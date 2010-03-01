@@ -1,8 +1,8 @@
 ﻿/*
 	Masked Input plugin for jQuery
-	Copyright (c) 2007-2009 Josh Bush (digitalbush.com)
+	Copyright (c) 2007-2010 Josh Bush (digitalbush.com)
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
-	Version: 1.2.2 (03/09/2009 22:39:06)
+	Version: 1.2.3 (02/28/2010 22:39:06)
 */
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
@@ -165,7 +165,7 @@
 								writeBuffer();
 								var next = seekNext(p);
 								$(this).caret(next);
-								if (settings.completed && next == len)
+								if (settings.completed && next >= len)
 									settings.completed.call(input);
 							}
 						}
@@ -199,7 +199,7 @@
 							}
 							if (pos > test.length)
 								break;
-						} else if (buffer[i] == test[pos] && i!=partialPosition) {
+						} else if (buffer[i] == test.charAt(pos) && i!=partialPosition) {
 							pos++;
 							lastMatch = i;
 						} 
