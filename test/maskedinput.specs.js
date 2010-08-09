@@ -41,7 +41,18 @@ QUnit.specify("Masked Input", function(){
 				
 				assert(input.val()).equals('');            
 			});
-		});                
+		});
+
+		describe("when typing a full mask", function(){
+			before(function(){
+				input.focus().autotype("3");
+			});
+			
+			it("should have the correct value", function(){				
+				assert(input.val()).equals('3');            
+			});
+		});
+		
     });
     
 });
