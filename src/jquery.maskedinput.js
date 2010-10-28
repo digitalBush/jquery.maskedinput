@@ -58,8 +58,7 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null,
-				watermark:null
+				completed: null
 			}, settings);
 
 			var defs = $.mask.definitions;
@@ -206,7 +205,7 @@
 						} 
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
-						input.val(settings.watermark||"");
+						input.val("");
 						clearBuffer(0, len);
 					} else if (allow || lastMatch + 1 >= partialPosition) {
 						writeBuffer();
