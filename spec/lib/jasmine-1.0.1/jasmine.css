@@ -103,7 +103,7 @@ body {
 
 .passed {
   background-color: #cfc;
-  display: none;
+  /*display: none;*/
 }
 
 .failed {
