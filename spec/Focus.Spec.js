@@ -17,7 +17,7 @@ describe("Focus Specifications", function() {
 			});
 			
 			it("should have the correct placeholder text", function(){	
-				expect(input.val()).toEqual('_');           
+				expect(input).toHaveValue('_');           
 			});
 			
 			it("should have the correct caret position", function(){
@@ -35,7 +35,7 @@ describe("Focus Specifications", function() {
 				});
 				
 				it("should have an empty value", function(){
-					expect(input.val()).toEqual('');            
+					expect(input).toHaveValue('');            
 				});
 			});
 	});
@@ -46,7 +46,7 @@ describe("Focus Specifications", function() {
 			});
 			
 			it("should have the correct placeholder text", function(){	
-				expect(input.val()).toEqual('(_)');           
+				expect(input).toHaveValue('(_)');           
 			});
 			
 			it("should have the correct caret position", function(){
@@ -64,7 +64,7 @@ describe("Focus Specifications", function() {
 				});
 				
 				it("should have an empty value", function(){
-					expect(input.val()).toEqual('');            
+					expect(input).toHaveValue('');            
 				});
 			});
 	});

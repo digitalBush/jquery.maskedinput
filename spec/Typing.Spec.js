@@ -24,11 +24,10 @@ describe("Typing Specifications", function() {
 		describe("when typing an incomplete mask",function(){
 			beforeEach(function(){
 				input.mashKeys('1');
-			});				 
-		
+			});		
 		
 			it("should have the correct placeholder text", function(){	
-				expect(input.val()).toEqual('1-_');           
+				expect(input).toHaveValue('1-_');           
 			});
 			
 			it("should have the correct caret position", function(){
@@ -46,7 +45,7 @@ describe("Typing Specifications", function() {
 				});
 				
 				it("should have an empty value", function(){
-					expect(input.val()).toEqual('');            
+					expect(input).toHaveValue('');            
 				});
 			});
 		});
@@ -54,11 +53,10 @@ describe("Typing Specifications", function() {
 		describe("when typing a complete mask",function(){
 			beforeEach(function(){
 				input.mashKeys('16');
-			});				 
-		
+			});	
 		
 			it("should have the correct placeholder text", function(){	
-				expect(input.val()).toEqual('1-6');           
+				expect(input).toHaveValue('1-6');           
 			});
 			
 			it("should have the correct caret position", function(){
@@ -75,10 +73,29 @@ describe("Typing Specifications", function() {
 					input.blur();
 				});
 				
-				it("should have an empty value", function(){
-					expect(input.val()).toEqual('1-6');            
+				it("should retain the value", function(){
+					expect(input).toHaveValue('1-6');            
 				});
 			});
+		});
+		
+		describe("when backspacing over a literal",function(){
+			beforeEach(function(){
+				input.mashKeys(function(keys){keys.type('1',keys.backspace);});
+			});	
+		
+			it("should have the correct placeholder text", function(){	
+				expect(input).toHaveValue('_-_');           
+			});
+			
+			it("should have the correct caret position", function(){
+				waits(1);
+				runs(function(){
+					var caret=input.caret();
+					expect(caret.begin).toEqual(0);            
+					expect(caret.end).toEqual(0);
+				});
+			});			
 		});
 
 	});
