@@ -33,10 +33,7 @@
 			forced[modifier]=isForced;
 			modifierState[modifier]=(direction=='down');		
 			var event=$.extend($.Event(), modifierState, {type:'key'+direction, keyCode: keys[modifier].keyCode, charCode: 0});
-			elm.queue('keymash',function(){
-				elm.trigger(event);
-				$(this).dequeue('keymash');
-			});
+			elm.trigger(event);
 		};
 		
 		var queueStroke=function(key){
@@ -50,20 +47,17 @@
 			var ignore = !key.charCode || modifierState.alt || modifierState.ctrl || modifierState.meta,
 				down = $.extend($.Event('keydown'), modifierState, {keyCode: key.keyCode, charCode: 0}),
 				press = $.extend($.Event('keypress'), modifierState, {keyCode: key.charCode, charCode: key.charCode}),
-				up = $.extend($.Event('keyup'), modifierState, {keyCode: key.keyCode, charCode: 0});				
+				up = $.extend($.Event('keyup'), modifierState, {keyCode: key.keyCode, charCode: 0});			
 			
-			elm.queue('keymash',function(){
-				elm.trigger(down);
-				if(!down.isPropagationStopped() && !ignore){
-					elm.trigger(press);
-					if(!press.isPropagationStopped()){					
-						//need to do caret positioning
-						elm.val(elm.val()+String.fromCharCode(key.charCode));
-					}
+			elm.trigger(down);
+			if(!down.isPropagationStopped() && !ignore){
+				elm.trigger(press);
+				if(!press.isPropagationStopped()){					
+					//need to do caret positioning
+					elm.val(elm.val()+String.fromCharCode(key.charCode));
 				}
-				elm.trigger(up);
-				$(this).dequeue('keymash');
-			});
+			}
+			elm.trigger(up);
 			
 			if(forced.shift)
 				queueModifierEvent('up','shift');			
@@ -97,6 +91,6 @@
 		}
 		return this.each(function(){
 			fn(KeyMasher($(this)));			
-		}).dequeue("keymash");
+		});
 	};
 })(jQuery);
