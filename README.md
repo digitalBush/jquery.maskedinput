@@ -7,4 +7,4 @@ This is a masked input plugin for the jQuery javascript library. It allows a use
 
 * a - Represents an alpha character (A-Z,a-z)
 * 9 - Represents a numeric character (0-9)
-* * - Represents an alphanumeric character (A-Z,a-z,0-9)
+* \* - Represents an alphanumeric character (A-Z,a-z,0-9)
