@@ -134,7 +134,7 @@
 
 					//backspace, delete, and escape get special treatment
 					if (k == 8 || k == 46 || (iPhone && k == 127)) {//backspace/delete
-						shiftL(pos.begin + (k == 46 ? 0 : -1));
+						shiftL(pos.begin + (k == 46 ? (tests[pos.begin]?0:1) : -1));
 						return false;
 					} else if (k == 27) {//escape
 						input.val(focusText);
