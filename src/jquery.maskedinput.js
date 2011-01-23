@@ -79,7 +79,7 @@
 				}
 			});
 
-			return this.each(function() {
+			return this.unmask().each(function() {
 				var input = $(this);
 				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
 				var ignore = false;  			//Variable for ignoring control keys
