@@ -27,6 +27,10 @@
         importGrammar(jasmine.grammar.FeatureStory);
         importGrammar(jasmine.grammar.GWT);
 
+		var input;
+		beforeEach(function(){ input = $("<input />").appendTo("body").focus(); });
+		afterEach(function(){ input.remove();});
+
     </script>
 
     <!-- include source files here... -->

@@ -1,8 +1,7 @@
-feature("Masking an Input", function() {  
+feature("Masking an Input", function() {	
 	scenario('Applying a mask to an already masked input',function(){
-		var input;
 		given("an input with two masks", function(){
-			input=$("<input />")
+			input
 			.mask("9")
 			.mask("99");
 		});
