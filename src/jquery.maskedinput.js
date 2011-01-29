@@ -14,7 +14,8 @@
 			'9': "[0-9]",
 			'a': "[A-Za-z]",
 			'*': "[A-Za-z0-9]"
-		}
+		},
+		dataName:"rawMaskFn"
 	};
 
 	$.fn.extend({
@@ -50,10 +51,7 @@
 		mask: function(mask, settings) {
 			if (!mask && this.length > 0) {
 				var input = $(this[0]);
-				var tests = input.data("tests");
-				return $.map(input.data("buffer"), function(c, i) {
-					return tests[i] ? c : null;
-				}).join('');
+				return input.data($.mask.dataName)();
 			}
 			settings = $.extend({
 				placeholder: "_",
@@ -84,8 +82,6 @@
 				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
 				var ignore = false;  			//Variable for ignoring control keys
 				var focusText = input.val();
-
-				input.data("buffer", buffer).data("tests", tests);
 
 				function seekNext(pos) {
 					while (++pos <= len && !tests[pos]);
@@ -213,13 +209,19 @@
 					return (partialPosition ? i : firstNonMaskPos);
 				};
 
+				input.data($.mask.dataName,function(){
+					var pos=checkVal(true);
+					return $.map(buffer, function(c, i) {
+						return tests[i]&&i<pos ? c : null;
+					}).join('');
+				})
+
 				if (!input.attr("readonly"))
 					input
 					.one("unmask", function() {
 						input
 							.unbind(".mask")
-							.removeData("buffer")
-							.removeData("tests");
+							.removeData($.mask.dataName);
 					})
 					.bind("focus.mask", function() {
 						focusText = input.val();
