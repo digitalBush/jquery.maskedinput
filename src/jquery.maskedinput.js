@@ -144,13 +144,13 @@
 						//Fixes Mac FF bug on backspace
 						return (e.keyCode == 8) ? false : null;
 					}
-					e = e || window.event;
-					var k = e.charCode || e.keyCode || e.which;
+
+					var k = e.which;
 					var pos = $(this).caret();
 
 					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
 						return true;
-					} else if ((k >= 32 && k <= 125) || k > 186) {//typeable characters
+					} else if (k) {//typeable characters
 						var p = seekNext(pos.begin - 1);
 						if (p < len) {
 							var c = String.fromCharCode(k);
