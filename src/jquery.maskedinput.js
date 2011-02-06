@@ -118,13 +118,13 @@
 				};
 
 				function keydownEvent(e) {
-					var pos = $(this).caret();
+					var pos = input.caret();
 					var k = e.which;
 
 					//backspace, delete, and escape get special treatment
 					if(k == 8 || k == 46 || (iPhone && k == 127)){
 						clearBuffer(pos.begin, pos.end);
-						shiftL(pos.end + (k == 8 ? -1: (tests[pos.begin]?0:1)));
+						shiftL(pos.begin + (k == 8 ? -1: (tests[pos.begin]?0:1)));
 						return false;
 					} else if (k == 27) {//escape
 						input.val(focusText);
@@ -135,7 +135,7 @@
 
 				function keypressEvent(e) {
 					var k = e.which;
-					var pos = $(this).caret();
+					var pos = input.caret();
 
 					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
 						return true;
@@ -149,7 +149,7 @@
 								buffer[p] = c;
 								writeBuffer();
 								var next = seekNext(p);
-								$(this).caret(next);
+								input.caret(next);
 								if (settings.completed && next >= len)
 									settings.completed.call(input);
 							}
