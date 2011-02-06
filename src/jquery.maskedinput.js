@@ -80,7 +80,6 @@
 			return this.trigger("unmask").each(function() {
 				var input = $(this);
 				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
-				var ignore = false;  			//Variable for ignoring control keys
 				var focusText = input.val();
 
 				function seekNext(pos) {
@@ -120,16 +119,12 @@
 
 				function keydownEvent(e) {
 					var pos = $(this).caret();
-					var k = e.keyCode;
-					ignore = (k < 16 || (k > 16 && k < 32) || (k > 32 && k < 41));
-
-					//delete selection before proceeding
-					if ((pos.begin - pos.end) != 0 && (!ignore || k == 8 || k == 46))
-						clearBuffer(pos.begin, pos.end);
+					var k = e.which;
 
 					//backspace, delete, and escape get special treatment
-					if (k == 8 || k == 46 || (iPhone && k == 127)) {//backspace/delete
-						shiftL(pos.begin + (k == 46 ? (tests[pos.begin]?0:1) : -1));
+					if(k == 8 || k == 46 || (iPhone && k == 127)){
+						clearBuffer(pos.begin, pos.end);
+						shiftL(pos.end + (k == 8 ? -1: (tests[pos.begin]?0:1)));
 						return false;
 					} else if (k == 27) {//escape
 						input.val(focusText);
@@ -139,18 +134,13 @@
 				};
 
 				function keypressEvent(e) {
-					if (ignore) {
-						ignore = false;
-						//Fixes Mac FF bug on backspace
-						return (e.keyCode == 8) ? false : null;
-					}
-
 					var k = e.which;
 					var pos = $(this).caret();
 
 					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
 						return true;
 					} else if (k) {//typeable characters
+						clearBuffer(pos.begin, pos.end);
 						var p = seekNext(pos.begin - 1);
 						if (p < len) {
 							var c = String.fromCharCode(k);
@@ -164,14 +154,16 @@
 									settings.completed.call(input);
 							}
 						}
+						return false;
 					}
-					return false;
 				};
 
 				function clearBuffer(start, end) {
-					for (var i = start; i < end && i < len; i++) {
-						if (tests[i])
-							buffer[i] = settings.placeholder;
+					if(start-end){
+						for (var i = start; i < end && i < len; i++) {
+							if (tests[i])
+								buffer[i] = settings.placeholder;
+						}
 					}
 				};
 
