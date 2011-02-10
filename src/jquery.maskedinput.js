@@ -86,21 +86,26 @@
 					while (++pos <= len && !tests[pos]);
 					return pos;
 				};
+				function seekPrev(pos) {
+					while (--pos >= 0 && !tests[pos]);
+					return pos;
+				};
 
-				function shiftL(pos) {
-					while (!tests[pos] && --pos >= 0);
-					for (var i = pos; i < len; i++) {
+				function shiftL(begin,end) {
+					if(begin<0)
+					   return;
+					for (var i = begin,j = seekNext(end); i < len; i++) {
 						if (tests[i]) {
-							buffer[i] = settings.placeholder;
-							var j = seekNext(i);
 							if (j < len && tests[i].test(buffer[j])) {
 								buffer[i] = buffer[j];
+								buffer[j] = settings.placeholder;
 							} else
 								break;
+							j = seekNext(j);
 						}
 					}
 					writeBuffer();
-					input.caret(Math.max(firstNonMaskPos, pos));
+					input.caret(Math.max(firstNonMaskPos, begin));
 				};
 
 				function shiftR(pos) {
@@ -118,13 +123,21 @@
 				};
 
 				function keydownEvent(e) {
-					var pos = input.caret();
-					var k = e.which;
+					var k=e.which;
 
 					//backspace, delete, and escape get special treatment
 					if(k == 8 || k == 46 || (iPhone && k == 127)){
-						clearBuffer(pos.begin, pos.end);
-						shiftL(pos.begin + (k == 8 ? -1: (tests[pos.begin]?0:1)));
+						var pos = input.caret(),
+							begin = pos.begin,
+							end = pos.end;
+						
+						if(end-begin==0){
+							end=k==46?seekNext(end-1):end;
+							begin=k!=46?seekPrev(begin):begin;
+						}
+						clearBuffer(begin, end);
+						shiftL(begin,end-1);
+
 						return false;
 					} else if (k == 27) {//escape
 						input.val(focusText);
@@ -134,13 +147,17 @@
 				};
 
 				function keypressEvent(e) {
-					var k = e.which;
-					var pos = input.caret();
-
+					var k = e.which,
+						pos = input.caret();
 					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
 						return true;
 					} else if (k) {//typeable characters
-						clearBuffer(pos.begin, pos.end);
+
+						if(pos.end-pos.begin!=0){
+							clearBuffer(pos.begin, pos.end);
+							shiftL(pos.begin, pos.end-1);
+						}
+
 						var p = seekNext(pos.begin - 1);
 						if (p < len) {
 							var c = String.fromCharCode(k);
@@ -159,11 +176,9 @@
 				};
 
 				function clearBuffer(start, end) {
-					if(start-end){
-						for (var i = start; i < end && i < len; i++) {
-							if (tests[i])
-								buffer[i] = settings.placeholder;
-						}
+					for (var i = start; i < end && i < len; i++) {
+						if (tests[i])
+							buffer[i] = settings.placeholder;
 					}
 				};
 
