@@ -210,9 +210,8 @@
 				};
 
 				input.data($.mask.dataName,function(){
-					var pos=checkVal(true);
 					return $.map(buffer, function(c, i) {
-						return tests[i]&&i<pos ? c : null;
+						return tests[i]&&c!=settings.placeholder ? c : null;
 					}).join('');
 				})
 
