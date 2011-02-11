@@ -132,8 +132,8 @@
 							end = pos.end;
 						
 						if(end-begin==0){
-							end=k==46?seekNext(end-1):end;
-							begin=k!=46?seekPrev(begin):begin;
+							end=begin=k!=46?seekPrev(begin):seekNext(begin-1);							
+							end=k==46?seekNext(end):end;
 						}
 						clearBuffer(begin, end);
 						shiftL(begin,end-1);
