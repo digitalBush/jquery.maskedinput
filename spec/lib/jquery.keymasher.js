@@ -46,9 +46,9 @@
 				key=keys[key.shift];
 			
 			var ignore = !key.charCode || modifierState.alt || modifierState.ctrl || modifierState.meta,
-				down = $.extend($.Event('keydown'), modifierState, {keyCode: key.keyCode, charCode: 0}),
+				down = $.extend($.Event('keydown'), modifierState, {keyCode: key.keyCode, charCode: 0, which:key.keyCode}),
 				press = $.extend($.Event('keypress'), modifierState, {keyCode: key.charCode, charCode: key.charCode, which: key.charCode}),
-				up = $.extend($.Event('keyup'), modifierState, {keyCode: key.keyCode, charCode: 0});			
+				up = $.extend($.Event('keyup'), modifierState, {keyCode: key.keyCode, charCode: 0, which:key.keyCode});			
 			
 			elm.trigger(down);
 			if(!down.isPropagationStopped() && !ignore){
