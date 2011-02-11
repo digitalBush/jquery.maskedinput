@@ -1,71 +1,151 @@
 feature("Deleting characters", function() {
-	scenario('Hitting delete key with cursor on a mask literal',function(){
-		given("an input with a mask definition of '9-99'", function(){
-			input
-			.mask("9-99")
-			.mashKeys("123")
+	story('User presses delete key with cursor on a mask literal',function(){
+		scenario('character at end matches definition to the right',function(){
+			given("an input with a mask definition of '9-99'", function(){
+				input
+				.mask("9-99")
+				.mashKeys("123");
+			});
 
+			given("the input has cursor positioned on literal", function(){
+				input.caret(1);
+			});
+
+			when("hitting the delete key",function(){
+				input.mashKeys(function(keys){keys.type(keys.delete)});
+			});
+
+			then("value should be correct",function(){
+				expect(input).toHaveValue('1-3_');
+			});
+
+			and("caret position should be correct",function(){
+				expect(input.caret().begin).toEqual(2);
+			});
 		});
 
-		given("the input has cursor positioned on literal", function(){
-			input					
-			.caret(1);
-		});
-		when("hitting the delete key",function(){
-			input.mashKeys(function(keys){keys.type(keys.delete)});
-		});
+		scenario('character at end does not match definition to the right',function(){
+			given("an input with a mask definition of '9-9a'", function(){
+				input
+				.mask("9-9a")
+				.mashKeys("12z");
+			});
 
-		then("value should be correct",function(){
-			expect(input).toHaveValue('1-3_');
-		});
+			given("the input has cursor positioned on literal", function(){
+				input.caret(1);
+			});
 
-		and("caret position should be correct",function(){
-			expect(input.caret().begin).toEqual(2);
+			when("hitting the delete key",function(){
+				input.mashKeys(function(keys){keys.type(keys.delete)});
+			});
+
+			then("value should be correct",function(){
+				expect(input).toHaveValue('1-_z');
+			});
+
+			and("caret position should be correct",function(){
+				expect(input.caret().begin).toEqual(2);
+			});
 		});
 	});
-});
 
-
-describe("Delete Specifications", function() {
-	describe("when deleting",function(){
-		describe("with character to right of current position which matches current mask definition",function(){
-			beforeEach(function(){
+	story('User presses delete key with cursor on first character',function(){
+		scenario('character to right matches definition of current position',function(){
+			given("an input with a mask definition of '99'", function(){
 				input
 				.mask("99")
-				.mashKeys("12")
-				.caret(0)
-				.mashKeys(function(keys){keys.type(keys.delete)});
-			});	
-		
-			it("should shift the character to the left", function(){	
-				expect(input).toHaveValue('2_');           
+				.mashKeys("12");
 			});
-			
-			it("should have the correct caret position", function(){
-				var caret=input.caret();
-				expect(caret.begin).toEqual(0);            
-				expect(caret.end).toEqual(0);
-			});			
+
+			given("the input has cursor positioned on first character", function(){
+				input.caret(0);
+			});
+
+			when("hitting the delete key",function(){
+				input.mashKeys(function(keys){keys.type(keys.delete)});
+			});
+
+			then("value should be correct",function(){
+				expect(input).toHaveValue('2_');
+			});
+
+			and("caret position should be correct",function(){
+				expect(input.caret().begin).toEqual(0);
+			});
 		});
-	
-		describe("with character to right of current position which not match current mask definition",function(){
-			beforeEach(function(){
+
+		scenario('character to right does not match definition of current position',function(){
+			given("an input with a mask definition of '9a'", function(){
 				input
 				.mask("9a")
-				.mashKeys("1z")
-				.caret(0)
-				.mashKeys(function(keys){keys.type(keys.delete)});
-			});	
-		
-			it("should not shift the character to the left", function(){	
-				expect(input).toHaveValue('_z');           
+				.mashKeys("1z");
 			});
-			
-			it("should have the correct caret position", function(){
-				var caret=input.caret();
-				expect(caret.begin).toEqual(0);            
-				expect(caret.end).toEqual(0);
-			});			
+
+			given("the input has cursor positioned on first character", function(){
+				input.caret(0);
+			});
+
+			when("hitting the delete key",function(){
+				input.mashKeys(function(keys){keys.type(keys.delete)});
+			});
+
+			then("value should be correct",function(){
+				expect(input).toHaveValue('_z');
+			});
+
+			and("caret position should be correct",function(){
+				expect(input.caret().begin).toEqual(0);
+			});
+		});
+		
+		describe('There is a mask literal between the two placeholders',function(){
+			scenario('character to right matches definition of current position',function(){
+				given("an input with a mask definition of '9-9'", function(){
+					input
+					.mask("9-9")
+					.mashKeys("12");
+				});
+
+				given("the input has cursor positioned on first character", function(){
+					input.caret(0);
+				});
+
+				when("hitting the delete key",function(){
+					input.mashKeys(function(keys){keys.type(keys.delete)});
+				});
+
+				then("value should be correct",function(){
+					expect(input).toHaveValue('2-_');
+				});
+
+				and("caret position should be correct",function(){
+					expect(input.caret().begin).toEqual(0);
+				});
+			});
+
+			scenario('character to right does not match definition of current position',function(){
+				given("an input with a mask definition of '9-9'", function(){
+					input
+					.mask("9-a")
+					.mashKeys("1z");
+				});
+
+				given("the input has cursor positioned on first character", function(){
+					input.caret(0);
+				});
+
+				when("hitting the delete key",function(){
+					input.mashKeys(function(keys){keys.type(keys.delete)});
+				});
+
+				then("value should be correct",function(){
+					expect(input).toHaveValue('_-z');
+				});
+
+				and("caret position should be correct",function(){
+					expect(input.caret().begin).toEqual(0);
+				});
+			});
 		});
 	});
 });
