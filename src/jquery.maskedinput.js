@@ -151,8 +151,7 @@
 						pos = input.caret();
 					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
 						return true;
-					} else if (k) {//typeable characters
-
+					} else if (k) {
 						if(pos.end-pos.begin!=0){
 							clearBuffer(pos.begin, pos.end);
 							shiftL(pos.begin, pos.end-1);
