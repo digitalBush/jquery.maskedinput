@@ -1,5 +1,5 @@
-feature("Deleting characters", function() {
-	story('User presses delete key with cursor on a mask literal',function(){
+feature("Delete Key", function() {
+	story('User presses delete with cursor on a mask literal',function(){
 		scenario('character at end matches definition to the right',function(){
 			given("an input with a mask definition of '9-99'", function(){
 				input
@@ -49,7 +49,7 @@ feature("Deleting characters", function() {
 		});
 	});
 
-	story('User presses delete key with cursor on first character',function(){
+	story('User presses delete with cursor on first character',function(){
 		scenario('character to right matches definition of current position',function(){
 			given("an input with a mask definition of '99'", function(){
 				input
