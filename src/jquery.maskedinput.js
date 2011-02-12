@@ -132,7 +132,7 @@
 							end = pos.end;
 						
 						if(end-begin==0){
-							end=begin=k!=46?seekPrev(begin):seekNext(begin-1);							
+							begin=k!=46?seekPrev(begin):(end=seekNext(begin-1));
 							end=k==46?seekNext(end):end;
 						}
 						clearBuffer(begin, end);
