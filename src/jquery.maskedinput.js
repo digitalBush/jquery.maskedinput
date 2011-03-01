@@ -149,7 +149,7 @@
 				function keypressEvent(e) {
 					var k = e.which,
 						pos = input.caret();
-					if (e.ctrlKey || e.altKey || e.metaKey) {//Ignore
+					if (e.ctrlKey || e.altKey || e.metaKey || k<32) {//Ignore
 						return true;
 					} else if (k) {
 						if(pos.end-pos.begin!=0){
