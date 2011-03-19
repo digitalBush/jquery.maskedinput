@@ -14,7 +14,7 @@
 			shifted = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()~_+{}|:\"<>?",
 			noprint={shift:16,ctrl:17,meta:91,alt:18,f1:112,f2:113,f3:114,f4:115,f5:116,f6:117,f7:118,f8:119,f9:120,f10:121,f11:122,f12:123,
 					capslock:20,numlock:144,scrolllock:145,pageup:33,pagedown:34,end:35,home:36,backspace:8,
-					insert:45, delete:46,pause:19,esc:27,left:37,up:38,right:39,down:40,printscreen:44};
+					insert:45, 'delete':46,pause:19,esc:27,left:37,up:38,right:39,down:40,printscreen:44};
 
 		$.each(keys,function(index,value){
 			var keyCode=value.charCodeAt(0),shift=shifted[index];			
