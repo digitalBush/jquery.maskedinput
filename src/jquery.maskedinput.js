@@ -1,8 +1,8 @@
 /*
 	Masked Input plugin for jQuery
-	Copyright (c) 2007-2010 Josh Bush (digitalbush.com)
+	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
-	Version: 1.2.3
+	Version: @version
 */
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
