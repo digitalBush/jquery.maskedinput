@@ -216,7 +216,7 @@
 				};
 
 				input.data($.mask.dataName,function(){
-                    checkVal();
+					checkVal();
 					return $.map(buffer, function(c, i) {
 						return tests[i]&&c!=settings.placeholder ? c : null;
 					}).join('');
