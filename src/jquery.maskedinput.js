@@ -1,7 +1,7 @@
 /*
 	Masked Input plugin for jQuery
 	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
-	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
+	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license)
 	Version: @version
 */
 (function($) {
@@ -130,7 +130,7 @@
 						var pos = input.caret(),
 							begin = pos.begin,
 							end = pos.end;
-						
+
 						if(end-begin==0){
 							begin=k!=46?seekPrev(begin):(end=seekNext(begin-1));
 							end=k==46?seekNext(end):end;
@@ -216,6 +216,7 @@
 				};
 
 				input.data($.mask.dataName,function(){
+                    checkVal();
 					return $.map(buffer, function(c, i) {
 						return tests[i]&&c!=settings.placeholder ? c : null;
 					}).join('');
