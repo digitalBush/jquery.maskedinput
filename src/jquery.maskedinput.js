@@ -55,8 +55,12 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
+				required_completed: null,
+				completed: null,
+				no_data_ghost_text: null,
+				no_data_ghost_text_class:'no_data'
 			}, settings);
+			if (settings.no_data_ghost_text == null) settings.no_data_ghost_text = '';
 
 			var defs = $.mask.definitions;
 			var tests = [];
@@ -80,7 +84,12 @@
 			return this.trigger("unmask").each(function() {
 				var input = $(this);
 				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
+				var ignore = false; //Variable for ignoring control keys
+				if (settings.no_data_ghost_text != '' &&
+					input.val() === settings.no_data_ghost_text) input.val('');
 				var focusText = input.val();
+				
+				input.data('buffer', buffer).data('tests', tests);
 
 				function seekNext(pos) {
 					while (++pos <= len && !tests[pos]);
@@ -166,8 +175,13 @@
 								writeBuffer();
 								var next = seekNext(p);
 								input.caret(next);
-								if (settings.completed && next >= len)
+								
+								if (settings.completed && next >= len) {
 									settings.completed.call(input);
+								}
+								else if (settings.required_completed && next >= partialPosition) {
+									settings.required_completed.call(input);
+								}
 							}
 						}
 						return false;
@@ -185,6 +199,8 @@
 
 				function checkVal(allow) {
 					//try to place characters where they belong
+					if (settings.no_data_ghost_text != '' &&
+						input.val() === '') input.val(settings.no_data_ghost_text);
 					var test = input.val();
 					var lastMatch = -1;
 					for (var i = 0, pos = 0; i < len; i++) {
@@ -226,9 +242,13 @@
 					.one("unmask", function() {
 						input
 							.unbind(".mask")
-							.removeData($.mask.dataName);
+							.removeData($.mask.dataName).removeData('buffer').removeData('tests');;
 					})
 					.bind("focus.mask", function() {
+						if (settings.no_data_ghost_text != '') {
+							input.removeClass(settings.no_data_ghost_text_class);
+							if (input.val()==settings.no_data_ghost_text) input.val(''); // get rid of null value ghost mask
+						}
 						focusText = input.val();
 						var pos = checkVal();
 						writeBuffer();
@@ -244,6 +264,13 @@
 						checkVal();
 						if (input.val() != focusText)
 							input.change();
+							
+						if (settings.no_data_ghost_text != '' &&
+							(input.val() === settings.no_data_ghost_text || input.val() === '')) {
+							// add null value ghost mask and ghost class
+							input.addClass(settings.no_data_ghost_text_class);
+							input.val(settings.no_data_ghost_text);
+						}
 					})
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
