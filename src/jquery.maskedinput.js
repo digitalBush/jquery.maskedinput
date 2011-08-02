@@ -162,6 +162,7 @@
 					var k = e.which,
 						rule = null,
 						i = 0,
+						startLength = input.mask().length,
 						pos = input.caret();
 					if (e.ctrlKey || e.altKey || e.metaKey || k<32) {//Ignore
 						return true;
@@ -189,7 +190,7 @@
 										input.caret(checkVal(true));
 									}
 								}
-								console.log("next: " + next + " len: " + len);
+								next += input.mask().length - startLength - 1;
 								if (settings.completed && next >= len)
 									settings.completed.call(input);
 							}
