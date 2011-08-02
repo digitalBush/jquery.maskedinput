@@ -55,7 +55,19 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
+				completed: null,
+				autocomplete: [ 
+					/* an array of objects of the following format, which will be
+					* applied via a call to String.replace() after each update of the input
+
+					{
+					pattern: /^([2-9])(.)/,
+					replacement: "0$1"
+					} 
+					
+					*/
+				]
+
 			}, settings);
 
 			var defs = $.mask.definitions;
@@ -148,6 +160,8 @@
 
 				function keypressEvent(e) {
 					var k = e.which,
+						rule = null,
+						i = 0,
 						pos = input.caret();
 					if (e.ctrlKey || e.altKey || e.metaKey || k<32) {//Ignore
 						return true;
@@ -166,9 +180,20 @@
 								writeBuffer();
 								var next = seekNext(p);
 								input.caret(next);
+								
+								if (settings.autocomplete.length > 0) {
+									for(i=0; i < settings.autocomplete.length; i++){
+										rule = settings.autocomplete[i];
+										input.val(input.val().replace(rule.pattern, rule.replacement));
+										clearBuffer(0, RegExp.lastMatch.length);
+										input.caret(checkVal(true));
+									}
+								}
+								console.log("next: " + next + " len: " + len);
 								if (settings.completed && next >= len)
 									settings.completed.call(input);
 							}
+
 						}
 						return false;
 					}
