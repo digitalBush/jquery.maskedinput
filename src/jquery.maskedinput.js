@@ -192,7 +192,7 @@
 							buffer[i] = settings.placeholder;
 							while (pos++ < test.length) {
 								var c = test.charAt(pos - 1);
-								if (tests[i].test(c)) {
+								if (tests[pos - 1] && tests[pos - 1].test(c)) {
 									buffer[i] = c;
 									lastMatch = i;
 									break;
