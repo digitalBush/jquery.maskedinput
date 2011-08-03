@@ -5,10 +5,16 @@
 <script src="../src/jquery.maskedinput.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function() {
-        $.mask.definitions['~'] = "[+-]";
-		$("#date").mask("99/99/9999",{completed:function(){alert("completed!");},
+			$.mask.definitions['~'] = "[+-]";
+			$.mask.definitions['m'] = "[0-9\/]";
+			$.mask.definitions['d'] = "[0-9\/]";
+			$.mask.definitions['y'] = "[0-9\/]";
+		$("#date").mask("mm/dd/yyyy",{ placeholder: " ",
 										autocomplete:[
 											{
+											pattern: /^1\//,
+											replacement: "01"
+											},{
 											pattern: /^([2-9])./,
 											replacement: "0$1"
 											},
@@ -17,11 +23,11 @@
 											replacement: ""
 											},
 											{
-											pattern: /^(\d\d.)([4-9])/,
+											pattern: /^(\d\d.)([4-9])./,
 											replacement: "$1" + "0" + "$2" //only broken out to clarify replacement tokens, works if single string
 											},
 											{
-											pattern: /^(\d\d.\d\d).(1[0-8])/,
+											pattern: /^(\d\d.\d\d.)(1[0-8]|0\d)/,
 											replacement: "$1" + "20" + "$2"
 											}
 											]
