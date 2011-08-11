@@ -10,7 +10,7 @@ feature("Masking an Input", function() {
 			input.mashKeys("1");
 		});
 
-		then("value should be correct",function(){
+		then("value should be reflect the second mask",function(){
 			expect(input).toHaveValue('1_');
 		});
 	});

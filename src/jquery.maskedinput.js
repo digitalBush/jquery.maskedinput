@@ -15,7 +15,37 @@
 			'a': "[A-Za-z]",
 			'*': "[A-Za-z0-9]"
 		},
-		dataName:"rawMaskFn"
+		dataName:"rawMaskFn",
+		autocomplete_predefined: {
+			'mmddyyyy': [
+				{
+				pattern: /^(\d)\//,
+					replacement: "0$1"
+			},
+			{
+				pattern: /^1[3-9]/,
+				replacement: "  "
+			},
+			{
+				pattern: /^(\d\d.)((3[2-9])|([4-9]\d))/,
+				replacement: "$1  "
+			},
+			{
+				pattern: /^(\d\d.)(\d\/)./,
+				replacement: "$1" + "0" + "$2" 
+			},
+			{
+				pattern: /^(\d\d.\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/,
+				replacement: "$1" + "20" + "$2"
+			},
+			{
+				pattern: /^(\d\d.\d\d.)([3-8]\d)(?!\d)/,
+				replacement: "$1" + "19" + "$2"
+			}
+			]
+
+
+		}
 	};
 
 	$.fn.extend({
