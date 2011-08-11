@@ -84,6 +84,20 @@ feature("Autocompletion", function() {
 				expect(input).toHaveValue('09/09/    ');
 			});
 		});
+		
+		scenario('User enters a year less than 30, not 19 or 20',function(){
+			given("an input with the month and day already entered", function(){
+				input.mashKeys("0909");
+			});
+
+			when("entering '18'",function(){
+				input.mashKeys("18");
+			});
+
+			then("input value should assume 2000s and prefix accordingly",function(){
+				expect(input).toHaveValue('09/09/2018');
+			});
+		});
 	});
 });
 
