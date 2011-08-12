@@ -3,3 +3,6 @@
 dist/*
 # vim undo files
 *~
+# vim swap files
+*.swp
+acs.tmp

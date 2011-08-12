@@ -13,7 +13,10 @@
 		definitions: {
 			'9': "[0-9]",
 			'a': "[A-Za-z]",
-			'*': "[A-Za-z0-9]"
+			'*': "[A-Za-z0-9]",
+            'm': "[0-9/]",
+            'd': "[0-9/]",
+            'y': "[0-9/]"
 		},
 		dataName:"rawMaskFn",
 		autocomplete_predefined: {
@@ -40,6 +43,26 @@
 			},
 			{
 				pattern: /^(\d\d.\d\d.)([3-8]\d)(?!\d)/,
+				replacement: "$1" + "19" + "$2"
+			}
+			],
+
+
+			'mmyyyy': [
+				{
+				pattern: /^(\d)\//,
+					replacement: "0$1"
+			},
+			{
+				pattern: /^1[3-9]/,
+				replacement: "  "
+			},
+			{
+				pattern: /^(\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/,
+				replacement: "$1" + "20" + "$2"
+			},
+			{
+				pattern: /^(\d\d.)([3-8]\d)(?!\d)/,
 				replacement: "$1" + "19" + "$2"
 			}
 			]
