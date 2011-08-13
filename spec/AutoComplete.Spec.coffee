@@ -4,171 +4,75 @@ feature "Autocompletion", ->
       input.mask "mm/dd/yyyy", 
         placeholder: " "
         autocomplete: $.mask.autocomplete_predefined["mmddyyyy"]
-    
-    scenario "User enters an invalid month", ->
-      given "an empty input", ->
-      
-      when_ "entering an invalid month", ->
-        input.mashKeys "13"
-      
-      then_ "input should reset to blank", ->
-        expect(input).toHaveValue "  /  /    "
-    
-    scenario "User enters a single digit followed by slash", ->
-      given "an empty input", ->
-      
-      when_ "entering a single digit followed by slash", ->
-        input.mashKeys "4/"
-      
-      then_ "input value should have month zero padded", ->
-        expect(input).toHaveValue "04/  /    "
-    
-    scenario "User enters a valid two digit month", ->
-      given "an empty input", ->
-      
-      when_ "entering '09'", ->
-        input.mashKeys "09"
-      
-      then_ "input value should advance to day fields", ->
-        expect(input).toHaveValue "09/  /    "
-    
-    scenario "User enters an invalid day of month", ->
-      given "an input with the month already entered", ->
-        input.mashKeys "09"
-      
-      when_ "entering '41'", ->
-        input.mashKeys "41"
-      
-      then_ "input value should reset to blank day of month", ->
-        expect(input).toHaveValue "09/  /    "
-      
-      when_ "entering '36'", ->
-        input.mashKeys "36"
-      
-      then_ "input value should reset to blank day of month", ->
-        expect(input).toHaveValue "09/  /    "
-    
-    scenario "User enters single digit day of month, followed by slash", ->
-      given "an input with the month already entered", ->
-        input.mashKeys "09"
-      
-      when_ "entering '9/'", ->
-        input.mashKeys "9/"
-      
-      then_ "input value should zero pad day of month", ->
-        expect(input).toHaveValue "09/09/    "
-    
-    scenario "User enters a year less than 30, not 19 or 20", ->
-      given "an input with the month and day already entered", ->
-        input.mashKeys "0909"
-      
-      when_ "entering '18'", ->
-        input.mashKeys "18"
-      
-      then_ "input value should assume 2000s and prefix accordingly", ->
-        expect(input).toHaveValue "09/09/2018"
 
-    scenario "User enters a year greater than 29", ->
-      given "an input with the month and day already entered", ->
-        input.mashKeys "0909"
-      
-      when_ "entering '64'", ->
-        input.mashKeys "64"
-      
-      then_ "input value should assume 1900s and prefix accordingly", ->
-        expect(input).toHaveValue "09/09/1964"
+    it "Should reset the input to blank if the user inputs an invalid month", ->
+      input.mashKeys "13"
+      expect(input).toHaveValue "  /  /    "
 
-    scenario "user starts to enter a year beginning with 20", ->
-        given "an input with the month and day already entered", ->
-        input.mashKeys "0909"
+    it "Should zero pad a single digit month if followed by a slash", ->
+      input.mashKeys "4/"
+      expect(input).toHaveValue "04/  /    "
 
-        when_ "entering '20'", ->
-        input.mashKeys "20"
+    it "Should advance to the day fields if user enters a valid two digit month", ->
+      input.mashKeys "09"
+      expect(input).toHaveValue "09/  /    "
 
-        then_ "input value should just reflect the '20' that was entered", ->
-            expect(input).toHaveValue "09/09/20  "
+    it "Should reset to blank day of month if any invalid day of month is entered", ->
+      input.mashKeys "0941"
+      expect(input).toHaveValue "09/  /    "
 
-    scenario "user starts to enter a year beginning with 19", ->
-        given "an input with the month and day already entered", ->
-        input.mashKeys "0909"
+    it "Should zero pad the day of month if a single digit day of month is followed by a slash", ->
+      input.mashKeys "099/"
+      expect(input).toHaveValue "09/09/    "
 
-        when_ "entering '19'", ->
-        input.mashKeys "19"
+    it "Should consider a two digit year less than 30, but not 19 or 20, to be 21st century and prefix with '20'", ->
+      input.mashKeys "090918"
+      expect(input).toHaveValue "09/09/2018"
 
-        then_ "input value should just reflect the '19' that was entered", ->
-            expect(input).toHaveValue "09/09/19  "
-  
+    it "Should consider a two digit year greater than 29 to be 20th century and prefix with '19'", ->
+      input.mashKeys "090964"
+      expect(input).toHaveValue "09/09/1964"
+
+    it "Should not prefix the year if the first two digits entered are '20'", ->
+      input.mashKeys "090920"
+      expect(input).toHaveValue "09/09/20  "
+
+    it "Should not prefix the year if the first two digits entered are '19'", ->
+      input.mashKeys "090919"
+      expect(input).toHaveValue "09/09/19  "
+
   story "User interacts with an input with 'mmyyyy' predefined autocomplete settings", ->
     beforeEach ->
       input.mask "mm/yyyy", 
         placeholder: " "
         autocomplete: $.mask.autocomplete_predefined["mmyyyy"]
-    
-    scenario "User enters an invalid month", ->
-      given "an empty input", ->
-      
-      when_ "entering an invalid month", ->
-        input.mashKeys "13"
-      
-      then_ "input should reset to blank", ->
-        expect(input).toHaveValue "  /    "
-    
-    scenario "User enters a single digit followed by slash", ->
-      given "an empty input", ->
-      
-      when_ "entering a single digit followed by slash", ->
-        input.mashKeys "4/"
-      
-      then_ "input value should have month zero padded", ->
-        expect(input).toHaveValue "04/    "
-    
-    scenario "User enters a valid two digit month", ->
-      given "an empty input", ->
-      
-      when_ "entering '09'", ->
-        input.mashKeys "09"
-      
-      then_ "input value should advance to year field", ->
-        expect(input).toHaveValue "09/    "
-    
-    scenario "User enters a year less than 30, not 19 or 20", ->
-      given "an input with the month already entered", ->
-        input.mashKeys "09"
-      
-      when_ "entering '18'", ->
-        input.mashKeys "18"
-      
-      then_ "input value should assume 2000s and prefix accordingly", ->
-        expect(input).toHaveValue "09/2018"
 
-    scenario "user starts to enter a year beginning with 20", ->
-        given "an input with the month already entered", ->
-        input.mashKeys "09"
+    it "Should reset the input to blank if the user inputs an invalid month", ->
+      input.mashKeys "13"
+      expect(input).toHaveValue "  /    "
 
-        when_ "entering '20'", ->
-        input.mashKeys "20"
+    it "Should zero pad a single digit month if followed by a slash", ->
+      input.mashKeys "4/"
+      expect(input).toHaveValue "04/    "
 
-        then_ "input value should just reflect the '20' that was entered", ->
-            expect(input).toHaveValue "09/20  "
+    it "Should advance to the year field if user enters a valid two digit month", ->
+      input.mashKeys "09"
+      expect(input).toHaveValue "09/    "
 
-    scenario "user starts to enter a year beginning with 19", ->
-        given "an input with the month already entered", ->
-        input.mashKeys "09"
+    it "Should consider a two digit digit less than 30, but not 19 or 20, to be 21st century and prefix with '20'", ->
+      input.mashKeys "0918"
+      expect(input).toHaveValue "09/2018"
 
-        when_ "entering '19'", ->
-        input.mashKeys "19"
+    it "Should consider a two digit year greater than 29 to be 20th century and prefix with '19'", ->
+      input.mashKeys "0964"
+      expect(input).toHaveValue "09/1964"
 
-        then_ "input value should just reflect the '19' that was entered", ->
-            expect(input).toHaveValue "09/19  "
-  
+    it "Should not prefix the year if the first two digits entered are '20'", ->
+      input.mashKeys "0920"
+      expect(input).toHaveValue "09/20  "
 
-    scenario "User enters a year greater than 29", ->
-      given "an input with the month already entered", ->
-        input.mashKeys "09"
-      
-      when_ "entering '64'", ->
-        input.mashKeys "64"
-      
-      then_ "input value should assume 1900s and prefix accordingly", ->
-        expect(input).toHaveValue "09/1964"
+    it "Should not prefix the year if the first two digits entered are '19'", ->
+      input.mashKeys "0919"
+      expect(input).toHaveValue "09/19  "
+
 
