@@ -13,9 +13,62 @@
 		definitions: {
 			'9': "[0-9]",
 			'a': "[A-Za-z]",
-			'*': "[A-Za-z0-9]"
+			'*': "[A-Za-z0-9]",
+            'm': "[0-9/]",
+            'd': "[0-9/]",
+            'y': "[0-9/]"
 		},
-		dataName:"rawMaskFn"
+		dataName:"rawMaskFn",
+		autocomplete_predefined: {
+			'mmddyyyy': [
+				{
+				pattern: /^(\d)\//,
+					replacement: "0$1"
+			},
+			{
+				pattern: /^1[3-9]/,
+				replacement: "  "
+			},
+			{
+				pattern: /^(\d\d.)((3[2-9])|([4-9]\d))/,
+				replacement: "$1  "
+			},
+			{
+				pattern: /^(\d\d.)(\d\/)./,
+				replacement: "$1" + "0" + "$2" 
+			},
+			{
+				pattern: /^(\d\d.\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/,
+				replacement: "$1" + "20" + "$2"
+			},
+			{
+				pattern: /^(\d\d.\d\d.)([3-8]\d)(?!\d)/,
+				replacement: "$1" + "19" + "$2"
+			}
+			],
+
+
+			'mmyyyy': [
+				{
+				pattern: /^(\d)\//,
+					replacement: "0$1"
+			},
+			{
+				pattern: /^1[3-9]/,
+				replacement: "  "
+			},
+			{
+				pattern: /^(\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/,
+				replacement: "$1" + "20" + "$2"
+			},
+			{
+				pattern: /^(\d\d.)([3-8]\d)(?!\d)/,
+				replacement: "$1" + "19" + "$2"
+			}
+			]
+
+
+		}
 	};
 
 	$.fn.extend({
@@ -55,7 +108,19 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
+				completed: null,
+				autocomplete: [ 
+					/* an array of objects of the following format, which will be
+					* applied via a call to String.replace() after each update of the input
+
+					{
+					pattern: /^([2-9])(.)/,
+					replacement: "0$1"
+					} 
+					
+					*/
+				]
+
 			}, settings);
 
 			var defs = $.mask.definitions;
@@ -148,6 +213,9 @@
 
 				function keypressEvent(e) {
 					var k = e.which,
+						rule = null,
+						i = 0,
+						startLength = input.mask().length,
 						pos = input.caret();
 					if (e.ctrlKey || e.altKey || e.metaKey || k<32) {//Ignore
 						return true;
@@ -166,9 +234,20 @@
 								writeBuffer();
 								var next = seekNext(p);
 								input.caret(next);
+								
+								if (settings.autocomplete.length > 0) {
+									for(i=0; i < settings.autocomplete.length; i++){
+										rule = settings.autocomplete[i];
+										input.val(input.val().replace(rule.pattern, rule.replacement));
+										clearBuffer(0, RegExp.lastMatch.length);
+										input.caret(checkVal(true));
+									}
+								}
+								next += input.mask().length - startLength - 1;
 								if (settings.completed && next >= len)
 									settings.completed.call(input);
 							}
+
 						}
 						return false;
 					}
@@ -192,7 +271,7 @@
 							buffer[i] = settings.placeholder;
 							while (pos++ < test.length) {
 								var c = test.charAt(pos - 1);
-								if (tests[i].test(c)) {
+								if (tests[pos - 1] && tests[pos - 1].test(c)) {
 									buffer[i] = c;
 									lastMatch = i;
 									break;
