@@ -16,12 +16,16 @@
 			'*': "[A-Za-z0-9]",
             'm': "[0-9/]",
             'd': "[0-9/]",
-            'y': "[0-9/]"
+            'y': "[0-9]"
 		},
 		dataName:"rawMaskFn",
 		autocomplete_predefined: {
 			'mmddyyyy': [
-				{
+			{
+				pattern: /^\//,
+				replacement: " "
+			},
+			{
 				pattern: /^(\d)\//,
 					replacement: "0$1"
 			},
@@ -31,6 +35,10 @@
 			},
 			{
 				pattern: /^(\d\d.)((3[2-9])|([4-9]\d))/,
+				replacement: "$1  "
+			},
+			{
+				pattern: /^(\d\d.)\/ /,
 				replacement: "$1  "
 			},
 			{
@@ -49,6 +57,10 @@
 
 
 			'mmyyyy': [
+			{
+				pattern: /^\//,
+				replacement: " "
+			},
 				{
 				pattern: /^(\d)\//,
 					replacement: "0$1"

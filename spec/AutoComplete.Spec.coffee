@@ -9,12 +9,20 @@ feature "Autocompletion", ->
       input.mashKeys "13"
       expect(input).toHaveValue "  /  /    "
 
+    it "Should reset the input to blank if the user inputs a slash as the first month character", ->
+      input.mashKeys "/"
+      expect(input).toHaveValue "  /  /    "
+
     it "Should zero pad a single digit month if followed by a slash", ->
       input.mashKeys "4/"
       expect(input).toHaveValue "04/  /    "
 
     it "Should advance to the day fields if user enters a valid two digit month", ->
       input.mashKeys "09"
+      expect(input).toHaveValue "09/  /    "
+
+    it "Should reset to blank day of month if a slash is entered as the first charactor of day of month", ->
+      input.mashKeys "09/"
       expect(input).toHaveValue "09/  /    "
 
     it "Should reset to blank day of month if any invalid day of month is entered", ->
@@ -49,6 +57,10 @@ feature "Autocompletion", ->
 
     it "Should reset the input to blank if the user inputs an invalid month", ->
       input.mashKeys "13"
+      expect(input).toHaveValue "  /    "
+
+    it "Should reset the input to blank if the user inputs a slash as the first character", ->
+      input.mashKeys "/"
       expect(input).toHaveValue "  /    "
 
     it "Should zero pad a single digit month if followed by a slash", ->
