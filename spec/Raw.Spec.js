@@ -5,11 +5,11 @@ feature("Getting raw value",function(){
 			.mask("9/9");
 		});
 
-		when("typing all numbers",function(){
+		whilst("typing all numbers",function(){
 			input.mashKeys("12");
 		});
 
-		then("raw value should be correct",function(){
+		hence("raw value should be correct",function(){
 			expect(input.mask()).toEqual("12");
 		});
 	});
@@ -20,11 +20,11 @@ feature("Getting raw value",function(){
 			.mask("9/9");
 		});
 
-		when("typing a number",function(){
+		whilst("typing a number",function(){
 			input.mashKeys("1");
 		});
 
-		then("raw value should be correct",function(){
+		hence("raw value should be correct",function(){
 			expect(input.mask()).toEqual("1");
 		});
 	});
@@ -35,7 +35,7 @@ feature("Getting raw value",function(){
 			.mask("9/9");
 		});
 
-		then("raw value should be correct",function(){
+		hence("raw value should be correct",function(){
 			expect(input.mask()).toEqual("");
 		});
 	});
@@ -46,11 +46,11 @@ feature("Getting raw value",function(){
 			.mask("9?99");
 		});
 
-		when("typing a partial input",function(){
+		whilst("typing a partial input",function(){
 			input.mashKeys("12");
 		});
 
-		then("raw value should be correct",function(){
+		hence("raw value should be correct",function(){
 			expect(input.mask()).toEqual("12");
 		});
 	});
