@@ -22,10 +22,10 @@ $.mask =
   autocomplete_predefined:
 			'mmddyyyy': [
         { pattern: /^\//, replacement: " " }
-				{ pattern: /^(\d)\//, replacement: "0$1" }
-        { pattern: /^(1[3-9])|[2-9]\d/, replacement: "  " }
-  			{ pattern: /^(\d\d.)((3[2-9])|([4-9]\d))/, replacement: "$1  " }
+				{ pattern: /^([1-9])\//, replacement: "0$1" }
+        { pattern: /^((1[3-9])|([2-9]\d)|(0\/))/, replacement: "  " }
         { pattern: /^(\d\d.)\//, replacement: "$1 " }
+  			{ pattern: /^(\d\d.)((3[2-9])|([4-9]\d)|(0\/))/, replacement: "$1  " }
   			{ pattern: /^(\d\d.)(\d\/)./, replacement: "$1" + "0" + "$2" }
   			{ pattern: /^(\d\d.\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/, replacement: "$1" + "20" + "$2" }
   			{ pattern: /^(\d\d.\d\d.)([3-8]\d)(?!\d)/, replacement: "$1" + "19" + "$2" }
