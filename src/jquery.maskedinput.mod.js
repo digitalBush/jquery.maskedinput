@@ -22,13 +22,13 @@
           pattern: /^([1-9])\//,
           replacement: "0$1"
         }, {
-          pattern: /^((1[3-9])|([2-9]\d)|(0\/))/,
+          pattern: /^((1[3-9])|([2-9]\d)|(0[0\/]))/,
           replacement: "  "
         }, {
           pattern: /^(\d\d.)\//,
           replacement: "$1 "
         }, {
-          pattern: /^(\d\d.)((3[2-9])|([4-9]\d)|(0\/))/,
+          pattern: /^(\d\d.)((3[2-9])|([4-9]\d)|(0[0\/]))/,
           replacement: "$1  "
         }, {
           pattern: /^(\d\d.)(\d\/)./,
@@ -201,7 +201,6 @@
           k = e.which;
           if (k === 8 || k === 46 || (iPhone && k === 127)) {
             _ref = input.caret(), begin = _ref.begin, end = _ref.end;
-            console.dir(input.caret());
             if (end === begin) {
               begin = k !== 46 ? seekPrev(begin) : end = seekNext(begin - 1);
               if (k === 46) {

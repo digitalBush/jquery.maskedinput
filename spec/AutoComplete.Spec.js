@@ -21,7 +21,8 @@
       });
       it("Should advance to the day fields if user enters a valid two digit month", function() {
         input.mashKeys("09");
-        return expect(input).toHaveValue("09/  /    ");
+        expect(input).toHaveValue("09/  /    ");
+        return expect(input.caret().begin).toEqual(3);
       });
       it("Should reset to blank day of month if a slash is entered as the first charactor of day of month", function() {
         input.mashKeys("09/");
@@ -29,6 +30,10 @@
       });
       it("Should reset to blank day of month if any invalid day of month is entered", function() {
         input.mashKeys("0941");
+        return expect(input).toHaveValue("09/  /    ");
+      });
+      it("Should reset to blank day of month if '00' is entered for the day of month", function() {
+        input.mashKeys("0900");
         return expect(input).toHaveValue("09/  /    ");
       });
       it("Should zero pad the day of month if a single digit day of month is followed by a slash", function() {
@@ -61,6 +66,10 @@
       });
       it("Should reset the input to blank if the user inputs an invalid month", function() {
         input.mashKeys("13");
+        return expect(input).toHaveValue("  /    ");
+      });
+      it("Should reset to blank day of month if '00' is entered for the month", function() {
+        input.mashKeys("00");
         return expect(input).toHaveValue("  /    ");
       });
       it("Should reset the input to blank if the user inputs a slash as the first character", function() {
