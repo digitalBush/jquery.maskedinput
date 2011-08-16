@@ -49,7 +49,7 @@
           pattern: /^(\d)\//,
           replacement: "0$1"
         }, {
-          pattern: /^1[3-9]/,
+          pattern: /^((1[3-9])|([2-9]\d)|(0[0\/]))/,
           replacement: "  "
         }, {
           pattern: /^(\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/,
