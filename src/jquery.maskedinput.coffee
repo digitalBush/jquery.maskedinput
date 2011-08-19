@@ -1,7 +1,8 @@
-# Masked Input plugin for jQuery - CoffeeScript version
+### Masked Input plugin for jQuery
 #
 # based upon Masked Input plugin for jQuery by Josh Bush
 # (http://digitalbush.com/projects/masked-input-plugin/)
+###
 
 $ = jQuery
 
