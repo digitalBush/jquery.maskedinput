@@ -6,3 +6,5 @@ dist/*
 # vim swap files
 *.swp
 acs.tmp
+node_modules/
+npm-debug.log
