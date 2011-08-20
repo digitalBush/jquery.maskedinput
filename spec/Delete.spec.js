@@ -12,15 +12,15 @@ feature("Delete Key", function() {
 			});
 
 			when("hitting the delete key",function(){
-				input.mashKeys(function(keys){keys.type(keys.delete)});
+				input.mashKeys(function(keys){keys.type(keys[ 'delete' ]);});
 			});
 
 			then("value should be correct",function(){
-				expect(input).toHaveValue('1-3_');
+				expect(input).tohavevalue('1-3_');
 			});
 
 			and("caret position should be correct",function(){
-				expect(input.caret().begin).toEqual(2);
+				expect(input.caret().begin).toequal(2);
 			});
 		});
 
