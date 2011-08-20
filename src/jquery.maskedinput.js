@@ -114,7 +114,7 @@
         placeholder: "_",
         completed: null,
         autocomplete: [],
-        progessive_reveal: false
+        progressive_reveal: false
       }, settings);
       defs = $.mask.definitions;
       tests = [];
