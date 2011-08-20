@@ -50,17 +50,17 @@ $.fn.extend
         if this.setSelectionRange
           this.setSelectionRange begin, end
         else if this.createTextRange
-          range = this.createTextRange
+          range = this.createTextRange()
           range.collapse true
           range.moveEnd 'character', end
           range.moveStart 'character', begin
-          range.select
+          range.select()
     else
       if this[0].setSelectionRange
         begin = this[0].selectionStart
         end = this[0].selectionEnd
       else if document.selection and document.selection.createRange
-        range = document.selection.createRange
+        range = document.selection.createRange()
         begin = 0 - range.duplicate().moveStart 'character', -100000
         end = begin + range.text.length
       return { begin: begin, end: end}

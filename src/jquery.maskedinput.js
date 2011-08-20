@@ -79,11 +79,11 @@
           if (this.setSelectionRange) {
             return this.setSelectionRange(begin, end);
           } else if (this.createTextRange) {
-            range = this.createTextRange;
+            range = this.createTextRange();
             range.collapse(true);
             range.moveEnd('character', end);
             range.moveStart('character', begin);
-            return range.select;
+            return range.select();
           }
         });
       } else {
@@ -91,7 +91,7 @@
           begin = this[0].selectionStart;
           end = this[0].selectionEnd;
         } else if (document.selection && document.selection.createRange) {
-          range = document.selection.createRange;
+          range = document.selection.createRange();
           begin = 0 - range.duplicate().moveStart('character', -100000);
           end = begin + range.text.length;
         }
