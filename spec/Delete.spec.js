@@ -16,11 +16,11 @@ feature("Delete Key", function() {
 			});
 
 			then("value should be correct",function(){
-				expect(input).tohavevalue('1-3_');
+				expect(input).toHaveValue('1-3_');
 			});
 
 			and("caret position should be correct",function(){
-				expect(input.caret().begin).toequal(2);
+				expect(input.caret().begin).toEqual(2);
 			});
 		});
 
