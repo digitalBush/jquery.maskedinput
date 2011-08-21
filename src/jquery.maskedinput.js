@@ -307,7 +307,7 @@
               if (pos > test.length) {
                 break;
               }
-            } else if (buffer[i] === test.charAt(pos && i !== partialPosition)) {
+            } else if (buffer[i] === (test.charAt(pos)) && i !== partialPosition) {
               pos++;
               lastMatch = i;
             }

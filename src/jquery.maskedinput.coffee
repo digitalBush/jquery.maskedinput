@@ -240,7 +240,7 @@ $.fn.extend
                 break
             if pos > test.length
               break
-          else if buffer[i] == test.charAt pos and i != partialPosition
+          else if buffer[i] == ( test.charAt pos ) and i != partialPosition
             pos++
             lastMatch = i
 
