@@ -270,7 +270,7 @@ $.fn.extend
               input.caret 0, pos
             else
               input.caret pos
-          if $.browser.msie then moveCaret else do -> setTimeout moveCaret, 0
+          if $.browser.msie then moveCaret() else do -> setTimeout moveCaret, 0
         .bind( "blur.mask", ->
           checkVal()
           if input.val() != focusText

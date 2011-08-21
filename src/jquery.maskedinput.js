@@ -353,7 +353,7 @@
               }
             };
             if ($.browser.msie) {
-              return moveCaret;
+              return moveCaret();
             } else {
               return (function() {
                 return setTimeout(moveCaret, 0);
