@@ -32,7 +32,7 @@
                             setTimeout(function () { that.setSelectionRange(begin, end); }, 0);
                         }
                         else {
-                            that.setSelectionRange(begin, end);
+                            this.setSelectionRange(begin, end);
                         }
 					} else if (this.createTextRange) {
 						var range = this.createTextRange();
