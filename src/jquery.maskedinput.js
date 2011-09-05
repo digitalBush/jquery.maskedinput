@@ -7,6 +7,7 @@
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
 	var iPhone = (window.orientation != undefined);
+    var enableSetSelectionRangeBugWorkaround = false;
 
 	$.mask = {
 		//Predefined character definitions
@@ -26,7 +27,13 @@
 				end = (typeof end == 'number') ? end : begin;
 				return this.each(function() {
 					if (this.setSelectionRange) {
-						this.setSelectionRange(begin, end);
+                        if (enableSetSelectionRangeBugWorkaround) {
+                            var that = this;
+                            setTimeout(function () { that.setSelectionRange(begin, end); }, 0);
+                        }
+                        else {
+                            that.setSelectionRange(begin, end);
+                        }
 					} else if (this.createTextRange) {
 						var range = this.createTextRange();
 						range.collapse(true);
@@ -55,8 +62,18 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
-			}, settings);
+				completed: null,
+                enableSetSelectionRangeBugWorkaround: false
+            }, settings);
+
+            // workaround for bug on android described in
+            // http://code.google.com/p/android/issues/detail?id=15245
+            // http://stackoverflow.com/questions/4861698/focus-textarea-with-caret-after-text-in-android-browser
+            // http://stackoverflow.com/questions/6103476/android-keyboard-and-javascript
+            // since android browser cannot be reliably detected, we just add
+            // setting for it (for example tablet browser with mobile mode switched off)
+
+            enableSetSelectionRangeBugWorkaround = settings.enableSetSelectionRangeBugWorkaround;
 
 			var defs = $.mask.definitions;
 			var tests = [];
