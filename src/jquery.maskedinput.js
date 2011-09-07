@@ -244,6 +244,7 @@
 						checkVal();
 						if (input.val() != focusText)
 							input.change();
+							input.trigger('unmasked.maskedInput');
 					})
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)

@@ -8,3 +8,9 @@ This is a masked input plugin for the jQuery javascript library. It allows a use
 * a - Represents an alpha character (A-Z,a-z)
 * 9 - Represents a numeric character (0-9)
 * \* - Represents an alphanumeric character (A-Z,a-z,0-9)
+
+Events
+--------
+
+- `unmasked.maskedInput` is triggered when the input is blurred and the mask is cleared. If you're performing separate validation, it may be useful to bind validation to this event. For example, if you're checking whether a field is empty, you don't want to consider the temporary placeholders in a field. When this event is triggered, they will be gone.
+
