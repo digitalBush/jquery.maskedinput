@@ -55,6 +55,7 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
+				required_completed: null,
 				completed: null
 			}, settings);
 
@@ -166,8 +167,13 @@
 								writeBuffer();
 								var next = seekNext(p);
 								input.caret(next);
-								if (settings.completed && next >= len)
+								
+								if (settings.completed && next >= len) {
 									settings.completed.call(input);
+								}
+								else if (settings.required_completed && next >= partialPosition) {
+									settings.required_completed.call(input);
+								}
 							}
 						}
 						return false;
