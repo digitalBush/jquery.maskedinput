@@ -18,8 +18,10 @@ minify = (js)->
 	process = uglify.uglify	
 	ast = process.ast_mangle(ast)
 	ast = process.ast_squeeze(ast)	
-	comment = uglify.parser.tokenizer(js)().comments_before[0].value;
-	'/*'+comment+'*/\n'+process.gen_code(ast)
+	#comment = uglify.parser.tokenizer(js)().comments_before[0].value;
+	#'/*'+comment+'*/\n'+process.gen_code(ast)
+	process.gen_code(ast)
+
 
 replaceTokens = (js,tokens)->
 	js.replace(

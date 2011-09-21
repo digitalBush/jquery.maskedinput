@@ -57,6 +57,9 @@
           pattern: /^((1[3-9])|([2-9]\d)|(0[0\/]))/,
           replacement: "  "
         }, {
+          pattern: /^(\d\d.)\//,
+          replacement: "$1 "
+        }, {
           pattern: /^(\d\d.)(1[0-8]|0\d|2[1-9])(?!\d)/,
           replacement: "$1" + "20" + "$2"
         }, {
@@ -135,7 +138,7 @@
         }
       });
       return (this.trigger("unmask")).each(function() {
-        var buffer, checkVal, clearBuffer, focusText, keydownEvent, keypressEvent, seekNext, seekPrev, shiftL, shiftR, wbCount, writeBuffer;
+        var buffer, checkVal, clearBuffer, focusText, keydownEvent, keypressEvent, resetBuffer, seekNext, seekPrev, shiftL, shiftR, wbCount, writeBuffer;
         input = $(this);
         buffer = $.map(mask.split(""), function(c, i) {
           if (c !== '?') {
@@ -202,20 +205,30 @@
           return _results;
         };
         keydownEvent = function(e) {
-          var begin, end, k, _ref;
+          var KEYBACKSPACE, KEYDELETE, KEYESCAPE, begin, end, k, _ref;
           k = e.which;
-          if (k === 8 || k === 46 || (iPhone && k === 127)) {
+          KEYDELETE = 46;
+          KEYBACKSPACE = 8;
+          KEYESCAPE = 27;
+          if (k === KEYBACKSPACE || k === KEYDELETE || (iPhone && k === 127)) {
             _ref = input.caret(), begin = _ref.begin, end = _ref.end;
             if (end === begin) {
-              begin = k !== 46 ? seekPrev(begin) : end = seekNext(begin - 1);
-              if (k === 46) {
+              if ((k === KEYBACKSPACE || k === KEYDELETE) && begin < input.val().length) {
+                resetBuffer();
+                return false;
+              }
+              begin = k !== KEYDELETE ? seekPrev(begin) : end = seekNext(begin - 1);
+              if (k === KEYDELETE) {
                 end = seekNext(end);
               }
+            } else {
+              resetBuffer();
+              return false;
             }
             clearBuffer(begin, end);
             shiftL(begin, end - 1);
             return false;
-          } else if (k === 27) {
+          } else if (k === KEYESCAPE) {
             input.val(focusText);
             input.caret(0, checkVal());
             return false;
@@ -259,6 +272,10 @@
             }
             return false;
           }
+        };
+        resetBuffer = function() {
+          input.val("");
+          return input.caret(0, checkVal());
         };
         clearBuffer = function(start, end) {
           var i, _results;

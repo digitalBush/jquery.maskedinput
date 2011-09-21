@@ -148,20 +148,32 @@ $.fn.extend
 
       keydownEvent = (e) ->
         k = e.which
+        KEYDELETE = 46
+        KEYBACKSPACE = 8
+        KEYESCAPE = 27
+
         
         # backspace, delete, and escape get special treatment
-        if k == 8 or k == 46 or (iPhone and k == 127)
+        if k == KEYBACKSPACE or k == KEYDELETE or (iPhone and k == 127)
           {begin, end} = input.caret()
 
           if end == begin
-            begin = if k != 46 then seekPrev begin else end = seekNext begin - 1
-            end = seekNext end if k == 46
+
+            if (k == KEYBACKSPACE or k == KEYDELETE) and begin < input.val().length
+              resetBuffer()
+              return false
+
+            begin = if k != KEYDELETE then seekPrev begin else end = seekNext begin - 1
+            end = seekNext end if k == KEYDELETE
+          else
+            resetBuffer()
+            return false
 
           clearBuffer begin, end
           shiftL begin, end - 1
 
           false
-        else if k == 27
+        else if k == KEYESCAPE
           # escape
           input.val focusText
           input.caret 0, checkVal()
@@ -203,6 +215,10 @@ $.fn.extend
                 settings.completed.call input
           false
 
+      resetBuffer = ->
+        input.val ""
+        input.caret 0, checkVal()
+      
       clearBuffer = (start, end) ->
         for i in [start...end] when i < len
           buffer[i] = settings.placeholder if tests[i]?

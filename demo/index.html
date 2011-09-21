@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
 <title> jQuery Mask Test </title>
@@ -11,7 +12,9 @@
 			$.mask.definitions['y'] = "[0-9\/]";
 		$("#date").mask("mm/dd/yyyy",{ placeholder: " ", progressive_reveal: true,
 										autocomplete: $.mask.autocomplete_predefined["mmddyyyy"]	});
-        $("#phone").mask("(999) 999-9999");
+		$("#phone").mask("mm/yyyy",{ placeholder: " ", progressive_reveal: true,
+										autocomplete: $.mask.autocomplete_predefined["mmyyyy"]	});
+        <!--$("#phone").mask("(999) 999-9999");-->
         $("#phoneExt").mask("(999) 999-9999? x99999");
         $("#iphone").mask("+33 999 999 999");
         $("#tin").mask("99-9999999");
