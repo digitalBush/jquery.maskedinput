@@ -1,7 +1,7 @@
 /*
 	Masked Input plugin for jQuery
 	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
-	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
+	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license)
 	Version: @version
 */
 (function($) {
@@ -79,7 +79,7 @@
 
 			return this.trigger("unmask").each(function() {
 				var input = $(this);
-				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder : c });
+				var buffer = $.map(mask.split(""), function(c, i) { if (c != '?') return defs[c] ? settings.placeholder[i % settings.placeholder.length] : c });
 				var focusText = input.val();
 
 				function seekNext(pos) {
@@ -177,7 +177,7 @@
 				function clearBuffer(start, end) {
 					for (var i = start; i < end && i < len; i++) {
 						if (tests[i])
-							buffer[i] = settings.placeholder;
+							buffer[i] = settings.placeholder[i % settings.placeholder.length];
 					}
 				};
 
@@ -189,7 +189,7 @@
 					var lastMatch = -1;
 					for (var i = 0, pos = 0; i < len; i++) {
 						if (tests[i]) {
-							buffer[i] = settings.placeholder;
+							buffer[i] = settings.placeholder[i % settings.placeholder.length];
 							while (pos++ < test.length) {
 								var c = test.charAt(pos - 1);
 								if (tests[i].test(c)) {
@@ -217,7 +217,7 @@
 
 				input.data($.mask.dataName,function(){
 					return $.map(buffer, function(c, i) {
-						return tests[i]&&c!=settings.placeholder ? c : null;
+						return tests[i]&&c!=settings.placeholder[i % settings.placeholder.length] ? c : null;
 					}).join('');
 				})
 
