@@ -16,6 +16,7 @@
         $("#eyescript").mask("~9.99 ~9.99 999");
         $("#po").mask("PO: aaa-999-***");
 		$("#pct").mask("99%");
+		$("#mac").mask("hh-hh-hh-hh-hh-hh");
 
         $("input").blur(function() {
             $("#info").html("Unmasked value: " + $(this).mask());
@@ -38,6 +39,7 @@
 		<tr><td>Eye Script</td><td><input id="eyescript" type="text" tabindex="6"/></td><td>~9.99 ~9.99 999</td></tr>
 		<tr><td>Purchase Order</td><td><input id="po" type="text" tabindex="6"/></td><td>aaa-999-***</td></tr>
 		<tr><td>Percent</td><td><input id="pct" type="text" tabindex="6"/></td><td>99%</td></tr>
+		<tr><td>MAC Address</td><td><input id="mac" type="text" tabindex="11"/></td><td>hh-hh-hh-hh-hh-hh</td></tr>
 </table>
 <div id="info"></div>
 </body>

@@ -13,7 +13,8 @@
 		definitions: {
 			'9': "[0-9]",
 			'a': "[A-Za-z]",
-			'*': "[A-Za-z0-9]"
+			'*': "[A-Za-z0-9]",
+			'h': "[A-Fa-f0-9]"
 		},
 		dataName:"rawMaskFn"
 	};
