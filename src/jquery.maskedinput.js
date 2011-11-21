@@ -312,8 +312,10 @@
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
 					.bind(pasteEventName, function() {
-						setTimeout(function() {
-							input.caret(checkVal(true));
+						setTimeout(function() { 
+							input.caret(checkVal(true)); 
+							if (checkVal(true) == input.val().length)
+								settings.completed.call(input);
 						}, 0);
 					});
 				checkVal(); //Perform initial check for existing values
