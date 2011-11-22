@@ -314,7 +314,7 @@
 					.bind(pasteEventName, function() {
 						setTimeout(function() { 
 							input.caret(checkVal(true)); 
-							if (checkVal(true) == input.val().length)
+							if (settings.completed && checkVal(true) == input.val().length)
 								settings.completed.call(input);
 						}, 0);
 					});
