@@ -1,9 +1,18 @@
 /*
 	Masked Input plugin for jQuery
 	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
-	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
+	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license)
 	Version: @version
 */
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
 	var iPhone = (window.orientation != undefined);
@@ -130,7 +139,7 @@
 						var pos = input.caret(),
 							begin = pos.begin,
 							end = pos.end;
-						
+
 						if(end-begin==0){
 							begin=k!=46?seekPrev(begin):(end=seekNext(begin-1));
 							end=k==46?seekNext(end):end;
@@ -255,4 +264,4 @@
 			});
 		}
 	});
-})(jQuery);
+}));
