@@ -55,7 +55,8 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
+				completed: null,
+				autoclear: true
 			}, settings);
 
 			var defs = $.mask.definitions;
@@ -241,9 +242,11 @@
 						($.browser.msie ? moveCaret:function(){setTimeout(moveCaret,0)})();
 					})
 					.bind("blur.mask", function() {
-						checkVal();
-						if (input.val() != focusText)
-							input.change();
+						if (settings.autoclear) {
+							checkVal();
+							if (input.val() != focusText)
+								input.change();
+						}
 					})
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
