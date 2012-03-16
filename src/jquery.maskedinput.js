@@ -1,8 +1,17 @@
 /*
 	Masked Input plugin for jQuery
-	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
+	Copyright (c) 2007-2011 Josh Bush (digitalbush.com)
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
-	Version: @version
+	Version: 1.3
+	
+	[Fagner @ 10/01/2012] Callbacks:
+		completed - Executa após terminar de preencher a máscara
+		afterBlur - Executa depois de realizar os procedimentos do blur na máscara
+	
+	[Fagner @ 10/01/2012]
+		Para pegar o valor original do plugin
+		$("#elemento").mask("9/9").mask(); //Retorna XX sendo cada X o valor do input referente ao nº 9 da máscara
+		$("#elemento2").mask(); //Retorna undefined
 */
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
@@ -60,7 +69,8 @@
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
+				completed: null,
+				afterBlur: null
 			}, settings);
 
 			var defs = $.mask.definitions;
@@ -178,6 +188,20 @@
 						return false;
 					}
 				};
+				
+				function blurEvent(e) {
+					checkVal();
+					
+					//Se o valor atual do input for diferente do valor original
+					if (input.val() != focusText) {
+						input.change();
+					}
+					
+					//Se estiver setado um callback no afterBlur
+					if(settings.afterBlur) {
+						settings.afterBlur.call(input);
+					}
+				};
 
 				function clearBuffer(start, end) {
 					for (var i = start; i < end && i < len; i++) {
@@ -245,11 +269,7 @@
 						};
 						($.browser.msie ? moveCaret:function(){setTimeout(moveCaret,0)})();
 					})
-					.bind("blur.mask", function() {
-						checkVal();
-						if (input.val() != focusText)
-							input.change();
-					})
+					.bind("blur.mask", blurEvent)
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
 					.bind(pasteEventName, function() {
