@@ -2,7 +2,7 @@
 	Masked Input plugin for jQuery
 	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
-	Version: 1.3
+	Version: @Version
 	
 	Callbacks:
 		completed - Executes after the mask has been filled
