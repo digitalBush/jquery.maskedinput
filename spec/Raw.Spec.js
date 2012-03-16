@@ -66,4 +66,10 @@ feature("Getting raw value",function(){
 			expect(input.mask()).toBe(undefined);
 		});
 	});
+	
+	scenario("Verify if the input has'nt the mask bound and it doesnt exists (should return undefined)", function() {
+		then("The raw value should be undefined for an element that does'nt exists", function() {
+			expect($().mask()).toBe(undefined);
+		});
+	});
 });
