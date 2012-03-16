@@ -187,12 +187,12 @@
 				function blurEvent(e) {
 					checkVal();
 					
-					//Se o valor atual do input for diferente do valor original
+					//if the value differs from original, triggers the change event
 					if (input.val() != focusText) {
 						input.change();
 					}
 					
-					//Se estiver setado um callback no afterBlur
+					//if an afterBlur callback has been defined
 					if(settings.afterBlur) {
 						settings.afterBlur.call(input);
 					}
