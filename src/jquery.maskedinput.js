@@ -4,14 +4,9 @@
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
 	Version: 1.3
 	
-	[Fagner @ 10/01/2012] Callbacks:
-		completed - Executa após terminar de preencher a máscara
-		afterBlur - Executa depois de realizar os procedimentos do blur na máscara
-	
-	[Fagner @ 10/01/2012]
-		Para pegar o valor original do plugin
-		$("#elemento").mask("9/9").mask(); //Retorna XX sendo cada X o valor do input referente ao nº 9 da máscara
-		$("#elemento2").mask(); //Retorna undefined
+	Callbacks:
+		completed - Executes after the mask has been filled
+		afterBlur - Executes after the value has changed and the blur has occurred
 */
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
