@@ -49,9 +49,14 @@
 		},
 		unmask: function() { return this.trigger("unmask"); },
 		mask: function(mask, settings) {
-			if (!mask && this.length > 0) {
-				var input = $(this[0]);
-				return input.data($.mask.dataName)();
+			if (!mask) {
+				if(this.length > 0) {
+					var fn = $(this).data($.mask.dataName);
+					if($.isFunction(fn)) {
+						return fn();
+					};
+				}
+			return undefined;
 			}
 			settings = $.extend({
 				placeholder: "_",
