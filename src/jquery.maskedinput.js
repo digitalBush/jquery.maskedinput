@@ -122,10 +122,17 @@
 					}
 				};
 
+				// Ensures the input text is valid for the assigned mask
+				function validateMask() {
+					checkVal();
+					if (input.val() != focusText)
+						input.change();
+				};
+
 				function keydownEvent(e) {
 					var k=e.which;
 
-					//backspace, delete, and escape get special treatment
+					//backspace, delete, escape and enter get special treatment
 					if(k == 8 || k == 46 || (iPhone && k == 127)){
 						var pos = input.caret(),
 							begin = pos.begin,
@@ -143,6 +150,10 @@
 						input.val(focusText);
 						input.caret(0, checkVal());
 						return false;
+					} else if (k == 13) { // enter/return keys
+						// Make sure to validate the mask in the event the user submits a
+						//form using Enter (no blur event happens in this case)
+						validateMask();
 					}
 				};
 
@@ -240,11 +251,7 @@
 						};
 						($.browser.msie ? moveCaret:function(){setTimeout(moveCaret,0)})();
 					})
-					.bind("blur.mask", function() {
-						checkVal();
-						if (input.val() != focusText)
-							input.change();
-					})
+					.bind("blur.mask", validateMask)
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
 					.bind(pasteEventName, function() {
