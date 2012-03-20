@@ -15,6 +15,7 @@ feature("Masking an Input", function() {
 		});
 	});
 	
+	//Issue #74
 	scenario("Applying a mask to an input with a value", function() {
 		given('an input with a value', function() {
 			input.val('55');

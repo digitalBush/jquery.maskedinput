@@ -227,6 +227,11 @@
 						} else if (buffer[i] == test.charAt(pos) && i!=partialPosition) {
 							pos++;
 							lastMatch = i;
+						} else {
+							//Issue #74
+							//Increase the lastMatch each time it reaches a template char
+							//so writeBuffer() will be called if there's template chars in the end of the mask
+							lastMatch++;
 						}
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
