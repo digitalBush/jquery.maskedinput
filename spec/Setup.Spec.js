@@ -21,7 +21,7 @@ feature("Masking an Input", function() {
 		});
 		
 		when("applying a mask with the template in both start and end", function() {
-			input.mask("(55)");
+			input.mask("(99)");
 		});
 		
 		then("value should be correct", function() {
