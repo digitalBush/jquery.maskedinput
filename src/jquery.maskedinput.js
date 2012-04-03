@@ -228,7 +228,7 @@
 							pos++;
 							lastMatch = i;
 						} else {
-							//Issue #74
+							//Issue #78
 							//Increase the lastMatch each time it reaches a template char
 							//so writeBuffer() will be called if there's template chars in the end of the mask
 							lastMatch++;
