@@ -72,4 +72,18 @@ feature("Getting raw value",function(){
 			expect($().mask()).toBe(undefined);
 		});
 	});
+	
+	scenario("If an optional condition is followed by white-space it should not keep that value", function() {
+		given("an input with an optional mask followed by a white-space", function() {
+			input.mask("999? 99");
+		});
+		
+		when("typing without the space and bluring", function() {
+			input.mashKeys("123").trigger("blur")
+		});
+		
+		then("The input.val() should not contain the space", function() {
+			expect(input.val()).toBe("123");
+		});
+	});
 });

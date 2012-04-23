@@ -209,8 +209,7 @@
 
 				function checkVal(allow) {
 					//try to place characters where they belong
-					var test = input.val();
-					var lastMatch = -1;
+					var test = input.val(), lastMatch = -1;
 					for (var i = 0, pos = 0; i < len; i++) {
 						if (tests[i]) {
 							buffer[i] = settings.placeholder;
@@ -224,14 +223,13 @@
 							}
 							if (pos > test.length)
 								break;
-						} else if (buffer[i] == test.charAt(pos) && i!=partialPosition) {
-							pos++;
-							lastMatch = i;
-						} else {
-							//Issue #78
-							//Increase the lastMatch each time it reaches a template char
-							//so writeBuffer() will be called if there's template chars in the end of the mask
-							lastMatch++;
+						} else if (i!=partialPosition) {
+							if(buffer[i] == test.charAt(pos)) {
+								pos++;
+								lastMatch = i;
+							} else {
+								lastMatch++;
+							}
 						}
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
