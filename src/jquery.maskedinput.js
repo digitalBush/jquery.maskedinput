@@ -56,7 +56,7 @@
 			settings = $.extend({
 				placeholder: "_",
 				completed: null,
-				autoclear: false
+				autoclear: true
 			}, settings);
 
 			var defs = $.mask.definitions;
