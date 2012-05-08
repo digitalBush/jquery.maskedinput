@@ -231,7 +231,7 @@
 					})
 					.bind("focus.mask", function() {
 						focusText = input.val();
-						if(setting.autoclear) {
+						if(settings.autoclear) {
 							var pos = checkVal();
 						}						
 						writeBuffer();

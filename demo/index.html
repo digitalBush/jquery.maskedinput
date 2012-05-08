@@ -23,10 +23,18 @@
             $(this).unmask();
         });
     });
+
+    $(document).ready(function() {
+        $("#test").mask("999-99-9999", {autoclear: false});
+        $("#test").live('blur', function() {
+            console.log($(this).val().replace(/-/g, '-'));
+        });
+    });
 	
 </script>
 </head>
 <body>
+    <p>Test: <input id="test" type="text" /></p>
 <table>
 		<tr><td>Date</td><td><input id="date" value="1231" type="text" tabindex="1" /></td><td>99/99/9999</td></tr>
 		<tr><td>Phone</td><td><input id="phone" type="text" tabindex="2"/></td><td>(999) 999-9999</td></tr>
