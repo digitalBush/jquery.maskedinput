@@ -3,6 +3,10 @@
 	Copyright (c) 2007-@Year Josh Bush (digitalbush.com)
 	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license) 
 	Version: @version
+	
+	Callbacks:
+		completed - Executes after the mask has been filled
+		afterBlur - Executes after the value has changed and the blur has occurred
 */
 (function($) {
 	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
@@ -49,13 +53,19 @@
 		},
 		unmask: function() { return this.trigger("unmask"); },
 		mask: function(mask, settings) {
-			if (!mask && this.length > 0) {
-				var input = $(this[0]);
-				return input.data($.mask.dataName)();
+			if (!mask) {
+				if(this.length > 0) {
+					var fn = $(this).data($.mask.dataName);
+					if($.isFunction(fn)) {
+						return fn();
+					};
+				}
+			return undefined;
 			}
 			settings = $.extend({
 				placeholder: "_",
-				completed: null
+				completed: null,
+				afterBlur: null
 			}, settings);
 
 			var defs = $.mask.definitions;
@@ -173,6 +183,20 @@
 						return false;
 					}
 				};
+				
+				function blurEvent(e) {
+					checkVal();
+					
+					//if the value differs from original, triggers the change event
+					if (input.val() != focusText) {
+						input.change();
+					}
+					
+					//if an afterBlur callback has been defined
+					if(settings.afterBlur) {
+						settings.afterBlur.call(input);
+					}
+				};
 
 				function clearBuffer(start, end) {
 					for (var i = start; i < end && i < len; i++) {
@@ -185,8 +209,7 @@
 
 				function checkVal(allow) {
 					//try to place characters where they belong
-					var test = input.val();
-					var lastMatch = -1;
+					var test = input.val(), lastMatch = -1;
 					for (var i = 0, pos = 0; i < len; i++) {
 						if (tests[i]) {
 							buffer[i] = settings.placeholder;
@@ -200,9 +223,13 @@
 							}
 							if (pos > test.length)
 								break;
-						} else if (buffer[i] == test.charAt(pos) && i!=partialPosition) {
-							pos++;
-							lastMatch = i;
+						} else if (i!=partialPosition) {
+							if(buffer[i] == test.charAt(pos)) {
+								pos++;
+								lastMatch = i;
+							} else {
+								lastMatch++;
+							}
 						}
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
@@ -240,11 +267,7 @@
 						};
 						($.browser.msie ? moveCaret:function(){setTimeout(moveCaret,0)})();
 					})
-					.bind("blur.mask", function() {
-						checkVal();
-						if (input.val() != focusText)
-							input.change();
-					})
+					.bind("blur.mask", blurEvent)
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
 					.bind(pasteEventName, function() {
@@ -252,6 +275,17 @@
 					});
 
 				checkVal(); //Perform initial check for existing values
+			});
+		},
+		
+		//jQuery 1.7+
+		autoMask: function() {
+			return $(this).on("focus", "input:text[data-mask]", function(e) {
+				var $this = $(this);
+				var mask = $this.data("mask");
+				if(mask !== undefined && $this.mask() === undefined) {
+					$this.mask(mask);
+				}
 			});
 		}
 	});
