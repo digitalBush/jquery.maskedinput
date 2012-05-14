@@ -276,6 +276,17 @@
 
 				checkVal(); //Perform initial check for existing values
 			});
+		},
+		
+		//jQuery 1.7+
+		autoMask: function() {
+			return $(this).on("focus", "input:text[data-mask]", function(e) {
+				var $this = $(this);
+				var mask = $this.data("mask");
+				if(mask !== undefined && $this.mask() === undefined) {
+					$this.mask(mask);
+				}
+			});
 		}
 	});
 })(jQuery);
