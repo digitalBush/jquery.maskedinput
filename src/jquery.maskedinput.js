@@ -242,9 +242,10 @@
 					})
 					.bind("blur.mask", function() {
 						checkVal();
-						if (input.val() != focusText)
+						if (input.val() != focusText) {
 							input.change();
 							input.trigger('unmasked.maskedInput');
+						}
 					})
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
