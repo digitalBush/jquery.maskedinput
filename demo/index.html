@@ -16,6 +16,10 @@
         $("#eyescript").mask("~9.99 ~9.99 999");
         $("#po").mask("PO: aaa-999-***");
 		$("#pct").mask("99%");
+	$("#handleinvalid").mask("999", {invalid: function(){
+		alert($(this).mask() + " is invalid, need 3 digits");
+		return 1; // refocus text field
+	}});
 
         $("input").blur(function() {
             $("#info").html("Unmasked value: " + $(this).mask());
@@ -38,6 +42,7 @@
 		<tr><td>Eye Script</td><td><input id="eyescript" type="text" tabindex="6"/></td><td>~9.99 ~9.99 999</td></tr>
 		<tr><td>Purchase Order</td><td><input id="po" type="text" tabindex="6"/></td><td>aaa-999-***</td></tr>
 		<tr><td>Percent</td><td><input id="pct" type="text" tabindex="6"/></td><td>99%</td></tr>
+                <tr><td>Handle Invalid</td><td><input id="handleinvalid" type="text" tabindex="6"/></td><td>999</td></tr>
 </table>
 <div id="info"></div>
 </body>
