@@ -266,7 +266,7 @@
 							clearBuffer(0, len);
 						}
 						else if(x.lastMatch + 1 < partialPosition) {
-							if(settings.invalid && settings.invalid()) {
+							if(settings.invalid && settings.invalid.call(input)) {
 								setTimeout(function() {refocusing = true; input.focus();}, 0);
 								return;
 							}
