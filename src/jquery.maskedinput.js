@@ -24,10 +24,10 @@
 		caret: function(begin, end) {
 			var range;
 
-			if (this.length === 0) {
+			if (this.length === 0 || this.is(":hidden")) {
 				return;
 			}
-
+			
 			if (typeof begin == 'number') {
 				end = (typeof end === 'number') ? end : begin;
 				return this.each(function() {

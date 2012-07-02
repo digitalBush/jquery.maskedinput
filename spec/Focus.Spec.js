@@ -34,6 +34,23 @@ feature("Focusing A Masked Input",function(){
 			expect(caret.end).toEqual(1);
 		});
 	});
+
+
+	scenario("Masking a hidden input",function(){
+		var error;
+    	$(window).on("error.test",function(err){error=err;})
+		given("a mask on a hidden input",function(){
+			input.hide().mask("9");
+
+		});
+		when("focusing input",function(){
+			input.focus();
+		});
+		waits(1);
+		then("should not throw an error",function(){
+			expect(error).toBeUndefined();
+		})
+	});
 });
 
 feature("Leaving A Masked Input",function(){
