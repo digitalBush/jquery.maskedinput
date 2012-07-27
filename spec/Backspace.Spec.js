@@ -3,7 +3,7 @@ feature("Backspace Key", function() {
 		scenario('character at cursor matches definition to the left',function(){
 			given("an input with a mask definition of '9-99'", function(){
 				input
-				.mask("9-99")
+				.maskedinput("9-99")
 				.mashKeys("123");
 			});
 
@@ -27,7 +27,7 @@ feature("Backspace Key", function() {
 		scenario('character at cursor does not match definition to the left',function(){
 			given("an input with a mask definition of 'a-99'", function(){
 				input
-				.mask("a-99")
+				.maskedinput("a-99")
 				.mashKeys("z12");
 			});
 
@@ -53,7 +53,7 @@ feature("Backspace Key", function() {
 		scenario('cursor character matches definition to the left',function(){
 			given("an input with a mask definition of '99'", function(){
 				input
-				.mask("99")
+				.maskedinput("99")
 				.mashKeys("12");
 			});
 
@@ -77,7 +77,7 @@ feature("Backspace Key", function() {
 		scenario('cursor character does not match definition to the left',function(){
 			given("an input with a mask definition of '9a'", function(){
 				input
-				.mask("9a")
+				.maskedinput("9a")
 				.mashKeys("1z");
 			});
 
@@ -102,7 +102,7 @@ feature("Backspace Key", function() {
 			scenario('character at end matches definition of first position',function(){
 				given("an input with a mask definition of '9-9'", function(){
 					input
-					.mask("9-9")
+					.maskedinput("9-9")
 					.mashKeys("12");
 				});
 
@@ -126,7 +126,7 @@ feature("Backspace Key", function() {
 			scenario('character at end does not match definition of first position',function(){
 				given("an input with a mask definition of '9-9'", function(){
 					input
-					.mask("9-a")
+					.maskedinput("9-a")
 					.mashKeys("1z");
 				});
 

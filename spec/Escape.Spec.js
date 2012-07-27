@@ -8,7 +8,7 @@ feature("Escape Key", function() {
 
 			given("a mask definition of '9'", function(){
 				input
-				.mask('9').focus();
+				.maskedinput('9').focus();
 			});
 			waits(1);
 			when("user types something different then hits escape key",function(){

@@ -3,7 +3,7 @@ feature("Delete Key", function() {
 		scenario('character at end matches definition to the right',function(){
 			given("an input with a mask definition of '9-99'", function(){
 				input
-				.mask("9-99")
+				.maskedinput("9-99")
 				.mashKeys("123");
 			});
 
@@ -27,7 +27,7 @@ feature("Delete Key", function() {
 		scenario('character at end does not match definition to the right',function(){
 			given("an input with a mask definition of '9-9a'", function(){
 				input
-				.mask("9-9a")
+				.maskedinput("9-9a")
 				.mashKeys("12z");
 			});
 
@@ -53,7 +53,7 @@ feature("Delete Key", function() {
 		scenario('character to right matches definition of current position',function(){
 			given("an input with a mask definition of '99'", function(){
 				input
-				.mask("99")
+				.maskedinput("99")
 				.mashKeys("12");
 			});
 
@@ -77,7 +77,7 @@ feature("Delete Key", function() {
 		scenario('character to right does not match definition of current position',function(){
 			given("an input with a mask definition of '9a'", function(){
 				input
-				.mask("9a")
+				.maskedinput("9a")
 				.mashKeys("1z");
 			});
 
@@ -102,7 +102,7 @@ feature("Delete Key", function() {
 			scenario('character to right matches definition of current position',function(){
 				given("an input with a mask definition of '9-9'", function(){
 					input
-					.mask("9-9")
+					.maskedinput("9-9")
 					.mashKeys("12");
 				});
 
@@ -126,7 +126,7 @@ feature("Delete Key", function() {
 			scenario('character to right does not match definition of current position',function(){
 				given("an input with a mask definition of '9-9'", function(){
 					input
-					.mask("9-a")
+					.maskedinput("9-a")
 					.mashKeys("1z");
 				});
 

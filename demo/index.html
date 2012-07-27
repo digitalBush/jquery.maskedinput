@@ -5,20 +5,20 @@
 <script src="../src/jquery.maskedinput.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function() {
-        $.mask.definitions['~'] = "[+-]";
-        $("#date").mask("99/99/9999",{completed:function(){alert("completed!");}});
-        $("#phone").mask("(999) 999-9999");
-        $("#phoneExt").mask("(999) 999-9999? x99999");
-        $("#iphone").mask("+33 999 999 999");
-        $("#tin").mask("99-9999999");
-        $("#ssn").mask("999-99-9999");
-        $("#product").mask("a*-999-a999", { placeholder: " " });
-        $("#eyescript").mask("~9.99 ~9.99 999");
-        $("#po").mask("PO: aaa-999-***");
-		$("#pct").mask("99%");
+        $.maskedinput.definitions['~'] = "[+-]";
+        $("#date").maskedinput("99/99/9999",{completed:function(){alert("completed!");}});
+        $("#phone").maskedinput("(999) 999-9999");
+        $("#phoneExt").maskedinput("(999) 999-9999? x99999");
+        $("#iphone").maskedinput("+33 999 999 999");
+        $("#tin").maskedinput("99-9999999");
+        $("#ssn").maskedinput("999-99-9999");
+        $("#product").maskedinput("a*-999-a999", { placeholder: " " });
+        $("#eyescript").maskedinput("~9.99 ~9.99 999");
+        $("#po").maskedinput("PO: aaa-999-***");
+		$("#pct").maskedinput("99%");
 
         $("input").blur(function() {
-            $("#info").html("Unmasked value: " + $(this).mask());
+            $("#info").html("Unmasked value: " + $(this).maskedinput());
         }).dblclick(function() {
             $(this).unmask();
         });

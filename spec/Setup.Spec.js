@@ -2,8 +2,8 @@ feature("Masking an Input", function() {
 	scenario('Applying a mask to an already masked input',function(){
 		given("an input with two masks", function(){
 			input
-			.mask("9")
-			.mask("99");
+			.maskedinput("9")
+			.maskedinput("99");
 		});
 
 		when("typing a number",function(){

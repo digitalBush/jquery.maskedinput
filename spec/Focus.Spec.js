@@ -1,7 +1,7 @@
 feature("Focusing A Masked Input",function(){
 	scenario("Mask starts with a placeholder",function(){
 		given("a mask beginning with a placeholder",function(){
-			input.mask("9");
+			input.maskedinput("9");
 		});
 		when("focusing",function(){
 			input.focus();
@@ -19,7 +19,7 @@ feature("Focusing A Masked Input",function(){
 
 	scenario("Mask starts with a literal",function(){
 		given("a mask beginning with a literal",function(){
-			input.mask("(9)");
+			input.maskedinput("(9)");
 		});
 		when("focusing",function(){
 			input.focus();
@@ -39,7 +39,7 @@ feature("Focusing A Masked Input",function(){
 feature("Leaving A Masked Input",function(){
 	scenario("All placeholders filled",function(){
 		given("a mask with two placeholders",function(){
-			input.mask("99");
+			input.maskedinput("99");
 		});
 		when("typing two characters and blurring",function(){
 			input.mashKeys("12").blur();
@@ -51,7 +51,7 @@ feature("Leaving A Masked Input",function(){
 
 	scenario("Empty placeholders remaining",function(){
 		given("a mask with two placeholders",function(){
-			input.mask("99");
+			input.maskedinput("99");
 		});
 		when("typing one character and blurring",function(){
 			input.mashKeys("1").blur();
@@ -65,7 +65,7 @@ feature("Leaving A Masked Input",function(){
 feature("Optional marker",function(){
 	scenario("Placeholders not filled to marker",function(){
 		given("a mask with an optional marker",function(){
-			input.mask("99?99");
+			input.maskedinput("99?99");
 		});
 		when("typing one character and leaving",function(){
 			input.mashKeys("1").blur();
@@ -77,7 +77,7 @@ feature("Optional marker",function(){
 
 	scenario("Placeholders filled to marker",function(){
 		given("a mask with an optional marker",function(){
-			input.mask("99?99");
+			input.maskedinput("99?99");
 		});
 		when("typing two characters and leaving",function(){
 			input.mashKeys("12").blur();
