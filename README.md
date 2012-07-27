@@ -8,7 +8,7 @@ and https://github.com/digitalBush/jquery.maskedinput/issues/94.
 
 Usage
 -----
-After the fix (see above) right now you should write $("#input").maskedinput("your mask here") instead of $("#input").mask("your mask here");
+After the fix (see above) right now you should write *$("#input").maskedinput("your mask here") instead of *$("#input").mask("your mask here");
 
 Overview
 --------
