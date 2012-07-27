@@ -1,4 +1,4 @@
-sys = require 'sys'
+util = require 'util'
 fs = require 'fs'
 path = require 'path'
 uglify = require 'uglify-js'
