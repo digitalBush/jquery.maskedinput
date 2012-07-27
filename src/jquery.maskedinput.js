@@ -5,10 +5,10 @@
 	Version: @version
 */
 (function($) {
-	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask";
+	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".maskedinput";
 	var iPhone = (window.orientation != undefined);
 
-	$.mask = {
+	$.maskedinput = {
 		//Predefined character definitions
 		definitions: {
 			'9': "[0-9]",
@@ -48,17 +48,17 @@
 			}
 		},
 		unmask: function() { return this.trigger("unmask"); },
-		mask: function(mask, settings) {
+		maskedinput: function(mask, settings) {
 			if (!mask && this.length > 0) {
 				var input = $(this[0]);
-				return input.data($.mask.dataName)();
+				return input.data($.maskedinput.dataName)();
 			}
 			settings = $.extend({
 				placeholder: "_",
 				completed: null
 			}, settings);
 
-			var defs = $.mask.definitions;
+			var defs = $.maskedinput.definitions;
 			var tests = [];
 			var partialPosition = mask.length;
 			var firstNonMaskPos = null;
@@ -215,7 +215,7 @@
 					return (partialPosition ? i : firstNonMaskPos);
 				};
 
-				input.data($.mask.dataName,function(){
+				input.data($.maskedinput.dataName,function(){
 					return $.map(buffer, function(c, i) {
 						return tests[i]&&c!=settings.placeholder ? c : null;
 					}).join('');
@@ -225,10 +225,10 @@
 					input
 					.one("unmask", function() {
 						input
-							.unbind(".mask")
-							.removeData($.mask.dataName);
+							.unbind(".maskedinput")
+							.removeData($.maskedinput.dataName);
 					})
-					.bind("focus.mask", function() {
+					.bind("focus.maskedinput", function() {
 						focusText = input.val();
 						var pos = checkVal();
 						writeBuffer();
@@ -240,13 +240,13 @@
 						};
 						($.browser.msie ? moveCaret:function(){setTimeout(moveCaret,0)})();
 					})
-					.bind("blur.mask", function() {
+					.bind("blur.maskedinput", function() {
 						checkVal();
 						if (input.val() != focusText)
 							input.change();
 					})
-					.bind("keydown.mask", keydownEvent)
-					.bind("keypress.mask", keypressEvent)
+					.bind("keydown.maskedinput", keydownEvent)
+					.bind("keypress.maskedinput", keypressEvent)
 					.bind(pasteEventName, function() {
 						setTimeout(function() { input.caret(checkVal(true)); }, 0);
 					});
