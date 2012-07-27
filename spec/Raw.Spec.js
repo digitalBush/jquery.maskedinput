@@ -2,7 +2,7 @@ feature("Getting raw value",function(){
 	scenario("After typing",function(){
 		given("an input with a mask containing a literal", function(){
 			input
-			.mask("9/9");
+			.maskedinput("9/9");
 		});
 
 		when("typing all numbers",function(){
@@ -10,14 +10,14 @@ feature("Getting raw value",function(){
 		});
 
 		then("raw value should be correct",function(){
-			expect(input.mask()).toEqual("12");
+			expect(input.maskedinput()).toEqual("12");
 		});
 	});
 
 	scenario("While typing",function(){
 		given("an input with a mask containing a literal", function(){
 			input
-			.mask("9/9");
+			.maskedinput("9/9");
 		});
 
 		when("typing a number",function(){
@@ -25,25 +25,25 @@ feature("Getting raw value",function(){
 		});
 
 		then("raw value should be correct",function(){
-			expect(input.mask()).toEqual("1");
+			expect(input.maskedinput()).toEqual("1");
 		});
 	});
 
 	scenario("Before typing",function(){
 		given("an input with a mask containing a literal", function(){
 			input
-			.mask("9/9");
+			.maskedinput("9/9");
 		});
 
 		then("raw value should be correct",function(){
-			expect(input.mask()).toEqual("");
+			expect(input.maskedinput()).toEqual("");
 		});
 	});
 
 	scenario("After typing partial input past an optional marker",function(){
 		given("an input with a mask containing a literal", function(){
 			input
-			.mask("9?99");
+			.maskedinput("9?99");
 		});
 
 		when("typing a partial input",function(){
@@ -51,7 +51,7 @@ feature("Getting raw value",function(){
 		});
 
 		then("raw value should be correct",function(){
-			expect(input.mask()).toEqual("12");
+			expect(input.maskedinput()).toEqual("12");
 		});
 	});
 });

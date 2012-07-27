@@ -5,7 +5,7 @@ describe("Typing Specifications", function() {
 			beforeEach(function(){
 				runs(function(){
 					input
-					.mask("99")
+					.maskedinput("99")
 					.focus()						
 				});
 				waits(1);
@@ -32,7 +32,7 @@ describe("Typing Specifications", function() {
 			beforeEach(function(){
 				runs(function(){
 					input
-					.mask("9a")
+					.maskedinput("9a")
 					.focus()						
 				});
 				waits(1);
