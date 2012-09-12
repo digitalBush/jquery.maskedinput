@@ -247,6 +247,13 @@
 					})
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
+					.bind("click.mask", function() {
+						var len = input.mask().length,
+							caret = input.caret();
+						if (caret.begin > len || caret.end > len) {
+							input.caret(Math.min(len, caret.begin), Math.min(len, caret.end));
+						}
+					})
 					.bind(pasteEventName, function() {
 						setTimeout(function() { input.caret(checkVal(true)); }, 0);
 					});
