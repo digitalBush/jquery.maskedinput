@@ -232,13 +232,13 @@
 						focusText = input.val();
 						var pos = checkVal();
 						writeBuffer();
-						var moveCaret=function(){
+						var moveCaret=function(input){
 							if (pos == mask.length)
 								input.caret(0, pos);
 							else
 								input.caret(pos);
 						};
-						($.browser.msie ? moveCaret:function(){setTimeout(moveCaret,0)})();
+						($.browser.msie ? moveCaret(input):function(){setTimeout(moveCaret(input),0)})();
 					})
 					.bind("blur.mask", function() {
 						checkVal();
