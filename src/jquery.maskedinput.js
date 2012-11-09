@@ -206,8 +206,10 @@
 						}
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
-						input.val("");
-						clearBuffer(0, len);
+						if (! settings.retainPartial) {
+							input.val("");
+							clearBuffer(0, len);
+						}
 					} else if (allow || lastMatch + 1 >= partialPosition) {
 						writeBuffer();
 						if (!allow) input.val(input.val().substring(0, lastMatch + 1));
