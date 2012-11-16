@@ -206,7 +206,7 @@
 						}
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
-						if (! settings.retainPartial) {
+						if (lastMatch == 0 || ! settings.retainPartial) {
 							input.val("");
 							clearBuffer(0, len);
 						}
