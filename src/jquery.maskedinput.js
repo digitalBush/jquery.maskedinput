@@ -275,7 +275,42 @@
 					}).join('');
 				});
 
+				function applyMask(rawData) {
+				    var out = [];
+				    for (var i = 0, pos = 0; i < len; i++) {
+					    if (tests[i] && pos < rawData.length) {
+					        out[i] = settings.placeholder;
+						    while (pos < rawData.length) {
+						        pos++;
+							    var c = rawData.charAt(pos - 1);
+							    if (tests[i].test(c)) {
+								    out[i] = c;
+								    break;
+							    }
+						    }
+						    if (pos >= rawData.length)
+						        out[i] = buffer[i];
+					    } else
+					        out[i] = buffer[i];
+				    }
+				    return out.join("");
+				};
+				
+				function stripMask(rawData) {
+				    var outVals = $.map(rawData.split(""), function(c,i) { 
+				        if (tests[i]) 
+				            return c;
+				    });
+				    return outVals.join("");
+				};
+				
+				//  Intialize the buffer with whatever was given to us.
+				if (focusText.length > 0)
+				    buffer = applyMask(focusText).split("");
+
 				if (!input.attr("readonly"))
+					// remove the mask from the buffer and store it
+					input.val(stripMask(buffer.join('')));
 					input
 					.one("unmask", function() {
 						input
