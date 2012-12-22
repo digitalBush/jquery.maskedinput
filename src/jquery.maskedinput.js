@@ -170,13 +170,8 @@
 						end = pos.end;
 
 						if (end - begin === 0) {
-							if (k !== 46) {
-								begin = seekPrev(begin);
-								end = seekNext(begin - 1);
-							} else {
-								begin = seekNext(begin - 1);
-								end = seekNext(end);
-							}
+							begin=k!==46?seekPrev(begin):(end=seekNext(begin-1));
+							end=k===46?seekNext(end):end;
 						}
 						clearBuffer(begin, end);
 						shiftL(begin, end - 1);
