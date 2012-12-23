@@ -73,11 +73,11 @@
 				completed: null
 			}, settings);
 
+
 			defs = $.mask.definitions;
 			tests = [];
-			partialPosition = mask.length;
+			partialPosition = len = mask.length;
 			firstNonMaskPos = null;
-			len = mask.length;
 
 			$.each(mask.split(""), function(i, c) {
 				if (c == '?') {
@@ -258,14 +258,14 @@
 							lastMatch = i;
 						}
 					}
-					if (!allow && lastMatch + 1 < partialPosition) {
+					if (allow) {
+						writeBuffer();
+					} else if (lastMatch + 1 < partialPosition) {
 						input.val("");
 						clearBuffer(0, len);
-					} else if (allow || lastMatch + 1 >= partialPosition) {
+					} else {
 						writeBuffer();
-						if (!allow) {
-							input.val(input.val().substring(0, lastMatch + 1));
-						}
+						input.val(input.val().substring(0, lastMatch + 1));
 					}
 					return (partialPosition ? i : firstNonMaskPos);
 				}
