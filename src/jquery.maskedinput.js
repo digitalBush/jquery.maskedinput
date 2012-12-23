@@ -15,7 +15,8 @@
 			'a': "[A-Za-z]",
 			'*': "[A-Za-z0-9]"
 		},
-		dataName:"rawMaskFn"
+		dataName: "rawMaskFn",
+		placeholder: '_',
 	};
 
 	$.fn.extend({
@@ -68,7 +69,7 @@
 				return input.data($.mask.dataName)();
 			}
 			settings = $.extend({
-				placeholder: "_",
+				placeholder: $.mask.placeholder, // Load default placeholder
 				completed: null
 			}, settings);
 
