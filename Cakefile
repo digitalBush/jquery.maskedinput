@@ -1,4 +1,4 @@
-sys = require 'sys'
+util = require 'util'
 fs = require 'fs'
 path = require 'path'
 uglify = require 'uglify-js'
@@ -29,7 +29,7 @@ replaceTokens = (js,tokens)->
 		
 task 'compress', 'compress javascript', ->
 	invoke 'clean'
-	fs.mkdir(distPath,0755)
+	fs.mkdir(distPath,0o0755)
 	compressed = minify(fs.readFileSync('src/jquery.maskedinput.js','utf8'))
 	final=replaceTokens(compressed,plugin)
 	fs.writeFileSync(path.join(distPath,'jquery.maskedinput.min.js'), final)

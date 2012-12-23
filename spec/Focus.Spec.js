@@ -62,6 +62,32 @@ feature("Leaving A Masked Input",function(){
 	});
 });
 
+feature("Leaving A Masked Input With retainPartial",function(){
+	scenario("All placeholders filled",function(){
+		given("a mask with two placeholders",function(){
+			input.mask("99", { retainPartial: true });
+		});
+		when("typing two characters and blurring",function(){
+			input.mashKeys("12").blur();
+		});
+		then("value should be correct",function(){
+			expect(input).toHaveValue("12");
+		});
+	});
+
+	scenario("Empty placeholders remaining",function(){
+		given("a mask with two placeholders",function(){
+			input.mask("99");
+		});
+		when("typing one character and blurring",function(){
+			input.mashKeys("1").blur();
+		});
+		then("value should be empty",function(){
+			expect(input).toHaveValue("");
+		});
+	});
+});
+
 feature("Optional marker",function(){
 	scenario("Placeholders not filled to marker",function(){
 		given("a mask with an optional marker",function(){

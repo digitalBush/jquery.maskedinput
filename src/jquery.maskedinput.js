@@ -258,8 +258,10 @@
 						}
 					}
 					if (!allow && lastMatch + 1 < partialPosition) {
-						input.val("");
-						clearBuffer(0, len);
+						if (lastMatch == 0 || ! settings.retainPartial) {
+							input.val("");
+							clearBuffer(0, len);
+						}
 					} else if (allow || lastMatch + 1 >= partialPosition) {
 						writeBuffer();
 						if (!allow) {
