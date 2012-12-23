@@ -8,3 +8,5 @@ This is a masked input plugin for the jQuery javascript library. It allows a use
 * a - Represents an alpha character (A-Z,a-z)
 * 9 - Represents a numeric character (0-9)
 * \* - Represents an alphanumeric character (A-Z,a-z,0-9)
+
+By design, this plugin will reject input which doesn't complete the mask. You can bypass this by using a '?' character at the position where you would like to consider input optional. For example, a mask of "(999) 999-9999? x99999" would require only the first 10 digits of a phone number with extension being optional.
