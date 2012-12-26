@@ -35,13 +35,12 @@ feature("Focusing A Masked Input",function(){
 		});
 	});
 
-
 	scenario("Masking a hidden input",function(){
 		var error;
-    	$(window).on("error.test",function(err){error=err;})
+		$(window).on("error.test",function(err){error=err;})
+
 		given("a mask on a hidden input",function(){
 			input.hide().mask("9");
-
 		});
 		when("focusing input",function(){
 			input.focus();
