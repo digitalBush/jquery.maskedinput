@@ -27,7 +27,7 @@
 			if (this.length === 0 || this.is(":hidden")) {
 				return;
 			}
-			
+
 			if (typeof begin == 'number') {
 				end = (typeof end === 'number') ? end : begin;
 				return this.each(function() {
@@ -105,7 +105,7 @@
 					focusText = input.val();
 
 				function seekNext(pos) {
-					while (++pos <= len && !tests[pos]);
+					while (++pos < len && !tests[pos]);
 					return pos;
 				}
 
