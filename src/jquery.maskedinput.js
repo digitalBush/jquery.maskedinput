@@ -313,8 +313,9 @@
 					.bind("keypress.mask", keypressEvent)
 					.bind(pasteEventName, function() {
 						setTimeout(function() { 
-							input.caret(checkVal(true)); 
-							if (settings.completed && checkVal(true) == input.val().length)
+							var pos=checkVal(true);
+							input.caret(pos); 
+							if (settings.completed && pos == input.val().length)
 								settings.completed.call(input);
 						}, 0);
 					});
