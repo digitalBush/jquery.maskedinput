@@ -5,7 +5,14 @@
 	Version: @version
 */
 (function($) {
-	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask",
+	function getPasteEvent() {
+	    var el = document.createElement('input'),
+	        name = 'onpaste';
+	    el.setAttribute(name, '');
+	    return (typeof el[name] === 'function')?'paste':'input';             
+	}
+
+	var pasteEventName = getPasteEvent() + ".mask",
 		iPhone = (window.orientation !== undefined);
 
 	$.mask = {
@@ -297,12 +304,7 @@
 								input.caret(pos);
 							}
 						};
-
-						if ($.browser.msie) {
-							moveCaret();
-						} else {
-							window.setTimeout(moveCaret, 0);
-						}
+						setTimeout(moveCaret, 0);
 					})
 					.bind("blur.mask", function() {
 						checkVal();
