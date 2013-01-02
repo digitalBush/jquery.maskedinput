@@ -13,7 +13,9 @@
 	}
 
 	var pasteEventName = getPasteEvent() + ".mask",
-		iPhone = !!navigator.userAgent.match(/(iphone)/i);
+		ua = navigator.userAgent,
+		iPhone = /iphone/i.test(ua),
+		android=/android/i.test(ua);
 
 	$.mask = {
 		//Predefined character definitions
@@ -217,7 +219,11 @@
 								writeBuffer();
 
 								next = seekNext(p);
-								input.caret(next);
+								if(android){
+									setTimeout($.proxy($.fn.caret,input,next),0);
+								}else{
+									input.caret(next);
+								}
 
 								if (settings.completed && next >= len) {
 									settings.completed.call(input);
