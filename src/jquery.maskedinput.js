@@ -13,7 +13,7 @@
 	}
 
 	var pasteEventName = getPasteEvent() + ".mask",
-		iPhone = (window.orientation !== undefined);
+		iPhone = !!navigator.userAgent.match(/(iphone)/i);
 
 	$.mask = {
 		//Predefined character definitions
