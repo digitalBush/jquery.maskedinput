@@ -5,6 +5,7 @@
 	Version: @version
 */
 (function($) {
+	var caretTimeoutId;
 	function getPasteEvent() {
 	    var el = document.createElement('input'),
 	        name = 'onpaste';
@@ -297,6 +298,7 @@
 							.removeData($.mask.dataName);
 					})
 					.bind("focus.mask", function() {
+						clearTimeout(caretTimeoutId);
 						var pos,
 							moveCaret;
 
@@ -310,7 +312,7 @@
 								input.caret(pos);
 							}
 						};
-						setTimeout(moveCaret, 0);
+						caretTimeoutId = setTimeout(moveCaret, 0);
 					})
 					.bind("blur.mask", function() {
 						checkVal();
