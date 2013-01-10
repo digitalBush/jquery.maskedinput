@@ -5,7 +5,6 @@
 	Version: @version
 */
 (function($) {
-	var caretTimeoutId;
 	function getPasteEvent() {
 	    var el = document.createElement('input'),
 	        name = 'onpaste';
@@ -16,7 +15,8 @@
 	var pasteEventName = getPasteEvent() + ".mask",
 		ua = navigator.userAgent,
 		iPhone = /iphone/i.test(ua),
-		android=/android/i.test(ua);
+		android=/android/i.test(ua),
+		caretTimeoutId;
 
 	$.mask = {
 		//Predefined character definitions
@@ -244,7 +244,7 @@
 					}
 				}
 
-				function writeBuffer() { return input.val(buffer.join('')).val(); }
+				function writeBuffer() { input.val(buffer.join('')); }
 
 				function checkVal(allow) {
 					//try to place characters where they belong
@@ -304,15 +304,15 @@
 
 						focusText = input.val();
 						pos = checkVal();
-						writeBuffer();
-						moveCaret = function(){
+						
+						caretTimeoutId = setTimeout(function(){
+							writeBuffer();
 							if (pos == mask.length) {
 								input.caret(0, pos);
 							} else {
 								input.caret(pos);
 							}
-						};
-						caretTimeoutId = setTimeout(moveCaret, 0);
+						}, 10);
 					})
 					.bind("blur.mask", function() {
 						checkVal();

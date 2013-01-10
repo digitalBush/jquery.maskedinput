@@ -6,7 +6,7 @@ feature("Focusing A Masked Input",function(){
 		when("focusing",function(){
 			input.focus();
 		});
-		waits(1);
+		waits(20);
 		then("placeholder text should be correct",function(){
 			expect(input).toHaveValue('_');
 		});
@@ -24,7 +24,7 @@ feature("Focusing A Masked Input",function(){
 		when("focusing",function(){
 			input.focus();
 		});
-		waits(1);
+		waits(20);
 		then("placeholder text should be correct",function(){
 			expect(input).toHaveValue('(_)');
 		});
