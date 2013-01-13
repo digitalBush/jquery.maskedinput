@@ -250,6 +250,7 @@
 					//try to place characters where they belong
 					var test = input.val(),
 						lastMatch = -1,
+						pos,
 						i,
 						c;
 
