@@ -5,8 +5,18 @@
 	Version: @version
 */
 (function($) {
-	var pasteEventName = ($.browser.msie ? 'paste' : 'input') + ".mask",
-		iPhone = (window.orientation !== undefined);
+	function getPasteEvent() {
+	    var el = document.createElement('input'),
+	        name = 'onpaste';
+	    el.setAttribute(name, '');
+	    return (typeof el[name] === 'function')?'paste':'input';             
+	}
+
+	var pasteEventName = getPasteEvent() + ".mask",
+		ua = navigator.userAgent,
+		iPhone = /iphone/i.test(ua),
+		android=/android/i.test(ua),
+		caretTimeoutId;
 
 	$.mask = {
 		//Predefined character definitions
@@ -15,7 +25,8 @@
 			'a': "[A-Za-z]",
 			'*': "[A-Za-z0-9]"
 		},
-		dataName:"rawMaskFn"
+		dataName: "rawMaskFn",
+		placeholder: '_',
 	};
 
 	$.fn.extend({
@@ -23,7 +34,7 @@
 		caret: function(begin, end) {
 			var range;
 
-			if (this.length === 0) {
+			if (this.length === 0 || this.is(":hidden")) {
 				return;
 			}
 
@@ -68,15 +79,15 @@
 				return input.data($.mask.dataName)();
 			}
 			settings = $.extend({
-				placeholder: "_",
+				placeholder: $.mask.placeholder, // Load default placeholder
 				completed: null
 			}, settings);
 
+
 			defs = $.mask.definitions;
 			tests = [];
-			partialPosition = mask.length;
+			partialPosition = len = mask.length;
 			firstNonMaskPos = null;
-			len = mask.length;
 
 			$.each(mask.split(""), function(i, c) {
 				if (c == '?') {
@@ -104,7 +115,7 @@
 					focusText = input.val();
 
 				function seekNext(pos) {
-					while (++pos <= len && !tests[pos]);
+					while (++pos < len && !tests[pos]);
 					return pos;
 				}
 
@@ -170,13 +181,8 @@
 						end = pos.end;
 
 						if (end - begin === 0) {
-							if (k !== 46) {
-								begin = seekPrev(begin);
-								end = seekNext(begin - 1);
-							} else {
-								begin = seekNext(begin - 1);
-								end = seekNext(end);
-							}
+							begin=k!==46?seekPrev(begin):(end=seekNext(begin-1));
+							end=k===46?seekNext(end):end;
 						}
 						clearBuffer(begin, end);
 						shiftL(begin, end - 1);
@@ -214,7 +220,11 @@
 								writeBuffer();
 
 								next = seekNext(p);
-								input.caret(next);
+								if(android){
+									setTimeout($.proxy($.fn.caret,input,next),0);
+								}else{
+									input.caret(next);
+								}
 
 								if (settings.completed && next >= len) {
 									settings.completed.call(input);
@@ -234,7 +244,7 @@
 					}
 				}
 
-				function writeBuffer() { return input.val(buffer.join('')).val(); }
+				function writeBuffer() { input.val(buffer.join('')); }
 
 				function checkVal(allow) {
 					//try to place characters where they belong
@@ -263,14 +273,14 @@
 							lastMatch = i;
 						}
 					}
-					if (!allow && lastMatch + 1 < partialPosition) {
+					if (allow) {
+						writeBuffer();
+					} else if (lastMatch + 1 < partialPosition) {
 						input.val("");
 						clearBuffer(0, len);
-					} else if (allow || lastMatch + 1 >= partialPosition) {
+					} else {
 						writeBuffer();
-						if (!allow) {
-							input.val(input.val().substring(0, lastMatch + 1));
-						}
+						input.val(input.val().substring(0, lastMatch + 1));
 					}
 					return (partialPosition ? i : firstNonMaskPos);
 				}
@@ -289,25 +299,21 @@
 							.removeData($.mask.dataName);
 					})
 					.bind("focus.mask", function() {
+						clearTimeout(caretTimeoutId);
 						var pos,
 							moveCaret;
 
 						focusText = input.val();
 						pos = checkVal();
-						writeBuffer();
-						moveCaret = function(){
+						
+						caretTimeoutId = setTimeout(function(){
+							writeBuffer();
 							if (pos == mask.length) {
 								input.caret(0, pos);
 							} else {
 								input.caret(pos);
 							}
-						};
-
-						if ($.browser.msie) {
-							moveCaret();
-						} else {
-							window.setTimeout(moveCaret, 0);
-						}
+						}, 10);
 					})
 					.bind("blur.mask", function() {
 						checkVal();
@@ -317,8 +323,11 @@
 					.bind("keydown.mask", keydownEvent)
 					.bind("keypress.mask", keypressEvent)
 					.bind(pasteEventName, function() {
-						setTimeout(function() {
-							input.caret(checkVal(true));
+						setTimeout(function() { 
+							var pos=checkVal(true);
+							input.caret(pos); 
+							if (settings.completed && pos == input.val().length)
+								settings.completed.call(input);
 						}, 0);
 					});
 				checkVal(); //Perform initial check for existing values
