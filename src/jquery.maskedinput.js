@@ -187,11 +187,11 @@
 						clearBuffer(begin, end);
 						shiftL(begin, end - 1);
 
-						return false;
+						e.preventDefault();
 					} else if (k == 27) {//escape
 						input.val(focusText);
 						input.caret(0, checkVal());
-						return false;
+						e.preventDefault();
 					}
 				}
 
@@ -203,7 +203,7 @@
 						next;
 
 					if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
-						return true;
+						return;
 					} else if (k) {
 						if (pos.end - pos.begin !== 0){
 							clearBuffer(pos.begin, pos.end);
@@ -218,8 +218,8 @@
 
 								buffer[p] = c;
 								writeBuffer();
-
 								next = seekNext(p);
+
 								if(android){
 									setTimeout($.proxy($.fn.caret,input,next),0);
 								}else{
@@ -231,7 +231,7 @@
 								}
 							}
 						}
-						return false;
+						e.preventDefault();
 					}
 				}
 
