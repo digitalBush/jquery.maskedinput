@@ -1,8 +1,8 @@
 /*
 	Key Masher plugin for jQuery (https://github.com/digitalBush/jquery.keymasher)
-	Copyright (c) 2010 Josh Bush (digitalbush.com)
+	Copyright (c) 2010-2013 Josh Bush (digitalbush.com)
 	Licensed under the MIT license
-	Version: 0.1
+	Version: 0.2
 */
 
 (function($,undefined){
@@ -51,9 +51,9 @@
 				up = $.extend($.Event('keyup'), modifierState, {keyCode: key.keyCode, charCode: 0, which:key.keyCode});			
 			
 			elm.trigger(down);
-			if(!down.isPropagationStopped() && !ignore){
+			if(!down.isDefaultPrevented() && !ignore){
 				elm.trigger(press);
-				if(!press.isPropagationStopped()){					
+				if(!press.isDefaultPrevented()){					
 					//need to do caret positioning
 					elm.val(elm.val()+String.fromCharCode(key.charCode));
 				}
