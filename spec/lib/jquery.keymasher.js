@@ -2,7 +2,7 @@
 	Key Masher plugin for jQuery (https://github.com/digitalBush/jquery.keymasher)
 	Copyright (c) 2010-2013 Josh Bush (digitalbush.com)
 	Licensed under the MIT license
-	Version: 0.2
+	Version: 0.3
 */
 
 (function($,undefined){
@@ -16,7 +16,7 @@
 					capslock:20,numlock:144,scrolllock:145,pageup:33,pagedown:34,end:35,home:36,backspace:8,
 					insert:45, 'delete':46,pause:19,esc:27,left:37,up:38,right:39,down:40,printscreen:44};
 
-		$.each(keys,function(index,value){
+		$.each(keys.split(''),function(index,value){
 			var keyCode=value.charCodeAt(0),shift=shifted[index];			
 			defs[value]={keyCode:keyCode,charCode:keyCode,shift:shift};
 			if(shift)
@@ -75,7 +75,7 @@
 			type:function(){
 				$.each(arguments,function(index,typing){
 					if($.type(typing)==='string')
-						$.each(typing,function(index,value){queueStroke(value);});
+						$.each(typing.split(''),function(index,value){queueStroke(value);});
 					else
 						queueStroke(typing);					
 				});
