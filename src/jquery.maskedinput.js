@@ -186,6 +186,8 @@ $.fn.extend({
 					input.caret(0, checkVal());
 					e.preventDefault();
 				}
+				
+				settings.onKeyDown && settings.onKeyDown.call(this, e);
 			}
 
 			function keypressEvent(e) {
@@ -196,7 +198,7 @@ $.fn.extend({
 					next;
 
 				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
-					return;
+
 				} else if (k) {
 					if (pos.end - pos.begin !== 0){
 						clearBuffer(pos.begin, pos.end);
@@ -221,11 +223,15 @@ $.fn.extend({
 
 							if (settings.completed && next >= len) {
 								settings.completed.call(input);
+							} else if(settings.incompleted) {
+								settings.incompleted.call(input);
 							}
 						}
 					}
 					e.preventDefault();
 				}
+				
+				settings.onKeyPress && settings.onKeyPress.call(this, e);
 			}
 
 			function clearBuffer(start, end) {
@@ -290,7 +296,7 @@ $.fn.extend({
 						.unbind(".mask")
 						.removeData($.mask.dataName);
 				})
-				.bind("focus.mask", function() {
+				.bind("focus.mask", function(e) {
 					clearTimeout(caretTimeoutId);
 					var pos,
 						moveCaret;
@@ -306,11 +312,15 @@ $.fn.extend({
 							input.caret(pos);
 						}
 					}, 10);
+					
+					settings.onFocus && settings.onFocus.call(this, e);
 				})
-				.bind("blur.mask", function() {
+				.bind("blur.mask", function(e) {
 					checkVal();
 					if (input.val() != focusText)
 						input.change();
+						
+					settings.onBlur && settings.onBlur.call(this, e);
 				})
 				.bind("keydown.mask", keydownEvent)
 				.bind("keypress.mask", keypressEvent)
