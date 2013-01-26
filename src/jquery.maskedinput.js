@@ -73,7 +73,8 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			replace: false
 		}, settings);
 
 
@@ -146,6 +147,9 @@ $.fn.extend({
 					c,
 					j,
 					t;
+
+				if (settings.replace)
+					return;
 
 				for (i = pos, c = settings.placeholder; i < len; i++) {
 					if (tests[i]) {
