@@ -14,6 +14,15 @@ var pasteEventName = getPasteEvent() + ".mask",
 $.mask = {
 	//Predefined character definitions
 	definitions: {
+		'0': "[0]",
+		'1': "[0-1]",
+		'2': "[0-2]",
+		'3': "[0-3]",
+		'4': "[0-4]",
+		'5': "[0-5]",
+		'6': "[0-6]",
+		'7': "[0-7]",
+		'8': "[0-8]",
 		'9': "[0-9]",
 		'a': "[A-Za-z]",
 		'*': "[A-Za-z0-9]"
@@ -81,30 +90,45 @@ $.fn.extend({
 		defs = $.mask.definitions;
 		tests = [];
 		partialPosition = len = mask.length;
-		firstNonMaskPos = null;
+		firstNonMaskPos = null,
+		escaped = false;
 
 		$.each(mask.split(""), function(i, c) {
 			if (c == '?') {
 				len--;
 				partialPosition = i;
-			} else if (defs[c]) {
+			} else if (c == '\\') {
+				len--;
+				escaped = true;
+			} else if (defs[c] && !escaped) {
 				tests.push(new RegExp(defs[c]));
 				if (firstNonMaskPos === null) {
 					firstNonMaskPos = tests.length - 1;
 				}
 			} else {
 				tests.push(null);
+				escaped = false;
 			}
 		});
 
 		return this.trigger("unmask").each(function() {
 			var input = $(this),
+				escaped = false,
 				buffer = $.map(
 				mask.split(""),
 				function(c, i) {
-					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
+					if (c == '\\') {
+						escaped = true;
+						return;
 					}
+					if (c == '?') {
+						return;
+					}
+					if (defs[c] && !escaped) {
+					    return settings.placeholder;
+					}
+					escaped = false;
+					return c;
 				}),
 				focusText = input.val();
 
