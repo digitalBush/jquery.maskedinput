@@ -244,7 +244,8 @@ $.fn.extend({
 				var test = input.val(),
 					lastMatch = -1,
 					i,
-					c;
+					c,
+					pos;
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
