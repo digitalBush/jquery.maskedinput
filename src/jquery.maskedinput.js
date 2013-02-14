@@ -293,8 +293,7 @@ $.fn.extend({
 				})
 				.bind("focus.mask", function() {
 					clearTimeout(caretTimeoutId);
-					var pos,
-						moveCaret;
+					var pos;
 
 					focusText = input.val();
 					pos = checkVal();
