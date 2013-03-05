@@ -1,4 +1,6 @@
+(function($){
 function getPasteEvent() {
+
     var el = document.createElement('input'),
         name = 'onpaste';
     el.setAttribute(name, '');
@@ -326,4 +328,4 @@ $.fn.extend({
 		});
 	}
 });
-
+})(jQuery);
