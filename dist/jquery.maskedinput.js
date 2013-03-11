@@ -9,7 +9,7 @@
     var el = document.createElement('input'),
         name = 'onpaste';
     el.setAttribute(name, '');
-    return (typeof el[name] === 'function')?'paste':'input';             
+    return (typeof el[name] === 'function')?'paste':'input';
 }
 
 var pasteEventName = getPasteEvent() + ".mask",
@@ -226,7 +226,7 @@ $.fn.extend({
 								input.caret(next);
 							}
 
-							if (settings.completed && next >= len) {
+							if (settings.completed && input.val().indexOf(settings.placeholder) == -1) {
 								settings.completed.call(input);
 							}
 						}
@@ -304,7 +304,7 @@ $.fn.extend({
 
 					focusText = input.val();
 					pos = checkVal();
-					
+
 					caretTimeoutId = setTimeout(function(){
 						writeBuffer();
 						if (pos == mask.length) {
@@ -322,9 +322,9 @@ $.fn.extend({
 				.bind("keydown.mask", keydownEvent)
 				.bind("keypress.mask", keypressEvent)
 				.bind(pasteEventName, function() {
-					setTimeout(function() { 
+					setTimeout(function() {
 						var pos=checkVal(true);
-						input.caret(pos); 
+						input.caret(pos);
 						if (settings.completed && pos == input.val().length)
 							settings.completed.call(input);
 					}, 0);
