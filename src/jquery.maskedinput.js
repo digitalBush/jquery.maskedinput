@@ -1,3 +1,7 @@
+/*!
+	jQuery MaskedInput
+	license: http://www.opensource.org/licenses/mit-license.php
+*/
 function getPasteEvent() {
     var el = document.createElement('input'),
         name = 'onpaste';
