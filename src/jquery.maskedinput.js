@@ -244,7 +244,8 @@ $.fn.extend({
 				var test = input.val(),
 					lastMatch = -1,
 					i,
-					c;
+					c,
+					pos;
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
@@ -292,8 +293,7 @@ $.fn.extend({
 				})
 				.bind("focus.mask", function() {
 					clearTimeout(caretTimeoutId);
-					var pos,
-						moveCaret;
+					var pos;
 
 					focusText = input.val();
 					pos = checkVal();
