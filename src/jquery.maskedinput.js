@@ -28,7 +28,7 @@ $.fn.extend({
 		var range;
 
 		if (this.length === 0 || this.is(":hidden")) {
-			return;
+			return { begin: 0, end: 0 };
 		}
 
 		if (typeof begin == 'number') {
