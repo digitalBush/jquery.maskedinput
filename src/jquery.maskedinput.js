@@ -73,7 +73,8 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			mode: 'ins' // Input mode: 'ins' for insert at caret position, 'ovr' for overwrite next position 
 		}, settings);
 
 
@@ -200,14 +201,18 @@ $.fn.extend({
 				} else if (k) {
 					if (pos.end - pos.begin !== 0){
 						clearBuffer(pos.begin, pos.end);
-						shiftL(pos.begin, pos.end-1);
+						if(settings.mode == 'ins') {
+							shiftL(pos.begin, pos.end-1);
+						}
 					}
 
 					p = seekNext(pos.begin - 1);
 					if (p < len) {
 						c = String.fromCharCode(k);
 						if (tests[p].test(c)) {
-							shiftR(p);
+							 if(settings.mode == 'ins') {
+								shiftR(p);
+							}
 
 							buffer[p] = c;
 							writeBuffer();
