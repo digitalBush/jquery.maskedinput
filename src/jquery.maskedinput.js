@@ -56,6 +56,13 @@ $.fn.extend({
 			return { begin: begin, end: end };
 		}
 	},
+        // Placeholder getter
+        placeholderAt: function(index, settings) {
+            if (settings.placeholder[index] !== undefined) {
+                return settings.placeholder[index];
+            }
+            return settings.placeholder;
+        },
 	unmask: function() {
 		return this.trigger("unmask");
 	},
@@ -102,7 +109,7 @@ $.fn.extend({
 				mask.split(""),
 				function(c, i) {
 					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
+						return defs[c] ? input.placeholderAt(i) : c;
 					}
 				}),
 				focusText = input.val();
@@ -129,7 +136,7 @@ $.fn.extend({
 					if (tests[i]) {
 						if (j < len && tests[i].test(buffer[j])) {
 							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
+							buffer[j] = input.placeholderAt(i);
 						} else {
 							break;
 						}
@@ -147,7 +154,7 @@ $.fn.extend({
 					j,
 					t;
 
-				for (i = pos, c = settings.placeholder; i < len; i++) {
+				for (i = pos, c = input.placeholderAt(i); i < len; i++) {
 					if (tests[i]) {
 						j = seekNext(i);
 						t = buffer[i];
@@ -232,7 +239,7 @@ $.fn.extend({
 				var i;
 				for (i = start; i < end && i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = input.placeholderAt(i);
 					}
 				}
 			}
@@ -249,7 +256,7 @@ $.fn.extend({
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = input.placeholderAt(i);
 						while (pos++ < test.length) {
 							c = test.charAt(pos - 1);
 							if (tests[i].test(c)) {
@@ -280,7 +287,7 @@ $.fn.extend({
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=settings.placeholder ? c : null;
+					return tests[i]&&c!=input.placeholderAt(i) ? c : null;
 				}).join('');
 			});
 
