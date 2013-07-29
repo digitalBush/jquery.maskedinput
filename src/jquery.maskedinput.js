@@ -1,4 +1,13 @@
-function getPasteEvent() {
+/*
+	Masked Input plugin for jQuery
+	Copyright (c) 2007-2013 Josh Bush (digitalbush.com)
+	Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license)
+	Version: 1.3.1
+
+	Updated by Modesty Zhang: 7/26/2013 to fix copy-paste when maxlength is present
+*/
+(function($) {
+	function getPasteEvent() {
     var el = document.createElement('input'),
         name = 'onpaste';
     el.setAttribute(name, '');
@@ -73,7 +82,8 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+            autoBlank: true
 		}, settings);
 
 
@@ -244,8 +254,7 @@ $.fn.extend({
 				var test = input.val(),
 					lastMatch = -1,
 					i,
-					c,
-					pos;
+					c;
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
@@ -268,7 +277,7 @@ $.fn.extend({
 				}
 				if (allow) {
 					writeBuffer();
-				} else if (lastMatch + 1 < partialPosition) {
+				} else if (settings.autoBlank && lastMatch + 1 < partialPosition) {//
 					input.val("");
 					clearBuffer(0, len);
 				} else {
@@ -284,20 +293,30 @@ $.fn.extend({
 				}).join('');
 			});
 
+            //MQZ Jul.28.2013. Fix Paste with maxlength
+            var rawMaxLength = input.prop('maxlength');
+            if (typeof (rawMaxLength) === "number") {
+                if (rawMaxLength < 2 * len) {
+                    //allow pasted text together with mask
+                    input.data('rawMaxLength', rawMaxLength);
+                    input.prop('maxlength', 2 * len);
+                }
+            }
+
 			if (!input.attr("readonly"))
 				input
 				.one("unmask", function() {
 					input
 						.unbind(".mask")
-						.removeData($.mask.dataName);
+						.removeData($.mask.dataName)
+                        .removeData('rawMaxLength');
 				})
 				.bind("focus.mask", function() {
 					clearTimeout(caretTimeoutId);
-					var pos;
 
 					focusText = input.val();
-					pos = checkVal();
-					
+					var pos = checkVal();
+
 					caretTimeoutId = setTimeout(function(){
 						writeBuffer();
 						if (pos == mask.length) {
@@ -315,9 +334,9 @@ $.fn.extend({
 				.bind("keydown.mask", keydownEvent)
 				.bind("keypress.mask", keypressEvent)
 				.bind(pasteEventName, function() {
-					setTimeout(function() { 
+					setTimeout(function() {
 						var pos=checkVal(true);
-						input.caret(pos); 
+						input.caret(pos);
 						if (settings.completed && pos == input.val().length)
 							settings.completed.call(input);
 					}, 0);
@@ -327,3 +346,5 @@ $.fn.extend({
 	}
 });
 
+
+})(jQuery);
