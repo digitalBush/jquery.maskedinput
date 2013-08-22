@@ -19,7 +19,8 @@ $.mask = {
 		'*': "[A-Za-z0-9]"
 	},
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	transform: function(string){return string;}
 };
 
 $.fn.extend({
@@ -205,7 +206,7 @@ $.fn.extend({
 
 					p = seekNext(pos.begin - 1);
 					if (p < len) {
-						c = String.fromCharCode(k);
+						c = settings.transform(String.fromCharCode(k));
 						if (tests[p].test(c)) {
 							shiftR(p);
 
