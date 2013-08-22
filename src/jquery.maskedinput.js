@@ -74,6 +74,7 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
+			transform: $.mask.transform,
 			completed: null
 		}, settings);
 
