@@ -339,7 +339,7 @@ $.fn.extend({
 							settings.completed.call(input);
 					}, 0);
 				});
-                if (chrome) {
+                if (chrome && android) {
                     input.bind("keyup.mask", keypressEvent);
                 }
 			checkVal(); //Perform initial check for existing values
