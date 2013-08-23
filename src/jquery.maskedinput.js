@@ -8,6 +8,7 @@ function getPasteEvent() {
 var pasteEventName = getPasteEvent() + ".mask",
 	ua = navigator.userAgent,
 	iPhone = /iphone/i.test(ua),
+	chrome = /chrome/i.test(ua),
 	android=/android/i.test(ua),
 	caretTimeoutId;
 
@@ -195,6 +196,22 @@ $.fn.extend({
 					c,
 					next;
 
+                    if (k == 0) {
+                        // unable to detect key pressed. Grab it from pos and adjust
+                        // this is a failsafe for mobile chrome
+                        // which can't detect keypress events
+                        // reliably
+                        if (pos.begin >= len) {
+                            input.val(input.val().substr(0, len));
+                            e.preventDefault();
+                            return false;
+                        }
+                        if (pos.begin == pos.end) {
+                            k = input.val().charCodeAt(pos.begin - 1);
+                            pos.begin--;
+                            pos.end--;
+                        }
+                    }
 				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
 					return;
 				} else if (k) {
@@ -322,8 +339,10 @@ $.fn.extend({
 							settings.completed.call(input);
 					}, 0);
 				});
+                if (chrome) {
+                    input.bind("keyup.mask", keypressEvent);
+                }
 			checkVal(); //Perform initial check for existing values
 		});
 	}
 });
-
