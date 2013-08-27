@@ -26,7 +26,7 @@ $.mask = {
 		'*': "[A-Za-z0-9]"
 	},
 	dataName: "rawMaskFn",
-	placeholder: '_',
+	placeholder: '_'
 };
 
 $.fn.extend({
