@@ -55,4 +55,26 @@ describe("Typing Specifications", function() {
 			});
 		});		
 	});
+	
+	describe("When the mask contains a '?' character and it was typed only required mask", function(){
+		var completed = false;
+		
+		beforeEach(function(){					
+			runs(function(){
+				input
+				.mask("99?99",{completed:function(){completed=true;}})
+				.focus();						
+			});
+			waits(1);
+			runs(function(){
+				input
+				.mashKeys("12");				
+			});
+			waits(1);			
+		});
+		
+		it("callback function should be called", function(){
+			expect(completed).toBeTruthy();
+		});
+	});
 });

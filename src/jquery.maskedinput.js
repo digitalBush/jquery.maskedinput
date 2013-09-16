@@ -65,7 +65,8 @@ $.fn.extend({
 			tests,
 			partialPosition,
 			firstNonMaskPos,
-			len;
+			len,
+			lenNotOptional;
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
@@ -75,11 +76,15 @@ $.fn.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
 			completed: null
 		}, settings);
-
+		
+		function getMaskLengthNotOptional(mask){
+			return mask.indexOf('?') != -1 ? mask.substring(0, mask.indexOf('?')).length : mask.length;
+		}
 
 		defs = $.mask.definitions;
 		tests = [];
 		partialPosition = len = mask.length;
+		lenNotOptional = getMaskLengthNotOptional(mask);
 		firstNonMaskPos = null;
 
 		$.each(mask.split(""), function(i, c) {
@@ -219,7 +224,7 @@ $.fn.extend({
 								input.caret(next);
 							}
 
-							if (settings.completed && next >= len) {
+							if (settings.completed && next >= lenNotOptional) {
 								settings.completed.call(input);
 							}
 						}
@@ -276,7 +281,7 @@ $.fn.extend({
 					input.val(input.val().substring(0, lastMatch + 1));
 				}
 				return (partialPosition ? i : firstNonMaskPos);
-			}
+			}			
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
@@ -318,7 +323,7 @@ $.fn.extend({
 					setTimeout(function() { 
 						var pos=checkVal(true);
 						input.caret(pos); 
-						if (settings.completed && pos == input.val().length)
+						if (settings.completed && pos >= lenNotOptional)
 							settings.completed.call(input);
 					}, 0);
 				});
