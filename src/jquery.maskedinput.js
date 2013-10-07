@@ -2,7 +2,7 @@ function getPasteEvent() {
     var el = document.createElement('input'),
         name = 'onpaste';
     el.setAttribute(name, '');
-    return (typeof el[name] === 'function')?'paste':'input';             
+    return (typeof el[name] === 'function')?'paste':'input';
 }
 
 var pasteEventName = getPasteEvent() + ".mask",
@@ -19,7 +19,8 @@ $.mask = {
 		'*': "[A-Za-z0-9]"
 	},
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	placeholders: {}
 };
 
 $.fn.extend({
@@ -73,6 +74,7 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
+			placeholders: $.mask.placeholders, // Load default placeholder
 			completed: null
 		}, settings);
 
@@ -102,11 +104,11 @@ $.fn.extend({
 				mask.split(""),
 				function(c, i) {
 					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
+						return defs[c] ? (settings.placeholders[c] ? settings.placeholders[c] : settings.placeholder)  : c;
 					}
 				}),
-				focusText = input.val();
-
+				focusText = input.val(),
+				maskbuffer = buffer.slice(0);
 			function seekNext(pos) {
 				while (++pos < len && !tests[pos]);
 				return pos;
@@ -124,12 +126,11 @@ $.fn.extend({
 				if (begin<0) {
 					return;
 				}
-
 				for (i = begin, j = seekNext(end); i < len; i++) {
 					if (tests[i]) {
 						if (j < len && tests[i].test(buffer[j])) {
 							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
+							buffer[j] = maskbuffer[j];
 						} else {
 							break;
 						}
@@ -147,7 +148,7 @@ $.fn.extend({
 					j,
 					t;
 
-				for (i = pos, c = settings.placeholder; i < len; i++) {
+				for (i = pos, c = maskbuffer[i]; i < len; i++) {
 					if (tests[i]) {
 						j = seekNext(i);
 						t = buffer[i];
@@ -207,6 +208,7 @@ $.fn.extend({
 					if (p < len) {
 						c = String.fromCharCode(k);
 						if (tests[p].test(c)) {
+							input.removeClass('placeholder');
 							shiftR(p);
 
 							buffer[p] = c;
@@ -232,7 +234,7 @@ $.fn.extend({
 				var i;
 				for (i = start; i < end && i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = maskbuffer[i];
 					}
 				}
 			}
@@ -244,12 +246,11 @@ $.fn.extend({
 				var test = input.val(),
 					lastMatch = -1,
 					i,
-					c,
-					pos;
+					c;
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = maskbuffer[i];
 						while (pos++ < test.length) {
 							c = test.charAt(pos - 1);
 							if (tests[i].test(c)) {
@@ -275,12 +276,15 @@ $.fn.extend({
 					writeBuffer();
 					input.val(input.val().substring(0, lastMatch + 1));
 				}
+				if(!partialPosition || !i) {
+					input.addClass('placeholder');
+				}
 				return (partialPosition ? i : firstNonMaskPos);
 			}
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=settings.placeholder ? c : null;
+					return tests[i]&&c!=maskbuffer[i] ? c : null;
 				}).join('');
 			});
 
@@ -293,11 +297,12 @@ $.fn.extend({
 				})
 				.bind("focus.mask", function() {
 					clearTimeout(caretTimeoutId);
-					var pos;
+					var pos,
+						moveCaret;
 
 					focusText = input.val();
 					pos = checkVal();
-					
+
 					caretTimeoutId = setTimeout(function(){
 						writeBuffer();
 						if (pos == mask.length) {
@@ -315,9 +320,9 @@ $.fn.extend({
 				.bind("keydown.mask", keydownEvent)
 				.bind("keypress.mask", keypressEvent)
 				.bind(pasteEventName, function() {
-					setTimeout(function() { 
+					setTimeout(function() {
 						var pos=checkVal(true);
-						input.caret(pos); 
+						input.caret(pos);
 						if (settings.completed && pos == input.val().length)
 							settings.completed.call(input);
 					}, 0);
@@ -326,4 +331,3 @@ $.fn.extend({
 		});
 	}
 });
-
