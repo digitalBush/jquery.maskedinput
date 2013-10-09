@@ -50,6 +50,24 @@ feature("Focusing A Masked Input",function(){
 			expect(error).toBeUndefined();
 		})
 	});
+
+	scenario("Mask contains a partial value with autoclear set to false",function(){
+		given("the input has a partial value",function(){
+			input.val("1");
+		});
+		given("a mask with two placeholders and autoclear=false",function(){
+			input.mask("99", { autoclear: false });
+		});
+		when("focusing on the input",function(){
+			input.focus();
+		});
+		then("the value should be partially filled out",function(){
+			expect(input).toHaveValue("1_");
+		});
+		then("the input partial value should remain",function(){
+			expect(input).toHaveValue("1_");
+		});
+	});
 });
 
 feature("Leaving A Masked Input",function(){
@@ -74,6 +92,20 @@ feature("Leaving A Masked Input",function(){
 		});
 		then("value should be empty",function(){
 			expect(input).toHaveValue("");
+		});
+	});
+
+	scenario("Empty placeholders remaining with autoclear set to false",function(){
+		given("a mask with two placeholders",function(){
+			input.mask("99", { autoclear: false });
+		});
+		when("typing one character and blurring",function(){
+			input.caret(0);
+			input.mashKeys("1")
+			input.blur();
+		});
+		then("value should remain visible with placeholders",function(){
+			expect(input).toHaveValue("1_");
 		});
 	});
 });
