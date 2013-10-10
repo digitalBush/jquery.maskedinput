@@ -107,6 +107,7 @@ $.fn.extend({
 						return defs[c] ? settings.placeholder : c;
 					}
 				}),
+				defaultBuffer = buffer.join(''),
 				focusText = input.val();
 
 			function seekNext(pos) {
@@ -271,7 +272,7 @@ $.fn.extend({
 				if (allow) {
 					writeBuffer();
 				} else if (lastMatch + 1 < partialPosition) {
-					if (settings.autoclear) {
+					if (settings.autoclear || buffer.join('') === defaultBuffer) {
 						// Invalid value. Remove it and replace it with the
 						// mask, which is the default behavior.
 						input.val("");

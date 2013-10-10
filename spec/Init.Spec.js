@@ -47,5 +47,15 @@ feature("Initializing a Mask",function(){
 		});
 	});
 
-	scenario("An input with an invalid value and placeholders remaining");
+	scenario("An input no value and autoclear set to false", function() {
+		given("an input with no value",function(){
+			input.val("");
+		});
+		when("setting a mask with autoclear set to false",function(){
+			input.mask("(999) 999-9999", { autoclear: false });
+		});
+		then("the value should be empty",function(){
+			expect(input).toHaveValue("");
+		});
+	});
 });
