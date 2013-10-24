@@ -19,7 +19,8 @@ $.mask = {
 		'*': "[A-Za-z0-9]"
 	},
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	dontShiftLeft: false
 };
 
 $.fn.extend({
@@ -73,7 +74,8 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			dontShiftLeft: $.mask.dontShiftLeft
 		}, settings);
 
 
@@ -125,16 +127,18 @@ $.fn.extend({
 					return;
 				}
 
-				for (i = begin, j = seekNext(end); i < len; i++) {
-					if (tests[i]) {
-						if (j < len && tests[i].test(buffer[j])) {
-							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
-						} else {
-							break;
-						}
+				if (!settings.dontShiftLeft) {
+					for (i = begin, j = seekNext(end); i < len; i++) {
+						if (tests[i]) {
+							if (j < len && tests[i].test(buffer[j])) {
+								buffer[i] = buffer[j];
+								buffer[j] = settings.placeholder;
+							} else {
+								break;
+							}
 
-						j = seekNext(j);
+							j = seekNext(j);
+						}
 					}
 				}
 				writeBuffer();
