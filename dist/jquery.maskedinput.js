@@ -265,6 +265,7 @@ $.fn.extend({
 							}
 						}
 						if (pos > test.length) {
+						    clearBuffer(i + 1, len);
 							break;
 						}
 					} else if (buffer[i] === test.charAt(pos) && i !== partialPosition) {
