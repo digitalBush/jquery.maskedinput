@@ -1,0 +1,12 @@
+{
+  "name": "jquery.maskedinput",
+  "version": "1.3.0",
+  "author": "Josh Bush",
+  "description": "jQuery Masked Input Plugin",
+
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-jasmine": "0.5.x",
+    "grunt-contrib-watch": "0.5.x"
+  }
+}
