@@ -5,24 +5,24 @@ var Handlebars=require("handlebars"),
 	distPath='dist/';
 
 Handlebars.registerHelper('include', function(context) {
-  return fs.readFileSync(context,'utf8');
+  return fs.readFileSync(context,'utf8', function() { /* swallow errors */ });
 });
 
-function keepComment(node,comment){	
+function keepComment(node,comment){
 	return comment.type === "comment2";
 }
 
 task('clean',function(){
-	fs.rmdir(distPath)
+	fs.rmdir(distPath, function() { /* swallow errors */ });
 });
 
 task('default',['clean'], function (params) {
-	fs.mkdir(distPath,0755);
+	fs.mkdir(distPath,0755, function() { /* swallow errors */ });
 
-	var options = JSON.parse(fs.readFileSync('plugin.json','utf8'))
+	var options = JSON.parse(fs.readFileSync('plugin.json','utf8', function() { /* swallow errors */ }))
 	options.Year=new Date().getFullYear()
 
-	var template = Handlebars.compile(fs.readFileSync('templates/jquery.maskedinput.template','utf8'));
+	var template = Handlebars.compile(fs.readFileSync('templates/jquery.maskedinput.template','utf8', function() { /* swallow errors */ }));
 	var debugFile = path.join(distPath,'jquery.maskedinput.js');
 	fs.writeFileSync(debugFile,template(options));
 
