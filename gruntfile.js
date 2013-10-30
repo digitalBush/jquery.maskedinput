@@ -13,7 +13,8 @@ module.exports = function( grunt ) {
 
       dev: {
         options: {
-          beautify: true
+          beautify: true,
+          mangle: false
         },
 
         files: {
