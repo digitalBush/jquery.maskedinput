@@ -17,7 +17,9 @@ Setting up your Developer Environment
 -------------------------------------
 jQuery Masked Input uses [NodeJS](http://www.nodejs.org) and [GruntJS](http://www.gruntjs.com) as it's developer platform and build automation tool.
 
-To get your environment setup correctly, you'll need nodejs version 0.8.25 or greater installed.
+To get your environment setup correctly, you'll need nodejs version 0.8.25 or greater installed. You'll also need to install the grunt command line tool:
+
+    $ sudo npm install -g grunt-cli
 
 Once node is installed on your system all that you need to do is install the developer dependencies and run the grunt build:
 
