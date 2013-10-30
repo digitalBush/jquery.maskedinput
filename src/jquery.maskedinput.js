@@ -74,7 +74,8 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			prefill: ''
 		}, settings);
 
 
@@ -314,6 +315,13 @@ $.fn.extend({
 
 					focusText = input.val();
 					pos = checkVal();
+					
+					if (pos == 0 && settings.prefill != "") {
+						$.map(settings.prefill.split(''), function(c, i) {
+							buffer[i] = c;
+							pos ++;
+						});
+					}
 					
 					caretTimeoutId = setTimeout(function(){
 						writeBuffer();
