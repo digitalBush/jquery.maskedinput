@@ -2,7 +2,7 @@ function getPasteEvent() {
     var el = document.createElement('input'),
         name = 'onpaste';
     el.setAttribute(name, '');
-    return (typeof el[name] === 'function')?'paste':'input';             
+    return (typeof el[name] === 'function')?'paste':'input';
 }
 
 var pasteEventName = getPasteEvent() + ".mask",
@@ -19,6 +19,7 @@ $.mask = {
 		'a': "[A-Za-z]",
 		'*': "[A-Za-z0-9]"
 	},
+	autoclear: true,
 	dataName: "rawMaskFn",
 	placeholder: '_'
 };
@@ -73,6 +74,7 @@ $.fn.extend({
 			return input.data($.mask.dataName)();
 		}
 		settings = $.extend({
+			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
 			completed: null
 		}, settings);
@@ -106,6 +108,7 @@ $.fn.extend({
 						return defs[c] ? settings.placeholder : c;
 					}
 				}),
+				defaultBuffer = buffer.join(''),
 				focusText = input.val();
 
 			function seekNext(pos) {
@@ -286,8 +289,16 @@ $.fn.extend({
 				if (allow) {
 					writeBuffer();
 				} else if (lastMatch + 1 < partialPosition) {
-					input.val("");
-					clearBuffer(0, len);
+					if (settings.autoclear || buffer.join('') === defaultBuffer) {
+						// Invalid value. Remove it and replace it with the
+						// mask, which is the default behavior.
+						input.val("");
+						clearBuffer(0, len);
+					} else {
+						// Invalid value, but we opt to show the value to the
+						// user and allow them to correct their mistake.
+						writeBuffer();
+					}
 				} else {
 					writeBuffer();
 					input.val(input.val().substring(0, lastMatch + 1));
@@ -313,8 +324,9 @@ $.fn.extend({
 					var pos;
 
 					focusText = input.val();
+
 					pos = checkVal();
-					
+
 					caretTimeoutId = setTimeout(function(){
 						writeBuffer();
 						if (pos == mask.length) {
@@ -326,15 +338,16 @@ $.fn.extend({
 				})
 				.bind("blur.mask", function() {
 					checkVal();
+
 					if (input.val() != focusText)
 						input.change();
 				})
 				.bind("keydown.mask", keydownEvent)
 				.bind("keypress.mask", keypressEvent)
 				.bind(pasteEventName, function() {
-					setTimeout(function() { 
+					setTimeout(function() {
 						var pos=checkVal(true);
-						input.caret(pos); 
+						input.caret(pos);
 						if (settings.completed && pos == input.val().length)
 							settings.completed.call(input);
 					}, 0);
@@ -342,7 +355,7 @@ $.fn.extend({
                 if (chrome && android) {
                     input.bind("keyup.mask", keypressEvent);
                 }
-			checkVal(); //Perform initial check for existing values
+				checkVal(); //Perform initial check for existing values
 		});
 	}
 });
