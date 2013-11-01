@@ -33,7 +33,7 @@ module.exports = function( grunt ) {
       full: {
         src: "src/**/*.js",
         options: {
-          specs: "spec/*Spec.js",
+          specs: "spec/*[S|s]pec.js",
           vendor: [
             "spec/lib/matchers.js",
             "spec/lib/jasmine-species/jasmine-grammar.js",
