@@ -16,7 +16,7 @@
         $("#eyescript").mask("~9.99 ~9.99 999");
         $("#po").mask("PO: aaa-999-***");
         $("#pct").mask("99%");
-        $("#phoneAutoclearFalse").mask("(999) 999-9999", { autoclear: false });
+        $("#phoneAutoclearFalse").mask("(999) 999-9999", { autoclear: false, completed:function(){alert("completed autoclear!");} });
         $("#phoneExtAutoclearFalse").mask("(999) 999-9999? x99999", { autoclear: false });
 
         $("input").blur(function() {
