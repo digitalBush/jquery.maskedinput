@@ -1,3 +1,5 @@
+(function($) {
+
 function getPasteEvent() {
     var el = document.createElement('input'),
         name = 'onpaste';
@@ -359,3 +361,4 @@ $.fn.extend({
 		});
 	}
 });
+})(jQuery);
