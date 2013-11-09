@@ -167,6 +167,13 @@ $.fn.extend({
 				}
 			}
 
+      function blurEvent(e) {
+          checkVal();
+
+          if (input.val() != focusText)
+            input.change();
+      }
+
 			function keydownEvent(e) {
 				var k = e.which,
 					pos,
@@ -187,7 +194,9 @@ $.fn.extend({
 					shiftL(begin, end - 1);
 
 					e.preventDefault();
-				} else if (k == 27) {//escape
+				} else if( k === 13 ) { // enter
+					blurEvent.call(this, e);
+				} else if (k === 27) { // escape
 					input.val(focusText);
 					input.caret(0, checkVal());
 					e.preventDefault();
@@ -217,9 +226,10 @@ $.fn.extend({
                             pos.end--;
                         }
                     }
+
 				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
 					return;
-				} else if (k) {
+				} else if ( k && k !== 13 ) {
 					if (pos.end - pos.begin !== 0){
 						clearBuffer(pos.begin, pos.end);
 						shiftL(pos.begin, pos.end-1);
@@ -338,12 +348,7 @@ $.fn.extend({
 						}
 					}, 10);
 				})
-				.bind("blur.mask", function() {
-					checkVal();
-
-					if (input.val() != focusText)
-						input.change();
-				})
+				.bind("blur.mask", blurEvent)
 				.bind("keydown.mask", keydownEvent)
 				.bind("keypress.mask", keypressEvent)
 				.bind(pasteEventName, function() {
