@@ -1,0 +1,18 @@
+{
+  "name": "jquery.maskedinput",
+  "version": "1.3.1",
+  "main": "dist/jquery.maskedinput.min.js"
+  "homepage": "https://github.com/digitalBush/jquery.maskedinput",
+  "authors": [
+    "Josh Bush <josh@digitalbush.com>"
+  ],
+  "description": "Fixed width input masking.",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
