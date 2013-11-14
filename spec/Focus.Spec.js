@@ -68,9 +68,8 @@ feature("Focusing A Masked Input",function(){
 			expect(input).toHaveValue("1_");
 		});
 	});
-	
-	
-	scenario("Mask containing optional mask ?,function(){
+
+	scenario("Mask containing optional mask ?",function(){
 		given("the input has a partial value",function(){
 			input.val("99");
 		});
