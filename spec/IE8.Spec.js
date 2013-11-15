@@ -1,11 +1,18 @@
 feature("IE8 bugs", function() {
 
 	var enterKeyEvent = $.Event('keydown.mask');
-    enterKeyEvent.which = enterKeyEvent.keyCode = 13;
+	enterKeyEvent.which = enterKeyEvent.keyCode = 13;
+
+	var textarea;
+    afterEach(function() {
+        if (!textarea) return;
+        textarea.remove();
+        textarea=null;
+    });
 
     story('User tries enter value into masked TEXTAREA',function(){
 
-    	scenario("Using plain INPUT",function(){
+    	scenario("Using INPUT",function(){
             given("a mask 9999",function(){
             	input.mask("9999");
             });
@@ -17,12 +24,9 @@ feature("IE8 bugs", function() {
             });
         });
 
-
-    	var textarea;
-    	textarea = $("<textarea/>").appendTo(document.body).focus();
-
-    	scenario("Using plain TEXTAREA",function(){
+    	scenario("Using TEXTAREA",function(){
             given("a mask 9999",function(){
+            	textarea = $("<textarea/>").appendTo("body").focus();
             	textarea.mask("9999");
             });
             when("typing 1234",function(){
@@ -34,4 +38,5 @@ feature("IE8 bugs", function() {
         });
 
     });
+
 });
