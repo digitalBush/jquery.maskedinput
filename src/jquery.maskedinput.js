@@ -53,9 +53,24 @@ $.fn.extend({
 				begin = this[0].selectionStart;
 				end = this[0].selectionEnd;
 			} else if (document.selection && document.selection.createRange) {
-				range = document.selection.createRange();
-				begin = 0 - range.duplicate().moveStart('character', -100000);
-				end = begin + range.text.length;
+				/*
+					range = document.selection.createRange();
+					begin = 0 - range.duplicate().moveStart('character', -100000);
+					end = begin + range.text.length;
+				*/
+				// fwo - above doesn't work in IE8 + TEXTAREA
+				// the problem: range.duplicate().moveStart('character', -100000) returns strange value for TEXTAREA
+				// solution: http://stackoverflow.com/questions/3053542/how-to-get-the-start-and-end-points-of-selection-in-text-area/3053640#3053640
+				// tested: IE8.Spec.js
+		        var bookmark = document.selection.createRange().getBookmark();
+		        var sel = this[0].createTextRange();
+		        var bfr = sel.duplicate();
+		        sel.moveToBookmark(bookmark);
+		        bfr.setEndPoint("EndToStart", sel);
+		        begin = bfr.text.length;
+		        end = bfr.text.length+sel.text.length;
+		        // fwo - end
+
 			}
 			return { begin: begin, end: end };
 		}
