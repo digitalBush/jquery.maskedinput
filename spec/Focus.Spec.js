@@ -68,6 +68,24 @@ feature("Focusing A Masked Input",function(){
 			expect(input).toHaveValue("1_");
 		});
 	});
+
+	scenario("Mask containing optional mask ?",function(){
+		given("the input has a partial value",function(){
+			input.val("99");
+		});
+		given("a optional mask on input",function(){
+			input.mask("9?9");
+		});
+		when("focusing input",function(){
+			input.focus();
+		});
+		waits(1);
+		then("caret position should be correct",function(){
+			var caret=input.caret();
+			expect(caret.begin).toEqual(0);
+			expect(caret.end).toEqual(2);
+		});
+	});
 });
 
 feature("Leaving A Masked Input",function(){
