@@ -246,7 +246,13 @@ $.fn.extend({
 							next = seekNext(p);
 
 							if(android){
-								setTimeout($.proxy($.fn.caret,input,next),0);
+								//Path for CSP Violation on FireFox OS 1.1
+								var proxy = function()
+								{
+									$.proxy($.fn.caret,input,next);
+								}
+
+								setTimeout(proxy,0);
 							}else{
 								input.caret(next);
 							}
