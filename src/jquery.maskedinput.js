@@ -328,10 +328,10 @@ $.fn.extend({
 				input
 				.one("unmask", function() {
 					input
-						.unbind(".mask")
+						.off(".mask")
 						.removeData($.mask.dataName);
 				})
-				.bind("focus.mask", function() {
+				.on("focus.mask", function() {
 					clearTimeout(caretTimeoutId);
 					var pos;
 
@@ -348,10 +348,10 @@ $.fn.extend({
 						}
 					}, 10);
 				})
-				.bind("blur.mask", blurEvent)
-				.bind("keydown.mask", keydownEvent)
-				.bind("keypress.mask", keypressEvent)
-				.bind(pasteEventName, function() {
+				.on("blur.mask", blurEvent)
+				.on("keydown.mask", keydownEvent)
+				.on("keypress.mask", keypressEvent)
+				.on(pasteEventName, function() {
 					setTimeout(function() {
 						var pos=checkVal(true);
 						input.caret(pos);
@@ -360,7 +360,7 @@ $.fn.extend({
 					}, 0);
 				});
                 if (chrome && android) {
-                    input.bind("keyup.mask", keypressEvent);
+                    input.on("keyup.mask", keypressEvent);
                 }
 				checkVal(); //Perform initial check for existing values
 		});
