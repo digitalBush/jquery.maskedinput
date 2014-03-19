@@ -35,10 +35,10 @@ module.exports = function( grunt ) {
         options: {
           specs: "spec/*[S|s]pec.js",
           vendor: [
+            "lib/jquery-1.9.0.min.js",
             "spec/lib/matchers.js",
             "spec/lib/jasmine-species/jasmine-grammar.js",
             "spec/lib/setup.js",
-            "lib/jquery-1.9.0.min.js",
             "spec/lib/jquery.keymasher.js"
           ]
         }

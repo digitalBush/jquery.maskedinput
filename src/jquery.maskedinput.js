@@ -1,5 +1,32 @@
 (function($) {
 
+    function setCaret(elm,begin,end){
+        end = (typeof end === 'number') ? end : begin;
+
+        if (elm.setSelectionRange) {
+            elm.setSelectionRange(begin, end);
+        } else if (elm.createTextRange) {
+            var range = elm.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', end);
+            range.moveStart('character', begin);
+            range.select();
+        }
+    }
+
+    function getCaret(elm){
+        var begin,end;
+        if (elm.setSelectionRange) {
+            begin = elm.selectionStart;
+            end = elm.selectionEnd;
+        } else if (document.selection && document.selection.createRange) {
+            var range = document.selection.createRange();
+            begin = 0 - range.duplicate().moveStart('character', -100000);
+            end = begin + range.text.length;
+        }
+        return { begin: begin, end: end };
+    }
+
 function getPasteEvent() {
     var el = document.createElement('input'),
         name = 'onpaste';
@@ -27,39 +54,6 @@ $.mask = {
 };
 
 $.fn.extend({
-	//Helper Function for Caret positioning
-	caret: function(begin, end) {
-		var range;
-
-		if (this.length === 0 || this.is(":hidden")) {
-			return;
-		}
-
-		if (typeof begin == 'number') {
-			end = (typeof end === 'number') ? end : begin;
-			return this.each(function() {
-				if (this.setSelectionRange) {
-					this.setSelectionRange(begin, end);
-				} else if (this.createTextRange) {
-					range = this.createTextRange();
-					range.collapse(true);
-					range.moveEnd('character', end);
-					range.moveStart('character', begin);
-					range.select();
-				}
-			});
-		} else {
-			if (this[0].setSelectionRange) {
-				begin = this[0].selectionStart;
-				end = this[0].selectionEnd;
-			} else if (document.selection && document.selection.createRange) {
-				range = document.selection.createRange();
-				begin = 0 - range.duplicate().moveStart('character', -100000);
-				end = begin + range.text.length;
-			}
-			return { begin: begin, end: end };
-		}
-	},
 	unmask: function() {
 		return this.trigger("unmask");
 	},
@@ -102,7 +96,8 @@ $.fn.extend({
 		});
 
 		return this.trigger("unmask").each(function() {
-			var input = $(this),
+			var elm = this,
+                input = $(this),
 				buffer = $.map(
 				mask.split(""),
 				function(c, i) {
@@ -144,7 +139,7 @@ $.fn.extend({
 					}
 				}
 				writeBuffer();
-				input.caret(Math.max(firstNonMaskPos, begin));
+                setCaret(elm,Math.max(firstNonMaskPos, begin))
 			}
 
 			function shiftR(pos) {
@@ -182,7 +177,7 @@ $.fn.extend({
 
 				//backspace, delete, and escape get special treatment
 				if (k === 8 || k === 46 || (iPhone && k === 127)) {
-					pos = input.caret();
+					pos = getCaret(elm);
 					begin = pos.begin;
 					end = pos.end;
 
@@ -198,14 +193,14 @@ $.fn.extend({
 					blurEvent.call(this, e);
 				} else if (k === 27) { // escape
 					input.val(focusText);
-					input.caret(0, checkVal());
+                    setCaret(elm,0,checkVal());
 					e.preventDefault();
 				}
 			}
 
 			function keypressEvent(e) {
 				var k = e.which,
-					pos = input.caret(),
+					pos = getCaret(elm),
 					p,
 					c,
 					next;
@@ -249,12 +244,13 @@ $.fn.extend({
 								//Path for CSP Violation on FireFox OS 1.1
 								var proxy = function()
 								{
-									$.proxy($.fn.caret,input,next);
+
+									$.proxy(setCaret,elm,next);
 								}
 
 								setTimeout(proxy,0);
 							}else{
-								input.caret(next);
+                                setCaret(elm,next);
 							}
 
 							if (settings.completed && next >= len) {
@@ -348,9 +344,9 @@ $.fn.extend({
 					caretTimeoutId = setTimeout(function(){
 						writeBuffer();
 						if (pos == mask.replace("?","").length) {
-							input.caret(0, pos);
+                            setCaret(elm,0,pos);
 						} else {
-							input.caret(pos);
+                            setCaret(elm,pos);
 						}
 					}, 10);
 				})
@@ -360,7 +356,7 @@ $.fn.extend({
 				.on(pasteEventName, function() {
 					setTimeout(function() {
 						var pos=checkVal(true);
-						input.caret(pos);
+                        setCaret(elm,pos);
 						if (settings.completed && pos == input.val().length)
 							settings.completed.call(input);
 					}, 0);
