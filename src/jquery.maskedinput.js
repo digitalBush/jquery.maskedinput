@@ -27,345 +27,299 @@
         return { begin: begin, end: end };
     }
 
-function getPasteEvent() {
-    var el = document.createElement('input'),
+    $.mask = {
+        masks:[],
+        //Predefined character definitions
+        //TODO: Move these to the mask def itself.
+        definitions: {
+            '9': "[0-9]",
+            'a': "[A-Za-z]",
+            '*': "[A-Za-z0-9]"
+        },
+        autoclear: true,
+        dataName: "maskedinput",
+        placeholder: '_'
+    };
+
+    function FixedWidthMask (mask, settings){
+        var self=this;
+        //Build up structures necessary to quickly apply masking
+        this.settings = settings;
+
+        this.tests = [];
+        this.partialPosition = mask.length;
+        this.length = mask.length;
+
+        var firstNonMaskPos = null;
+
+        $.each(mask.split(""), function(i, c) {
+            if (c == '?') {
+                self.length--;
+                self.partialPosition = i;
+            } else if (settings.definitions[c]) {
+                self.tests.push(new RegExp(settings.definitions[c]));
+                if (firstNonMaskPos === null) {
+                    firstNonMaskPos = self.tests.length - 1;
+                }
+            } else {
+                self.tests.push(c);
+            }
+        });
+    }
+
+    FixedWidthMask.prototype.applyBackspace = function(input, pos){
+        var i, buffer = input.split('');
+        for(i = pos - 1; i >= 0; i--){
+                if(this.tests[i].test)
+                    break
+        }
+        buffer.splice(i, 1);
+        return this.apply(buffer.join(''), i);
+    }
+
+    FixedWidthMask.prototype.applyDelete = function(input, pos){
+        var i, buffer = input.split('');
+        for(i = pos; i < buffer.length; i++){
+                if(this.tests[i].test)
+                    break
+        }
+        buffer.splice(i, 1);
+        var result=this.apply(buffer.join(''), i);
+        result.pos=i;
+        return result;
+    }
+
+    FixedWidthMask.prototype.apply = function(input, caretPosition){
+        if(caretPosition == null)
+            caretPosition = 0;
+        var buffer=[],
+            raw=[],
+            lastMatch = -1,
+            i,
+            action,
+            pos;
+
+        for (i = 0, pos = 0; i < this.length; i++) {
+            var action=this.tests[i];
+
+            if (action.test) {
+                buffer.push(this.settings.placeholder);
+
+                while (pos++ < input.length) {
+                    c = input.charAt(pos - 1);
+                    if (action.test(c)) {
+                        buffer[i] = c;
+                        raw.push(c)
+                        lastMatch = i;
+                        break;
+                    }
+                }
+            } else {
+                buffer.push(action);
+                if(action === input.charAt(pos) && i !== this.partialPosition) {
+                    pos++;
+                    lastMatch=i;
+                }
+            }
+        }
+
+        //Find the next spot waiting for input
+        var maxCaret=Math.min(caretPosition,this.length);
+        for(i=Math.max(lastMatch+1,maxCaret);i<this.length;i++){
+            if(this.tests[i].test)
+            break
+        }
+
+        var result={
+            value: buffer.join(''),
+            raw: raw.join(''), //TODO: separate unmask call?
+            pos: i , //(partialPosition ? i : firstNonMaskPos)
+            isComplete: (lastMatch + 1) >= this.partialPosition
+        };
+        console.log(result);
+        return result;
+    }
+
+    function getPasteEvent() {
+        var el = document.createElement('input'),
         name = 'onpaste';
-    el.setAttribute(name, '');
-    return (typeof el[name] === 'function')?'paste':'input';
-}
+        el.setAttribute(name, '');
+        return (typeof el[name] === 'function')?'paste':'input';
+    }
 
-var pasteEventName = getPasteEvent() + ".mask",
-	ua = navigator.userAgent,
-	iPhone = /iphone/i.test(ua),
-	chrome = /chrome/i.test(ua),
-	android=/android/i.test(ua),
-	caretTimeoutId;
-
-$.mask = {
-	//Predefined character definitions
-	definitions: {
-		'9': "[0-9]",
-		'a': "[A-Za-z]",
-		'*': "[A-Za-z0-9]"
-	},
-	autoclear: true,
-	dataName: "rawMaskFn",
-	placeholder: '_'
-};
-
-$.fn.extend({
-	unmask: function() {
-		return this.trigger("unmask");
-	},
-	mask: function(mask, settings) {
-		var input,
-			defs,
-			tests,
-			partialPosition,
-			firstNonMaskPos,
-			len;
-
-		if (!mask && this.length > 0) {
-			input = $(this[0]);
-			return input.data($.mask.dataName)();
-		}
-		settings = $.extend({
-			autoclear: $.mask.autoclear,
-			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
-		}, settings);
+    var pasteEventName = getPasteEvent() + ".mask",
+    ua = navigator.userAgent,
+    iPhone = /iphone/i.test(ua),
+    chrome = /chrome/i.test(ua),
+    android=/android/i.test(ua),
+    caretTimeoutId;
 
 
-		defs = $.mask.definitions;
-		tests = [];
-		partialPosition = len = mask.length;
-		firstNonMaskPos = null;
 
-		$.each(mask.split(""), function(i, c) {
-			if (c == '?') {
-				len--;
-				partialPosition = i;
-			} else if (defs[c]) {
-				tests.push(new RegExp(defs[c]));
-				if (firstNonMaskPos === null) {
-					firstNonMaskPos = tests.length - 1;
-				}
-			} else {
-				tests.push(null);
-			}
-		});
+    $.fn.extend({
+        //TODO: Be a good citizen and get this down to only .mask()
+        unmask: function() {
+            return this.trigger("unmask");
+        },
+        //TODO: we need a conflict thing here, maybe only use maskedinput(or alias?)
+        mask: function(mask, settings) {
+            var input,
+            defs,
+            tests,
+            partialPosition,
+            firstNonMaskPos,
+            len;
 
-		return this.trigger("unmask").each(function() {
-			var elm = this,
+            //TODO: make these more in line with newer plugin interaction guidelines.
+            if (!mask && this.length > 0) {
+                 input = $(this[0]);
+                 return input.data($.mask.dataName).apply(input.val()).raw;
+            }
+
+            settings = $.extend({
+                definitions: $.mask.definitions,
+                autoclear: $.mask.autoclear,
+                placeholder: $.mask.placeholder,
+                completed: null
+            }, settings);
+
+            var mask=new FixedWidthMask(mask,settings);
+
+
+            return this.trigger("unmask").each(function() {
+                var elm = this,
                 input = $(this),
-				buffer = $.map(
-				mask.split(""),
-				function(c, i) {
-					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
-					}
-				}),
-				defaultBuffer = buffer.join(''),
-				focusText = input.val();
+                focusText = elm.value;
 
-			function seekNext(pos) {
-				while (++pos < len && !tests[pos]);
-				return pos;
-			}
-
-			function seekPrev(pos) {
-				while (--pos >= 0 && !tests[pos]);
-				return pos;
-			}
-
-			function shiftL(begin,end) {
-				var i,
-					j;
-
-				if (begin<0) {
-					return;
-				}
-
-				for (i = begin, j = seekNext(end); i < len; i++) {
-					if (tests[i]) {
-						if (j < len && tests[i].test(buffer[j])) {
-							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
-						} else {
-							break;
-						}
-
-						j = seekNext(j);
-					}
-				}
-				writeBuffer();
-                setCaret(elm,Math.max(firstNonMaskPos, begin))
-			}
-
-			function shiftR(pos) {
-				var i,
-					c,
-					j,
-					t;
-
-				for (i = pos, c = settings.placeholder; i < len; i++) {
-					if (tests[i]) {
-						j = seekNext(i);
-						t = buffer[i];
-						buffer[i] = c;
-						if (j < len && tests[j].test(t)) {
-							c = t;
-						} else {
-							break;
-						}
-					}
-				}
-			}
-
-      function blurEvent(e) {
-          checkVal();
-
-          if (input.val() != focusText)
-            input.change();
-      }
-
-			function keydownEvent(e) {
-				var k = e.which,
-					pos,
-					begin,
-					end;
-
-				//backspace, delete, and escape get special treatment
-				if (k === 8 || k === 46 || (iPhone && k === 127)) {
-					pos = getCaret(elm);
-					begin = pos.begin;
-					end = pos.end;
-
-					if (end - begin === 0) {
-						begin=k!==46?seekPrev(begin):(end=seekNext(begin-1));
-						end=k===46?seekNext(end):end;
-					}
-					clearBuffer(begin, end);
-					shiftL(begin, end - 1);
-
-					e.preventDefault();
-				} else if( k === 13 ) { // enter
-					blurEvent.call(this, e);
-				} else if (k === 27) { // escape
-					input.val(focusText);
-                    setCaret(elm,0,checkVal());
-					e.preventDefault();
-				}
-			}
-
-			function keypressEvent(e) {
-				var k = e.which,
-					pos = getCaret(elm),
-					p,
-					c,
-					next;
-
-                    if (k == 0) {
-                        // unable to detect key pressed. Grab it from pos and adjust
-                        // this is a failsafe for mobile chrome
-                        // which can't detect keypress events
-                        // reliably
-                        if (pos.begin >= len) {
-                            input.val(input.val().substr(0, len));
-                            e.preventDefault();
-                            return false;
-                        }
-                        if (pos.begin == pos.end) {
-                            k = input.val().charCodeAt(pos.begin - 1);
-                            pos.begin--;
-                            pos.end--;
+                function blurEvent(e) {
+                    if(settings.autoclear){
+                        var result = mask.apply(elm.value, 0);
+                        if(!result.isComplete){
+                            elm.value = "";
                         }
                     }
 
-				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
-					return;
-				} else if ( k && k !== 13 ) {
-					if (pos.end - pos.begin !== 0){
-						clearBuffer(pos.begin, pos.end);
-						shiftL(pos.begin, pos.end-1);
-					}
-
-					p = seekNext(pos.begin - 1);
-					if (p < len) {
-						c = String.fromCharCode(k);
-						if (tests[p].test(c)) {
-							shiftR(p);
-
-							buffer[p] = c;
-							writeBuffer();
-							next = seekNext(p);
-
-							if(android){
-								//Path for CSP Violation on FireFox OS 1.1
-								var proxy = function()
-								{
-
-									$.proxy(setCaret,elm,next);
-								}
-
-								setTimeout(proxy,0);
-							}else{
-                                setCaret(elm,next);
-							}
-
-							if (settings.completed && next >= len) {
-								settings.completed.call(input);
-							}
-						}
-					}
-					e.preventDefault();
-				}
-			}
-
-			function clearBuffer(start, end) {
-				var i;
-				for (i = start; i < end && i < len; i++) {
-					if (tests[i]) {
-						buffer[i] = settings.placeholder;
-					}
-				}
-			}
-
-			function writeBuffer() { input.val(buffer.join('')); }
-
-			function checkVal(allow) {
-				//try to place characters where they belong
-				var test = input.val(),
-					lastMatch = -1,
-					i,
-					c,
-					pos;
-
-				for (i = 0, pos = 0; i < len; i++) {
-					if (tests[i]) {
-						buffer[i] = settings.placeholder;
-						while (pos++ < test.length) {
-							c = test.charAt(pos - 1);
-							if (tests[i].test(c)) {
-								buffer[i] = c;
-								lastMatch = i;
-								break;
-							}
-						}
-						if (pos > test.length) {
-							break;
-						}
-					} else if (buffer[i] === test.charAt(pos) && i !== partialPosition) {
-						pos++;
-						lastMatch = i;
-					}
-				}
-				if (allow) {
-					writeBuffer();
-				} else if (lastMatch + 1 < partialPosition) {
-					if (settings.autoclear || buffer.join('') === defaultBuffer) {
-						// Invalid value. Remove it and replace it with the
-						// mask, which is the default behavior.
-						input.val("");
-						clearBuffer(0, len);
-					} else {
-						// Invalid value, but we opt to show the value to the
-						// user and allow them to correct their mistake.
-						writeBuffer();
-					}
-				} else {
-					writeBuffer();
-					input.val(input.val().substring(0, lastMatch + 1));
-				}
-				return (partialPosition ? i : firstNonMaskPos);
-			}
-
-			input.data($.mask.dataName,function(){
-				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=settings.placeholder ? c : null;
-				}).join('');
-			});
-
-			if (!input.attr("readonly"))
-				input
-				.one("unmask", function() {
-					input
-						.off(".mask")
-						.removeData($.mask.dataName);
-				})
-				.on("focus.mask", function() {
-					clearTimeout(caretTimeoutId);
-					var pos;
-
-					focusText = input.val();
-
-					pos = checkVal();
-
-					caretTimeoutId = setTimeout(function(){
-						writeBuffer();
-						if (pos == mask.replace("?","").length) {
-                            setCaret(elm,0,pos);
-						} else {
-                            setCaret(elm,pos);
-						}
-					}, 10);
-				})
-				.on("blur.mask", blurEvent)
-				.on("keydown.mask", keydownEvent)
-				.on("keypress.mask", keypressEvent)
-				.on(pasteEventName, function() {
-					setTimeout(function() {
-						var pos=checkVal(true);
-                        setCaret(elm,pos);
-						if (settings.completed && pos == input.val().length)
-							settings.completed.call(input);
-					}, 0);
-				});
-                if (chrome && android) {
-                    input.on("keyup.mask", keypressEvent);
+                    if (elm.value != focusText){
+                        input.change();
+                    }
                 }
-				checkVal(); //Perform initial check for existing values
-		});
-	}
-});
+
+                function keydownEvent(e) {
+                    var k = e.which;
+
+                    //backspace, delete, enter, and escape get special treatment
+                    if (k === 8 || k === 46) {
+                        var pos = getCaret(elm);
+                        var result;
+
+                        if(pos.begin != pos.end){
+                            var buffer = elm.value.split('');
+                            buffer.splice(pos.begin,pos.end - pos.begin);
+                            result = mask.apply(buffer.join(''), pos.begin+1);
+                            result.pos = pos.begin;
+                        }else{
+                            if(k==8){
+                                result = mask.applyBackspace(elm.value, pos.begin);
+                            }else{
+                                result = mask.applyDelete(elm.value, pos.begin);
+                            }
+                        }
+
+                        elm.value = result.value;
+                        setCaret(elm, result.pos);
+                        e.preventDefault();
+                    } else if(k === 13) { // enter
+                        blurEvent.call(this, e);
+                    } else if (k === 27) { // escape
+                        elm.value = focusText;
+                        setCaret(elm, 0, focusText.length);
+                        e.preventDefault();
+                    }
+                }
+
+                function keypressEvent(e) {
+                    var k = e.which,
+                    pos = getCaret(elm);
+
+                    if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
+                        return;
+                    } else if (k && k !== 13) {
+                        var buffer = elm.value.split('');
+                        buffer.splice(pos.begin, pos.end - pos.begin, String.fromCharCode(k));
+                        var result = mask.apply(buffer.join(''), pos.begin+1);
+
+                        elm.value = result.value;
+                        setCaret(elm, result.pos);
+                        if(result.isComplete && settings.completed)
+                            settings.completed.call(input); //TODO: Raise event instead.
+                        e.preventDefault();
+
+                        // if(android){
+                        //     //Path for CSP Violation on FireFox OS 1.1
+                        //     var proxy = function()
+                        //     {
+                        //
+                        //         $.proxy(setCaret,elm,next);
+                        //     }
+                        //
+                        //     setTimeout(proxy,0);
+                        // }else{
+                        //     setCaret(elm,next);
+                        // }
+                    }
+                }
+
+                var caretTimeoutId;
+                function focusEvent(e){
+                    clearTimeout(caretTimeoutId);
+                    var result = mask.apply(elm.value, 0);
+                    focusText = elm.value;
+
+                    caretTimeoutId = setTimeout(function(){
+                        elm.value = result.value;
+                        if (result.isComplete) {
+                            setCaret(elm, 0, result.pos);
+                        } else {
+                            setCaret(elm, result.pos);
+                        }
+                    }, 10);
+                }
+
+                function pasteEvent(e){
+                    setTimeout(function() {
+                        var pos = getCaret(elm);
+                        var result = mask.apply(elm.value, pos.end);
+                        elm.value = result.value;
+                        setCaret(elm, result.pos);
+                        if(result.isComplete && settings.completed)
+                            settings.completed.call(input); //TODO: Raise event instead.
+                    }, 0);
+                }
+                input.data($.mask.dataName,mask);
+
+                if (!input.attr("readonly"))
+                input
+                .one("unmask", function() {
+                    input
+                    .off(".mask")
+                    .removeData($.mask.dataName);
+                })
+                .on("focus.mask",focusEvent)
+                .on("blur.mask", blurEvent)
+                .on("keydown.mask", keydownEvent)
+                .on("keypress.mask", keypressEvent)
+                .on(pasteEventName, pasteEvent);
+
+                // if (chrome && android) {
+                //     input.on("keyup.mask", keypressEvent);
+                // }
+
+                //Apply initital mask
+                if(elm.value.length){
+                    var result=mask.apply(elm.value, 0);
+                    elm.value = result.value;
+                }
+            });
+        }
+    });
 })(jQuery);
