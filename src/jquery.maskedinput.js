@@ -74,7 +74,9 @@
                     break
         }
         buffer.splice(i, 1);
-        return this.apply(buffer.join(''), i);
+        var result= this.apply(buffer.join(''), i);
+        result.pos=i;
+        return result;
     }
 
     FixedWidthMask.prototype.applyDelete = function(input, pos){
