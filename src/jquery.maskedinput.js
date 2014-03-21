@@ -118,7 +118,6 @@
                 buffer.push(action);
                 if(action === input.charAt(pos) && i !== this.partialPosition) {
                     pos++;
-                    lastMatch=i;
                 }
             }
         }
@@ -130,9 +129,16 @@
             break
         }
 
+        var trimmed=buffer;
+        if(this.partialPosition < this.length){
+            trimmed=buffer.slice(0, Math.max(this.partialPosition,lastMatch+1))
+        }
+
+        //TODO: better names for these props
         var result={
-            value: buffer.join(''),
-            raw: raw.join(''), //TODO: separate unmask call?
+            value: buffer.join(''), //Prompt Value
+            trimmed: trimmed.join(''), //Display Value
+            raw: raw.join(''), //Raw Value, TODO: separate unmask call?
             pos: i , //(partialPosition ? i : firstNonMaskPos)
             isComplete: (lastMatch + 1) >= this.partialPosition
         };
@@ -192,11 +198,10 @@
                 focusText = elm.value;
 
                 function blurEvent(e) {
-                    if(settings.autoclear){
-                        var result = mask.apply(elm.value, 0);
-                        if(!result.isComplete){
-                            elm.value = "";
-                        }
+                    var result = mask.apply(elm.value, 0);
+                    elm.value = result.trimmed;
+                    if(settings.autoclear && !result.isComplete){
+                        elm.value = "";
                     }
 
                     if (elm.value != focusText){
