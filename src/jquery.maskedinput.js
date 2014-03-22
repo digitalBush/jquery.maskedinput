@@ -93,7 +93,7 @@
 
     FixedWidthMask.prototype.apply = function(input, caretPosition){
         if(caretPosition == null)
-            caretPosition = 0;
+            caretPosition = this.length;
         var buffer=[],
             raw=[],
             lastMatch = -1,
@@ -200,7 +200,7 @@
                 focusText = elm.value;
 
                 function blurEvent(e) {
-                    var result = mask.apply(elm.value, 0);
+                    var result = mask.apply(elm.value);
                     elm.value = result.trimmed;
                     if(settings.autoclear && !result.isComplete){
                         elm.value = "";
@@ -279,7 +279,7 @@
                 var caretTimeoutId;
                 function focusEvent(e){
                     clearTimeout(caretTimeoutId);
-                    var result = mask.apply(elm.value, 0);
+                    var result = mask.apply(elm.value);
                     focusText = elm.value;
 
                     caretTimeoutId = setTimeout(function(){
@@ -323,7 +323,7 @@
 
                 //Apply initital mask
                 if(elm.value.length){
-                    var result=mask.apply(elm.value, 0);
+                    var result=mask.apply(elm.value);
                     elm.value = result.value;
                 }
             });
