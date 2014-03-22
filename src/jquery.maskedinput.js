@@ -126,7 +126,7 @@
 
         //Find the next spot waiting for input
         var maxCaret=Math.min(caretPosition,this.length);
-        for(i=Math.max(lastMatch+1,maxCaret);i<this.length;i++){
+        for(i=Math.min(lastMatch+1,maxCaret);i<this.length;i++){
             if(this.tests[i].test)
             break
         }
