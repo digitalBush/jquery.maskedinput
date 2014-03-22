@@ -37,7 +37,7 @@ feature("Enter Key", function() {
                 input.trigger(enterKeyEvent);
             });
             then("value should remain visible with placeholders",function(){
-                expect(input).toHaveValue("1_");
+                expect(input).toHaveValue("1");
             });
         });
     });
@@ -63,7 +63,7 @@ feature("Enter Key", function() {
                 input.mashKeys("1").trigger(enterKeyEvent);
             });
             then("value should be empty",function(){
-                expect(input).toHaveValue("1___");
+                expect(input).toHaveValue("1");
             });
         });
 

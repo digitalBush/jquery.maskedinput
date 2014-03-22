@@ -123,7 +123,7 @@ feature("Leaving A Masked Input",function(){
 			input.blur();
 		});
 		then("value should remain visible with placeholders",function(){
-			expect(input).toHaveValue("1_");
+			expect(input).toHaveValue("1");
 		});
 	});
 });
@@ -149,7 +149,7 @@ feature("Optional marker",function(){
 			input.mashKeys("1").blur();
 		});
 		then("value should be empty",function(){
-			expect(input).toHaveValue("1___");
+			expect(input).toHaveValue("1");
 		});
 	});
 

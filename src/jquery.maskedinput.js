@@ -133,7 +133,11 @@
 
         var trimmed=buffer;
         if(this.partialPosition < this.length){
-            trimmed=buffer.slice(0, Math.max(this.partialPosition,lastMatch+1))
+            trimmed = buffer.slice(0, Math.max(this.partialPosition,lastMatch+1))
+        }
+
+        if(!this.settings.autoclear){
+            trimmed = buffer.slice(0,i);
         }
 
         //TODO: better names for these props
@@ -324,7 +328,11 @@
                 //Apply initital mask
                 if(elm.value.length){
                     var result=mask.apply(elm.value);
-                    elm.value = result.value;
+                    if(!settings.autoclear || result.isComplete){
+                        elm.value = result.value;
+                    }else{
+                        elm.value="";
+                    }
                 }
             });
         }
