@@ -74,7 +74,7 @@
                     break
         }
         buffer.splice(i, 1);
-        var result= this.apply(buffer.join(''), i);
+        var result= this.apply(buffer.join(''), i, true);
         result.pos=i;
         return result;
     }
@@ -86,15 +86,17 @@
                     break
         }
         buffer.splice(i, 1);
-        var result=this.apply(buffer.join(''), i);
+        var result=this.apply(buffer.join(''), i, true);
         result.pos=i;
         return result;
     }
 
-    FixedWidthMask.prototype.apply = function(input, caretPosition){
+    FixedWidthMask.prototype.apply = function(inputString, caretPosition, doShift){
         if(caretPosition == null)
             caretPosition = this.length;
-        var buffer=[],
+
+        var input=inputString.split(''),
+            buffer=[],
             raw=[],
             lastMatch = -1,
             i,
@@ -108,17 +110,50 @@
                 buffer.push(this.settings.placeholder);
 
                 while (pos++ < input.length) {
-                    c = input.charAt(pos - 1);
+                    c = input[pos - 1];
                     if (action.test(c)) {
                         buffer[i] = c;
-                        raw.push(c)
+                        raw.push(c);
                         lastMatch = i;
+                        break;
+                    }else if(doShift){
+                        //TODO: The following is awful and needs to be refactored.
+                        var tests=$.map(this.tests.slice(i + 1),function(test, offset){
+                            var index = pos - 1 + offset;
+                            if(test.test && input[index] != null){
+                                return {regex:test,char:input[index]};
+                            }
+                        });
+
+                        if(tests.length){
+                            var newInput = [],canShift = true;
+                            tests.unshift({regex: action});
+                            for(var j = 1; j < tests.length; j++){
+                                if(!tests[j-1].regex.test(tests[j].char)){
+                                    canShift = false;
+                                    break;
+                                }
+                                newInput.push(tests[j].char);
+                            }
+                        }
+
+                        if(canShift){
+                            //Everything to the right can shift left and still match.
+                            input = newInput;
+                            buffer[i] = input[0];
+                            pos = 1;
+                        }else{
+                            //Retry current char at next position leaving a blank.
+                            pos--;
+                        }
+                        //Only allow shift attempt to happen once.
+                        doShift = false;
                         break;
                     }
                 }
             } else {
                 buffer.push(action);
-                if(action === input.charAt(pos) && i !== this.partialPosition) {
+                if(action === input[pos] && i !== this.partialPosition) {
                     pos++;
                 }
             }
