@@ -258,17 +258,15 @@
                         var pos = getCaret(elm);
                         var result;
 
-                        if(pos.begin != pos.end){
+                        if (pos.begin != pos.end) {
                             var buffer = elm.value.split('');
                             buffer.splice(pos.begin,pos.end - pos.begin);
                             result = mask.apply(buffer.join(''), pos.begin+1);
                             result.pos = pos.begin;
-                        }else{
-                            if(k==8){
-                                result = mask.applyBackspace(elm.value, pos.begin);
-                            }else{
-                                result = mask.applyDelete(elm.value, pos.begin);
-                            }
+                        } else if( k == 8 ) {
+                            result = mask.applyBackspace(elm.value, pos.begin);
+                        } else {
+                            result = mask.applyDelete(elm.value, pos.begin);
                         }
 
                         elm.value = result.value;
