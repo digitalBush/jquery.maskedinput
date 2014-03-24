@@ -110,7 +110,7 @@
                 buffer.push(this.settings.placeholder);
 
                 while (pos++ < input.length) {
-                    c = input[pos - 1];
+                    var c = input[pos - 1];
                     if (action.test(c)) {
                         buffer[i] = c;
                         raw.push(c);
