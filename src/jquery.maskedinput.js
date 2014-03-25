@@ -1,5 +1,5 @@
 (function($) {
-
+    "use strict";
     function setCaret(elm,begin,end){
         end = (typeof end === 'number') ? end : begin;
 
@@ -116,7 +116,7 @@
                         setCaret(elm, result.pos);
                         e.preventDefault();
                     } else if(k === 13) { // enter
-                        blurEvent.call(this, e);
+                        blurEvent.call(elm, e);
                     } else if (k === 27) { // escape
                         elm.value = focusText;
                         setCaret(elm, 0, focusText.length);

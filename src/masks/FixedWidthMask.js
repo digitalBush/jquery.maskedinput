@@ -1,4 +1,5 @@
 (function(){
+    "use strict";
     function FixedWidthMask (mask, settings){
         var self=this;
         //Build up structures necessary to quickly apply masking

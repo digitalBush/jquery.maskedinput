@@ -7,5 +7,6 @@
     "undef"     : true,
     "unused"    : true,
     "trailing"  : true,
-    "curly"     : true
+    "curly"     : true,
+    "strict"    : true
 }
