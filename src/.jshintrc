@@ -1,5 +1,9 @@
 {
-  "asi"       : true,
-  "jquery"    : true,
-  "eqnull"    : true
+    "browser"   : true,
+    "jquery"    : true,
+    "eqnull"    : true,
+    "newcap"    : true,
+    "indent"    : 4,
+    "undef"     : true,
+    "unused"    : true
 }

@@ -70,26 +70,26 @@
     FixedWidthMask.prototype.applyBackspace = function(input, pos){
         var i, buffer = input.split('');
         for(i = pos - 1; i >= 0; i--){
-                if(this.tests[i].test)
-                    break
+            if(this.tests[i].test)
+                break;
         }
         buffer.splice(i, 1);
         var result= this.apply(buffer.join(''), i, true);
         result.pos=i;
         return result;
-    }
+    };
 
     FixedWidthMask.prototype.applyDelete = function(input, pos){
         var i, buffer = input.split('');
         for(i = pos; i < buffer.length; i++){
-                if(this.tests[i].test)
-                    break
+            if(this.tests[i].test)
+                break;
         }
         buffer.splice(i, 1);
         var result=this.apply(buffer.join(''), i, true);
         result.pos=i;
         return result;
-    }
+    };
 
     FixedWidthMask.prototype.apply = function(inputString, caretPosition, doShift){
         if(caretPosition == null)
@@ -104,7 +104,7 @@
             pos;
 
         for (i = 0, pos = 0; i < this.length; i++) {
-            var action=this.tests[i];
+            action=this.tests[i];
 
             if (action.test) {
                 buffer.push(this.settings.placeholder);
@@ -118,15 +118,20 @@
                         break;
                     }else if(doShift){
                         //TODO: The following is awful and needs to be refactored.
-                        var tests=$.map(this.tests.slice(i + 1),function(test, offset){
+                        var tests;
+                        /* jshint ignore:start */
+                        tests=$.map(this.tests.slice(i + 1), function(test, offset){
                             var index = pos - 1 + offset;
                             if(test.test && input[index] != null){
                                 return {regex:test,char:input[index]};
                             }
                         });
+                        /* jshint ignore:end */
+
+                        var newInput = [];
+                        var canShift = tests.length > 0;
 
                         if(tests.length){
-                            var newInput = [],canShift = true;
                             tests.unshift({regex: action});
                             for(var j = 1; j < tests.length; j++){
                                 if(!tests[j-1].regex.test(tests[j].char)){
@@ -163,12 +168,12 @@
         var maxCaret=Math.min(caretPosition,this.length);
         for(i=Math.min(lastMatch+1,maxCaret);i<this.length;i++){
             if(this.tests[i].test)
-            break
+                break;
         }
 
         var trimmed=buffer;
         if(this.partialPosition < this.length){
-            trimmed = buffer.slice(0, Math.max(this.partialPosition,lastMatch+1))
+            trimmed = buffer.slice(0, Math.max(this.partialPosition,lastMatch+1));
         }
 
         if(!this.settings.autoclear){
@@ -183,9 +188,8 @@
             pos: i , //(partialPosition ? i : firstNonMaskPos)
             isComplete: (lastMatch + 1) >= this.partialPosition
         };
-        console.log(result);
         return result;
-    }
+    };
 
     function getPasteEvent() {
         var el = document.createElement('input'),
@@ -194,14 +198,7 @@
         return (typeof el[name] === 'function')?'paste':'input';
     }
 
-    var pasteEventName = getPasteEvent() + ".mask",
-    ua = navigator.userAgent,
-    iPhone = /iphone/i.test(ua),
-    chrome = /chrome/i.test(ua),
-    android=/android/i.test(ua),
-    caretTimeoutId;
-
-
+    var pasteEventName = getPasteEvent() + ".mask";
 
     $.fn.extend({
         //TODO: Be a good citizen and get this down to only .mask()
@@ -209,18 +206,13 @@
             return this.trigger("unmask");
         },
         //TODO: we need a conflict thing here, maybe only use maskedinput(or alias?)
-        mask: function(mask, settings) {
-            var input,
-            defs,
-            tests,
-            partialPosition,
-            firstNonMaskPos,
-            len;
+        mask: function(format, settings) {
+            var input;
 
             //TODO: make these more in line with newer plugin interaction guidelines.
-            if (!mask && this.length > 0) {
-                 input = $(this[0]);
-                 return input.data($.mask.dataName).apply(input.val()).raw;
+            if (!format && this.length > 0) {
+                input = $(this[0]);
+                return input.data($.mask.dataName).apply(input.val()).raw;
             }
 
             settings = $.extend({
@@ -230,7 +222,7 @@
                 completed: null
             }, settings);
 
-            var mask=new FixedWidthMask(mask,settings);
+            var mask=new FixedWidthMask(format,settings);
 
 
             return this.trigger("unmask").each(function() {
@@ -238,7 +230,7 @@
                 input = $(this),
                 focusText = elm.value;
 
-                function blurEvent(e) {
+                function blurEvent() {
                     var result = mask.apply(elm.value);
                     elm.value = result.trimmed;
                     if(settings.autoclear && !result.isComplete){
@@ -314,7 +306,7 @@
                 }
 
                 var caretTimeoutId;
-                function focusEvent(e){
+                function focusEvent(){
                     clearTimeout(caretTimeoutId);
                     var result = mask.apply(elm.value);
                     focusText = elm.value;
@@ -329,7 +321,7 @@
                     }, 10);
                 }
 
-                function pasteEvent(e){
+                function pasteEvent(){
                     setTimeout(function() {
                         var pos = getCaret(elm);
                         var result = mask.apply(elm.value, pos.end);
@@ -341,18 +333,19 @@
                 }
                 input.data($.mask.dataName,mask);
 
-                if (!input.attr("readonly"))
-                input
-                .one("unmask", function() {
+                if (!input.attr("readonly")){
                     input
-                    .off(".mask")
-                    .removeData($.mask.dataName);
-                })
-                .on("focus.mask",focusEvent)
-                .on("blur.mask", blurEvent)
-                .on("keydown.mask", keydownEvent)
-                .on("keypress.mask", keypressEvent)
-                .on(pasteEventName, pasteEvent);
+                    .one("unmask", function() {
+                        input
+                        .off(".mask")
+                        .removeData($.mask.dataName);
+                    })
+                    .on("focus.mask",focusEvent)
+                    .on("blur.mask", blurEvent)
+                    .on("keydown.mask", keydownEvent)
+                    .on("keypress.mask", keypressEvent)
+                    .on(pasteEventName, pasteEvent);
+                }
 
                 // if (chrome && android) {
                 //     input.on("keyup.mask", keypressEvent);

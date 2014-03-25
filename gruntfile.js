@@ -23,11 +23,11 @@ module.exports = function(grunt) {
             options: {
                 banner: '<%= banner %>'
             },
-          dist: {
-            files: {
-              'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+            dist: {
+                files: {
+                    'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+                }
             }
-          }
         },
         jasmine: {
             full: {
@@ -45,9 +45,17 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            files: ['gruntfile.js', '<%= concat.dist.src %>', '<%= jasmine.full.options.specs %>'],
-            options: {
-                jshintrc: 'src/.jshintrc'
+            src: {
+                options: {
+                    jshintrc: 'src/.jshintrc'
+                },
+                src: '<%= concat.dist.src %>'
+            },
+            specs: {
+                options: {
+                    jshintrc: 'spec/.jshintrc'
+                },
+                src: ['<%= jasmine.full.options.specs %>']
             }
         },
         watch: {
