@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                 stripBanners: false
             },
             dist: {
-                src: ['src/jquery.maskedinput.js'],
+                src: ['src/jquery.maskedinput.js','src/masks/*.js'],
                 dest: 'dist/<%= pkg.name %>.js'
             }
         },
