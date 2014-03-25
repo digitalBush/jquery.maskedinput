@@ -1,6 +1,0 @@
-language: node_js
-node_js:
-  - "0.10"
-
-# always succeed on release branch and tags
-script: /bin/true
