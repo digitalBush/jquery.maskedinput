@@ -2,7 +2,5 @@ language: node_js
 node_js:
   - "0.10"
 
-# ignore the release branch
-branches:
-  - release
-  - /\d+\.\d+(\.\d+)*/
+# always succeed on release branch and tags
+script: /bin/true
