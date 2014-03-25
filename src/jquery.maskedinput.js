@@ -137,8 +137,9 @@
 
                         elm.value = result.value;
                         setCaret(elm, result.pos);
-                        if(result.isComplete)
+                        if(result.isComplete){
                             input.trigger("completed.mask");
+                        }
 
                         e.preventDefault();
 
@@ -179,8 +180,9 @@
                         var result = mask.apply(elm.value, pos.end);
                         elm.value = result.value;
                         setCaret(elm, result.pos);
-                        if(result.isComplete)
+                        if(result.isComplete){
                             input.trigger("completed.mask");
+                        }
                     }, 0);
                 }
                 input.data($.mask.dataName,mask);

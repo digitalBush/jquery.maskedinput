@@ -28,8 +28,9 @@
     FixedWidthMask.prototype.applyBackspace = function(input, pos){
         var i, buffer = input.split('');
         for(i = pos - 1; i >= 0; i--){
-            if(this.tests[i].test)
+            if(this.tests[i].test){
                 break;
+            }
         }
         buffer.splice(i, 1);
         var result= this.apply(buffer.join(''), i, true);
@@ -40,8 +41,9 @@
     FixedWidthMask.prototype.applyDelete = function(input, pos){
         var i, buffer = input.split('');
         for(i = pos; i < buffer.length; i++){
-            if(this.tests[i].test)
+            if(this.tests[i].test){
                 break;
+            }
         }
         buffer.splice(i, 1);
         var result=this.apply(buffer.join(''), i, true);
@@ -50,8 +52,9 @@
     };
 
     FixedWidthMask.prototype.apply = function(inputString, caretPosition, doShift){
-        if(caretPosition == null)
+        if(caretPosition == null){
             caretPosition = this.length;
+        }
 
         var input=inputString.split(''),
             buffer=[],
@@ -125,8 +128,9 @@
         //Find the next spot waiting for input
         var maxCaret=Math.min(caretPosition,this.length);
         for(i=Math.min(lastMatch+1,maxCaret);i<this.length;i++){
-            if(this.tests[i].test)
+            if(this.tests[i].test){
                 break;
+            }
         }
 
         var trimmed=buffer;

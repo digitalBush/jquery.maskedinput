@@ -5,5 +5,7 @@
     "newcap"    : true,
     "indent"    : 4,
     "undef"     : true,
-    "unused"    : true
+    "unused"    : true,
+    "trailing"  : true,
+    "curly"     : true
 }
