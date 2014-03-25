@@ -4,7 +4,3 @@ node_js:
 before_script:
   - npm install -g grunt-cli
 
-# ignore the release branch
-branches:
-  - release
-  - /\d+\.\d+(\.\d+)*/
