@@ -73,7 +73,7 @@
                 completed: null
             }, settings);
 
-            //Hardcoded as fixed for now. 
+            //Hardcoded as fixed for now.
             var mask=new $.mask.masks.fixed(format, settings);
 
             return this.trigger("unmask").each(function() {
@@ -137,8 +137,9 @@
 
                         elm.value = result.value;
                         setCaret(elm, result.pos);
-                        if(result.isComplete && settings.completed)
-                            settings.completed.call(input); //TODO: Raise event instead.
+                        if(result.isComplete)
+                            input.trigger("completed.mask");
+
                         e.preventDefault();
 
                         // if(android){
@@ -178,8 +179,8 @@
                         var result = mask.apply(elm.value, pos.end);
                         elm.value = result.value;
                         setCaret(elm, result.pos);
-                        if(result.isComplete && settings.completed)
-                            settings.completed.call(input); //TODO: Raise event instead.
+                        if(result.isComplete)
+                            input.trigger("completed.mask");
                     }, 0);
                 }
                 input.data($.mask.dataName,mask);

@@ -1,8 +1,8 @@
-feature("Pasting", function() {	
+feature("Pasting", function() {
 	scenario('When pasting a value',function(){
 		var completed=false;
 		given("an input with a completed callback", function(){
-			input.mask("99",{completed:function(){completed=true;}});
+			input.mask("99").on("completed.mask",function(){completed=true;});
 		});
 
 		when("pasting",function(){
