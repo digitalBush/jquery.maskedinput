@@ -257,7 +257,7 @@ $.fn.extend({
 								input.caret(next);
 							}
 
-							if (settings.completed && next >= len) {
+							if (settings.completed && (next >= len || buffer.indexOf(settings.placeholder) == -1)) {
 								settings.completed.call(input);
 							}
 						}
