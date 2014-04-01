@@ -247,10 +247,9 @@ $.fn.extend({
 
 							if(android){
 								//Path for CSP Violation on FireFox OS 1.1
-								var proxy = function()
-								{
-									$.proxy($.fn.caret,input,next);
-								}
+								var proxy = function() {
+									$.proxy($.fn.caret,input,next)();
+								};
 
 								setTimeout(proxy,0);
 							}else{
