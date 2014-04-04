@@ -23,7 +23,8 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	reMap: {}
 };
 
 $.fn.extend({
@@ -78,7 +79,8 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			reMap: $.mask.reMap
 		}, settings);
 
 
@@ -238,6 +240,11 @@ $.fn.extend({
 					p = seekNext(pos.begin - 1);
 					if (p < len) {
 						c = String.fromCharCode(k);
+						/* a chance to remap inputs */
+						if(c in settings.reMap)
+						{
+							c = settings.reMap[c];
+						}
 						if (tests[p].test(c)) {
 							shiftR(p);
 
