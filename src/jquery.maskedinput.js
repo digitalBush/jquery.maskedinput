@@ -22,6 +22,7 @@ $.mask = {
 		'*': "[A-Za-z0-9]"
 	},
 	autoclear: true,
+    partiallyclear: false,
 	dataName: "rawMaskFn",
 	placeholder: '_'
 };
@@ -77,6 +78,7 @@ $.fn.extend({
 		}
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
+            partiallyclear: $.mask.partiallyclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
 			completed: null
 		}, settings);
@@ -303,8 +305,12 @@ $.fn.extend({
 						lastMatch = i;
 					}
 				}
-				if (allow) {
-					writeBuffer();
+                if (allow) {
+                    writeBuffer();
+                } else if (settings.partiallyclear && !settings.autoclear && (buffer.join('') != defaultBuffer)) {
+                    writeBuffer();
+                    input.val(input.val().substring(0, lastMatch + 1));
+                    clearBuffer(input.val().length, len);
 				} else if (lastMatch + 1 < partialPosition) {
 					if (settings.autoclear || buffer.join('') === defaultBuffer) {
 						// Invalid value. Remove it and replace it with the
