@@ -23,7 +23,8 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	converters: {}
 };
 
 $.fn.extend({
@@ -78,25 +79,29 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
+			converters: $.mask.converters,
 			completed: null
 		}, settings);
 
 
 		defs = $.mask.definitions;
 		tests = [];
+		converters = [];
 		partialPosition = len = mask.length;
 		firstNonMaskPos = null;
-
+		
 		$.each(mask.split(""), function(i, c) {
 			if (c == '?') {
 				len--;
 				partialPosition = i;
 			} else if (defs[c]) {
 				tests.push(new RegExp(defs[c]));
+				converters.push(settings.converters[c]);
 				if (firstNonMaskPos === null) {
 					firstNonMaskPos = tests.length - 1;
 				}
 			} else {
+				converters.push(null);
 				tests.push(null);
 			}
 		});
@@ -239,6 +244,7 @@ $.fn.extend({
 					if (p < len) {
 						c = String.fromCharCode(k);
 						if (tests[p].test(c)) {
+							c = applyConverter(c,p);
 							shiftR(p);
 
 							buffer[p] = c;
@@ -276,6 +282,10 @@ $.fn.extend({
 
 			function writeBuffer() { input.val(buffer.join('')); }
 
+			function applyConverter(c,testIndex){			
+				if(converters[testIndex]) return converters[testIndex].call(this,c)
+				return c;
+			}
 			function checkVal(allow) {
 				//try to place characters where they belong
 				var test = input.val(),
@@ -283,13 +293,13 @@ $.fn.extend({
 					i,
 					c,
 					pos;
-
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
 						buffer[i] = settings.placeholder;
 						while (pos++ < test.length) {
 							c = test.charAt(pos - 1);
 							if (tests[i].test(c)) {
+								c = applyConverter(c,i);
 								buffer[i] = c;
 								lastMatch = i;
 								break;

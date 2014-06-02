@@ -53,6 +53,25 @@ describe("Typing Specifications", function() {
 				expect(caret.begin).toEqual(1);            
 				expect(caret.end).toEqual(1);
 			});
-		});		
+		});	
+
+		describe("when there are converters in place apply converters at each typing ",function(){
+			beforeEach(function(){
+				runs(function(){
+					input
+					.mask("a/a",{converters:{'a':function(c){return c.toUpperCase();}}})
+					.focus()						
+				});
+				waits(1);
+				runs(function(){
+					input
+					.mashKeys("e")
+					.mashKeys("e")
+				});
+			})			
+			it("should apply converter (converter is just c.toUpperCase())",function(){
+				expect(input).toHaveValue("E/E");
+			});
+		});			
 	});
 });
