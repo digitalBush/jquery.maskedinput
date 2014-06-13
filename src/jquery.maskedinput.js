@@ -12,6 +12,7 @@ var pasteEventName = getPasteEvent() + ".mask",
 	iPhone = /iphone/i.test(ua),
 	chrome = /chrome/i.test(ua),
 	android=/android/i.test(ua),
+	mobile = android,// || iPhone;
 	caretTimeoutId;
 
 $.mask = {
@@ -203,6 +204,14 @@ $.fn.extend({
 				}
 			}
 
+			function pasteEvent() {
+ +	                    setTimeout(function() {
+ +	                        var pos = checkVal(true);
+ +	                        input.caret(pos);
+ +	                        if (settings.completed && pos == input.val().length)
+ +	                            settings.completed.call(input);
+ +	                    }, 0);
+ +                	}
 			function keypressEvent(e) {
 				var k = e.which,
 					pos = input.caret(),
@@ -355,19 +364,14 @@ $.fn.extend({
 				})
 				.on("blur.mask", blurEvent)
 				.on("keydown.mask", keydownEvent)
-				.on("keypress.mask", keypressEvent)
-				.on(pasteEventName, function() {
-					setTimeout(function() {
-						var pos=checkVal(true);
-						input.caret(pos);
-						if (settings.completed && pos == input.val().length)
-							settings.completed.call(input);
-					}, 0);
-				});
-                if (chrome && android) {
-                    input.on("keyup.mask", keypressEvent);
-                }
-				checkVal(); //Perform initial check for existing values
+				.on(pasteEventName, pasteEvent);
+ +				if (mobile) {
+ +		                        input.on('keyup.mask', pasteEvent);
+ +		                } else {
+ +		                        input.on("keypress.mask", keypressEvent)
+ +		                }
+ +			}
+			checkVal(); //Perform initial check for existing values
 		});
 	}
 });
