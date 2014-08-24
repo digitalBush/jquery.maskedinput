@@ -176,11 +176,20 @@
                     if (curVal.length < oldVal.length) {
                         // a deletion or backspace happened
                         checkVal(true);
-                        pos.begin = seekPrev(pos.begin + 1);
-                        input.caret(pos.begin, pos.begin);
+                        while (pos.begin > 0 && !tests[pos.begin-1])
+                              pos.begin--;   
+                        if (pos.begin === 0)
+                        {
+                           while (pos.begin < firstNonMaskPos && !tests[pos.begin])
+                              pos.begin++; 
+                        }
+                        input.caret(pos.begin,pos.begin);
                     } else {
-                        pos = checkVal(true);
-                        input.caret(pos);
+                        var pos2 = checkVal(true);
+                        while (pos.begin < len && !tests[pos.begin])
+                              pos.begin++; 
+
+                        input.caret(pos.begin,pos.begin);
                     }
                     if (settings.completed && pos == input.val().length)
                         settings.completed.call(input);
