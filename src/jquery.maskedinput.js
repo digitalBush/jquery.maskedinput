@@ -175,7 +175,7 @@ $.fn.extend({
       }
 
 			function keydownEvent(e) {
-				var k = e.which,
+				var k = e.which || e.keyCode,
 					pos,
 					begin,
 					end;
@@ -204,7 +204,7 @@ $.fn.extend({
 			}
 
 			function keypressEvent(e) {
-				var k = e.which,
+				var k = e.which || e.keyCode,
 					pos = input.caret(),
 					p,
 					c,
