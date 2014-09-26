@@ -152,7 +152,7 @@ $.fn.extend({
 					if (tests[i]) {
 						if (j < len && tests[i].test(buffer[j])) {
 							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder[i];
+							buffer[j] = settings.placeholder[j];
 						} else {
 							break;
 						}
