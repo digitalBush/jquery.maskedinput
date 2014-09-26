@@ -23,7 +23,9 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	shiftLeft: true,
+	shiftRight: true
 };
 
 $.fn.extend({
@@ -78,6 +80,8 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
+			shiftLeft: $.mask.shiftLeft,
+			shiftRight: $.mask.shiftRight,
 			completed: null
 		}, settings);
 
@@ -148,16 +152,18 @@ $.fn.extend({
 					return;
 				}
 
-				for (i = begin, j = seekNext(end); i < len; i++) {
-					if (tests[i]) {
-						if (j < len && tests[i].test(buffer[j])) {
-							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder[j];
-						} else {
-							break;
+				if ( settings.shiftLeft ) {
+					for (i = begin, j = seekNext(end); i < len; i++) {
+						if (tests[i]) {
+							if (j < len && tests[i].test(buffer[j])) {
+								buffer[i] = buffer[j];
+								buffer[j] = settings.placeholder[j];
+							} else {
+								break;
+							}
+	
+							j = seekNext(j);
 						}
-
-						j = seekNext(j);
 					}
 				}
 				writeBuffer();
@@ -165,6 +171,7 @@ $.fn.extend({
 			}
 
 			function shiftR(pos) {
+				if (!settings.shiftRight) return;
 				var i,
 					c,
 					j,
