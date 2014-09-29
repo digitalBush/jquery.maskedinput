@@ -69,7 +69,8 @@ $.fn.extend({
 			tests,
 			partialPosition,
 			firstNonMaskPos,
-			len;
+            len,
+            oldVal;
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
@@ -167,19 +168,44 @@ $.fn.extend({
 				}
 			}
 
-      function blurEvent(e) {
-          checkVal();
+            function androidInputEvent(e) {
+                var curVal = input.val();
+                var pos = input.caret();
+                if (curVal.length < oldVal.length) {
+                    // a deletion or backspace happened
+                    checkVal(true);
+                    while (pos.begin > 0 && !tests[pos.begin-1])
+                          pos.begin--;
+                    if (pos.begin === 0)
+                    {
+                       while (pos.begin < firstNonMaskPos && !tests[pos.begin])
+                          pos.begin++;
+                    }
+                    input.caret(pos.begin,pos.begin);
+                } else {
+                    var pos2 = checkVal(true);
+                    while (pos.begin < len && !tests[pos.begin])
+                          pos.begin++;
 
-          if (input.val() != focusText)
-            input.change();
-      }
+                    input.caret(pos.begin,pos.begin);
+                }
+                if (settings.completed && pos == input.val().length)
+                    settings.completed.call(input);
+            }
+
+            function blurEvent(e) {
+                checkVal();
+
+                if (input.val() != focusText)
+                    input.change();
+            }
 
 			function keydownEvent(e) {
 				var k = e.which,
 					pos,
 					begin,
 					end;
-
+                    oldVal = input.val();
 				//backspace, delete, and escape get special treatment
 				if (k === 8 || k === 46 || (iPhone && k === 127)) {
 					pos = input.caret();
@@ -209,23 +235,6 @@ $.fn.extend({
 					p,
 					c,
 					next;
-
-                    if (k == 0) {
-                        // unable to detect key pressed. Grab it from pos and adjust
-                        // this is a failsafe for mobile chrome
-                        // which can't detect keypress events
-                        // reliably
-                        if (pos.begin >= len) {
-                            input.val(input.val().substr(0, len));
-                            e.preventDefault();
-                            return false;
-                        }
-                        if (pos.begin == pos.end) {
-                            k = input.val().charCodeAt(pos.begin - 1);
-                            pos.begin--;
-                            pos.end--;
-                        }
-                    }
 
 				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
 					return;
@@ -364,8 +373,11 @@ $.fn.extend({
 							settings.completed.call(input);
 					}, 0);
 				});
-                if (chrome && android) {
-                    input.on("keyup.mask", keypressEvent);
+                if (chrome && android)
+                {
+                    input
+                        .off('input.mask')
+                        .on('input.mask', androidInputEvent);
                 }
 				checkVal(); //Perform initial check for existing values
 		});
