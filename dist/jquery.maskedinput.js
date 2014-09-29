@@ -98,12 +98,6 @@
                 }
                 function keypressEvent(e) {
                     var p, c, next, k = e.which, pos = input.caret();
-                    if (0 == k) {
-                        if (pos.begin >= len) return input.val(input.val().substr(0, len)), e.preventDefault(), 
-                        !1;
-                        pos.begin == pos.end && (k = input.val().charCodeAt(pos.begin - 1), pos.begin--, 
-                        pos.end--);
-                    }
                     if (!(e.ctrlKey || e.altKey || e.metaKey || 32 > k) && k && 13 !== k) {
                         if (pos.end - pos.begin !== 0 && (clearBuffer(pos.begin, pos.end), shiftL(pos.begin, pos.end - 1)), 
                         p = seekNext(pos.begin - 1), len > p && (c = String.fromCharCode(k), tests[p].test(c))) {

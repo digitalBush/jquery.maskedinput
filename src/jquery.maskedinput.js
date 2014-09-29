@@ -236,23 +236,6 @@ $.fn.extend({
 					c,
 					next;
 
-                    if (k == 0) {
-                        // unable to detect key pressed. Grab it from pos and adjust
-                        // this is a failsafe for mobile chrome
-                        // which can't detect keypress events
-                        // reliably
-                        if (pos.begin >= len) {
-                            input.val(input.val().substr(0, len));
-                            e.preventDefault();
-                            return false;
-                        }
-                        if (pos.begin == pos.end) {
-                            k = input.val().charCodeAt(pos.begin - 1);
-                            pos.begin--;
-                            pos.end--;
-                        }
-                    }
-
 				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
 					return;
 				} else if ( k && k !== 13 ) {
