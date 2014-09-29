@@ -69,7 +69,8 @@ $.fn.extend({
 			tests,
 			partialPosition,
 			firstNonMaskPos,
-                    len, oldVal, bindInputEvent;
+            len,
+            oldVal;
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
@@ -166,36 +167,38 @@ $.fn.extend({
 					}
 				}
 			}
-                function inputEvent(e) {
-                    var curVal = input.val();
-                    var pos = input.caret();
-                    if (curVal.length < oldVal.length) {
-                        // a deletion or backspace happened
-                        checkVal(true);
-                        while (pos.begin > 0 && !tests[pos.begin-1])
-                              pos.begin--;   
-                        if (pos.begin === 0)
-                        {
-                           while (pos.begin < firstNonMaskPos && !tests[pos.begin])
-                              pos.begin++; 
-                        }
-                        input.caret(pos.begin,pos.begin);
-                    } else {
-                        var pos2 = checkVal(true);
-                        while (pos.begin < len && !tests[pos.begin])
-                              pos.begin++; 
 
-                        input.caret(pos.begin,pos.begin);
+            function androidInputEvent(e) {
+                var curVal = input.val();
+                var pos = input.caret();
+                if (curVal.length < oldVal.length) {
+                    // a deletion or backspace happened
+                    checkVal(true);
+                    while (pos.begin > 0 && !tests[pos.begin-1])
+                          pos.begin--;
+                    if (pos.begin === 0)
+                    {
+                       while (pos.begin < firstNonMaskPos && !tests[pos.begin])
+                          pos.begin++;
                     }
-                    if (settings.completed && pos == input.val().length)
-                        settings.completed.call(input);
-                }
-      function blurEvent(e) {
-          checkVal();
+                    input.caret(pos.begin,pos.begin);
+                } else {
+                    var pos2 = checkVal(true);
+                    while (pos.begin < len && !tests[pos.begin])
+                          pos.begin++;
 
-          if (input.val() != focusText)
-            input.change();
-      }
+                    input.caret(pos.begin,pos.begin);
+                }
+                if (settings.completed && pos == input.val().length)
+                    settings.completed.call(input);
+            }
+
+            function blurEvent(e) {
+                checkVal();
+
+                if (input.val() != focusText)
+                    input.change();
+            }
 
 			function keydownEvent(e) {
 				var k = e.which,
@@ -227,12 +230,6 @@ $.fn.extend({
 			}
 
 			function keypressEvent(e) {
-                    if (bindInputEvent)
-                    {
-                        bindInputEvent = false;
-                        input.off('input.mask');
-                    }
-                    ;
 				var k = e.which,
 					pos = input.caret(),
 					p,
@@ -393,13 +390,11 @@ $.fn.extend({
 							settings.completed.call(input);
 					}, 0);
 				});
-                if (chrome && android) // bind with input event
+                if (chrome && android)
                 {
-                    bindInputEvent = true;
-                    input.bind('input.mask', inputEvent);
-                } else
-                {
-                    bindInputEvent = false;
+                    input
+                        .off('input.mask')
+                        .on('input.mask', androidInputEvent);
                 }
 				checkVal(); //Perform initial check for existing values
 		});
