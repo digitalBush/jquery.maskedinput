@@ -126,6 +126,23 @@ feature("Leaving A Masked Input",function(){
 			expect(input).toHaveValue("1_");
 		});
 	});
+
+	scenario("Shifts characters left on blur with autoclear false",function(){
+		given("a mask with 10 placeholders",function(){
+			input.mask("(999) 999-9999", { autoclear: false });
+		});
+		when("focusing input",function(){
+			input.focus();
+		});
+		waits(20);
+		when("typing characters at the end of the mask and blurring",function(){
+			input.caret(12);
+			input.mashKeys("44").blur();
+		});
+		then("characters should shift left to beginning of mask",function(){
+			expect(input).toHaveValue("(44_) ___-____");
+		});
+	});
 });
 
 feature("Optional marker",function(){
