@@ -13,13 +13,21 @@ If your requirements aren't met by the predefined placeholders, you can always a
 
 By design, this plugin will reject input which doesn't complete the mask. You can bypass this by using a '?' character at the position where you would like to consider input optional. For example, a mask of "(999) 999-9999? x99999" would require only the first 10 digits of a phone number with extension being optional.
 
+
+Getting the bits
+----------------
+We generally recommend that you use [bower](http://bower.io) to install jquery.maskedinput plugin, however you can download a copy of the latest release by clicking [this link right here.](https://github.com/digitalBush/jquery.maskedinput/archive/1.3.1.zip)
+
+    $ bower install --save jquery.maskedinput
+
+
 Setting up your Developer Environment
 -------------------------------------
 jQuery Masked Input uses [NodeJS](http://www.nodejs.org) and [GruntJS](http://www.gruntjs.com) as it's developer platform and build automation tool.
 
 To get your environment setup correctly, you'll need nodejs version 0.8.25 or greater installed. You'll also need to install the grunt command line tool:
 
-   $ sudo npm install -g grunt-cli
+    $ sudo npm install -g grunt-cli
 
 Once node is installed on your system all that you need to do is install the developer dependencies and run the grunt build:
 
