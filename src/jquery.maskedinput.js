@@ -23,7 +23,9 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	shiftLeft: true,
+	shiftRight: true
 };
 
 $.fn.extend({
@@ -79,9 +81,28 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
+			shiftLeft: $.mask.shiftLeft,
+			shiftRight: $.mask.shiftRight,
 			completed: null
 		}, settings);
 
+		// If placeholder is a single character set it for all applicable positions.
+		if (settings.placeholder.length == 1) {
+			var p = settings.placeholder;
+			settings.placeholder = '';
+			for (var i = 0, len = mask.length; i < len; i++) {
+				switch(mask[i]) {
+					case 'a':
+					case '9':
+					case '*':
+					case '~':
+						settings.placeholder += p;
+						break;
+					default:
+						settings.placeholder += mask[i];
+				}
+			}
+		}
 
 		defs = $.mask.definitions;
 		tests = [];
@@ -108,7 +129,7 @@ $.fn.extend({
 				mask.split(""),
 				function(c, i) {
 					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
+						return defs[c] ? settings.placeholder[i] : c;
 					}
 				}),
 				defaultBuffer = buffer.join(''),
@@ -132,16 +153,18 @@ $.fn.extend({
 					return;
 				}
 
-				for (i = begin, j = seekNext(end); i < len; i++) {
-					if (tests[i]) {
-						if (j < len && tests[i].test(buffer[j])) {
-							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
-						} else {
-							break;
+				if ( settings.shiftLeft ) {
+					for (i = begin, j = seekNext(end); i < len; i++) {
+						if (tests[i]) {
+							if (j < len && tests[i].test(buffer[j])) {
+								buffer[i] = buffer[j];
+								buffer[j] = settings.placeholder[j];
+							} else {
+								break;
+							}
+	
+							j = seekNext(j);
 						}
-
-						j = seekNext(j);
 					}
 				}
 				writeBuffer();
@@ -149,16 +172,17 @@ $.fn.extend({
 			}
 
 			function shiftR(pos) {
+				if (!settings.shiftRight) return;
 				var i,
 					c,
 					j,
 					t;
 
-				for (i = pos, c = settings.placeholder; i < len; i++) {
+				for (i = pos; i < len; i++) {
 					if (tests[i]) {
 						j = seekNext(i);
 						t = buffer[i];
-						buffer[i] = c;
+						buffer[i] = settings.placeholder[i];
 						if (j < len && tests[j].test(t)) {
 							c = t;
 						} else {
@@ -278,7 +302,7 @@ $.fn.extend({
 				var i;
 				for (i = start; i < end && i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = settings.placeholder[i];
 					}
 				}
 			}
@@ -295,7 +319,7 @@ $.fn.extend({
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = settings.placeholder[i];
 						while (pos++ < test.length) {
 							c = test.charAt(pos - 1);
 							if (tests[i].test(c)) {
@@ -335,7 +359,7 @@ $.fn.extend({
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=settings.placeholder ? c : null;
+					return tests[i]&&c!=settings.placeholder[i] ? c : null;
 				}).join('');
 			});
 
