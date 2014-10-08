@@ -19,11 +19,21 @@ $.mask = {
 	definitions: {
 		'9': "[0-9]",
 		'a': "[A-Za-z]",
-		'*': "[A-Za-z0-9]"
+		'*': "[A-Za-z0-9]",
+		'D': "[0-9]",
+		'M': "[0-9]",
+		'Y': "[0-9]"
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholders : {
+		'9': "_",
+		'a': "_",
+		'*': "_",
+		'D': "D",
+		'M': "M",
+		'Y': "Y"
+	}
 };
 
 $.fn.extend({
@@ -66,6 +76,7 @@ $.fn.extend({
 	mask: function(mask, settings) {
 		var input,
 			defs,
+			phs,
 			tests,
 			partialPosition,
 			firstNonMaskPos,
@@ -84,6 +95,7 @@ $.fn.extend({
 
 
 		defs = $.mask.definitions;
+		phs = $.mask.placeholders;
 		tests = [];
 		partialPosition = len = mask.length;
 		firstNonMaskPos = null;
@@ -108,7 +120,7 @@ $.fn.extend({
 				mask.split(""),
 				function(c, i) {
 					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
+						return defs[c] ? phs[c] : c;
 					}
 				}),
 				defaultBuffer = buffer.join(''),
@@ -136,7 +148,7 @@ $.fn.extend({
 					if (tests[i]) {
 						if (j < len && tests[i].test(buffer[j])) {
 							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
+							buffer[i] = phs[mask.charAt(i)];
 						} else {
 							break;
 						}
@@ -154,7 +166,7 @@ $.fn.extend({
 					j,
 					t;
 
-				for (i = pos, c = settings.placeholder; i < len; i++) {
+				for (i = pos, c = phs[mask.charAt(i)]; i < len; i++) {
 					if (tests[i]) {
 						j = seekNext(i);
 						t = buffer[i];
@@ -278,7 +290,7 @@ $.fn.extend({
 				var i;
 				for (i = start; i < end && i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = phs[mask.charAt(i)];
 					}
 				}
 			}
@@ -295,7 +307,7 @@ $.fn.extend({
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = phs[mask.charAt(i)];
 						while (pos++ < test.length) {
 							c = test.charAt(pos - 1);
 							if (tests[i].test(c)) {
@@ -335,7 +347,7 @@ $.fn.extend({
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=settings.placeholder ? c : null;
+					return tests[i] && c != phs[mask.charAt(i)] ? c : null;
 				}).join('');
 			});
 
