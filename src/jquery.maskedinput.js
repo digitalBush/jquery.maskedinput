@@ -69,6 +69,7 @@ $.fn.extend({
 			tests,
 			partialPosition,
 			firstNonMaskPos,
+            lastRequiredNonMaskPos,
             len,
             oldVal;
 
@@ -97,6 +98,9 @@ $.fn.extend({
 				if (firstNonMaskPos === null) {
 					firstNonMaskPos = tests.length - 1;
 				}
+                if(i < partialPosition){
+                    lastRequiredNonMaskPos = tests.length - 1;
+                }
 			} else {
 				tests.push(null);
 			}
@@ -105,14 +109,27 @@ $.fn.extend({
 		return this.trigger("unmask").each(function() {
 			var input = $(this),
 				buffer = $.map(
-				mask.split(""),
-				function(c, i) {
-					if (c != '?') {
-						return defs[c] ? settings.placeholder : c;
-					}
-				}),
+    				mask.split(""),
+    				function(c, i) {
+    					if (c != '?') {
+    						return defs[c] ? settings.placeholder : c;
+    					}
+    				}),
 				defaultBuffer = buffer.join(''),
 				focusText = input.val();
+
+            function tryFireCompleted(){
+                if (!settings.completed) {
+                    return;
+                }
+
+                for (var i = firstNonMaskPos; i <= lastRequiredNonMaskPos; i++) {
+                    if (tests[i] && buffer[i] === settings.placeholder) {
+                        return;
+                    }
+                }
+                settings.completed.call(input);
+            }
 
 			function seekNext(pos) {
 				while (++pos < len && !tests[pos]);
@@ -189,8 +206,8 @@ $.fn.extend({
 
                     input.caret(pos.begin,pos.begin);
                 }
-                if (settings.completed && pos == input.val().length)
-                    settings.completed.call(input);
+
+                tryFireCompleted();
             }
 
             function blurEvent(e) {
@@ -264,10 +281,9 @@ $.fn.extend({
 							}else{
 								input.caret(next);
 							}
-
-							if (settings.completed && next >= len) {
-								settings.completed.call(input);
-							}
+                            if(pos.begin <= lastRequiredNonMaskPos){
+		                         tryFireCompleted();
+                             }
 						}
 					}
 					e.preventDefault();
@@ -370,8 +386,7 @@ $.fn.extend({
 					setTimeout(function() {
 						var pos=checkVal(true);
 						input.caret(pos);
-						if (settings.completed && pos == input.val().length)
-							settings.completed.call(input);
+                        tryFireCompleted();
 					}, 0);
 				});
                 if (chrome && android)
