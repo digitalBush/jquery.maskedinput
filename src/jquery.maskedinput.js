@@ -10,7 +10,7 @@ function getPasteEvent() {
 var pasteEventName = getPasteEvent() + ".mask",
 	ua = navigator.userAgent,
 	iPhone = /iphone/i.test(ua),
-	chrome = /chrome/i.test(ua),
+	chrome = !!window.chrome,
 	android=/android/i.test(ua),
 	caretTimeoutId;
 
