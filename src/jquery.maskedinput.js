@@ -218,6 +218,10 @@ $.fn.extend({
             }
 
 			function keydownEvent(e) {
+                if (input.prop("readonly")){
+                    return;
+                }
+
 				var k = e.which,
 					pos,
 					begin,
@@ -247,6 +251,10 @@ $.fn.extend({
 			}
 
 			function keypressEvent(e) {
+                if (input.prop("readonly")){
+                    return;
+                }
+
 				var k = e.which,
 					pos = input.caret(),
 					p,
@@ -355,14 +363,18 @@ $.fn.extend({
 				}).join('');
 			});
 
-			if (!input.attr("readonly"))
-				input
+
+			input
 				.one("unmask", function() {
 					input
 						.off(".mask")
 						.removeData($.mask.dataName);
 				})
 				.on("focus.mask", function() {
+                    if (input.prop("readonly")){
+                        return;
+                    }
+
 					clearTimeout(caretTimeoutId);
 					var pos;
 
@@ -383,6 +395,10 @@ $.fn.extend({
 				.on("keydown.mask", keydownEvent)
 				.on("keypress.mask", keypressEvent)
 				.on(pasteEventName, function() {
+                    if (input.prop("readonly")){
+                        return;
+                    }
+
 					setTimeout(function() {
 						var pos=checkVal(true);
 						input.caret(pos);

@@ -7,7 +7,7 @@
     $(function() {
         $.mask.definitions['~'] = "[+-]";
         $("#date").mask("99/99/9999",{completed:function(){alert("completed!");}});
-        $("#phone").mask("(999) 999-9999");
+        $(".phone").mask("(999) 999-9999");
         $("#phoneExt").mask("(999) 999-9999? x99999");
         $("#iphone").mask("+33 999 999 999");
         $("#tin").mask("99-9999999");
@@ -31,7 +31,8 @@
 <body>
 <table>
 		<tr><td>Date</td><td><input id="date" value="1231" type="text" tabindex="1" /></td><td>99/99/9999</td></tr>
-		<tr><td>Phone</td><td><input id="phone" type="text" tabindex="2"/></td><td>(999) 999-9999</td></tr>
+		<tr><td>Phone</td><td><input class="phone" type="text" tabindex="2"/></td><td>(999) 999-9999</td></tr>
+        <tr><td>Phone(Readonly)</td><td><input class="phone" type="text" tabindex="2" readonly/></td><td>(999) 999-9999</td></tr>
 		<tr><td>Phone + Ext</td><td><input id="phoneExt" type="text" tabindex="2"/></td><td>(999) 999-9999? x99999</td></tr>
 		<tr><td>Int'l Phone</td><td><input id="iphone" type="text" tabindex="2"/></td><td>+33 999 999 999</td></tr>
 		<tr><td>Tax ID</td><td><input id="tin" type="text" tabindex="3"/></td><td>99-9999999</td></tr>
