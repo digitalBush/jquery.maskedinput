@@ -4,7 +4,9 @@
     Licensed under the MIT license (http://digitalbush.com/projects/masked-input-plugin/#license)
     Version: 1.3.1
 */
-!function($) {
+!function(factory) {
+    "function" == typeof define && define.amd ? define([ "jquery" ], factory) : factory("object" == typeof exports ? require("jquery") : jQuery);
+}(function($) {
     function getPasteEvent() {
         var el = document.createElement("input"), name = "onpaste";
         return el.setAttribute(name, ""), "function" == typeof el[name] ? "paste" : "input";
@@ -173,4 +175,4 @@
             }));
         }
     });
-}(jQuery);
+});
