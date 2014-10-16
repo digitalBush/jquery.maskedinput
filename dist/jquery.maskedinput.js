@@ -143,7 +143,7 @@
                             clearBuffer(i + 1, len);
                             break;
                         }
-                    } else buffer[i] === test.charAt(pos) && i !== partialPosition && (pos++, partialPosition > i && (lastMatch = i));
+                    } else buffer[i] === test.charAt(pos) && pos++, partialPosition > i && (lastMatch = i);
                     return allow ? writeBuffer() : partialPosition > lastMatch + 1 ? settings.autoclear || buffer.join("") === defaultBuffer ? (input.val() && input.val(""), 
                     clearBuffer(0, len)) : writeBuffer() : (writeBuffer(), input.val(input.val().substring(0, lastMatch + 1))), 
                     partialPosition ? i : firstNonMaskPos;

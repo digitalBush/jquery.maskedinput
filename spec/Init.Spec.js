@@ -23,6 +23,18 @@ feature("Initializing a Mask",function(){
 		});
 	});
 
+	scenario("An input with a valid value ending in a literal",function(){
+		given("an input with a valid value",function(){
+			input.val("12");
+		});
+		when("setting a mask",function(){
+			input.mask("(99)");
+		});
+		then("the value should be intact",function(){
+			expect(input).toHaveValue("(12)");
+		});
+	});
+
 	scenario("An input with an invalid value and placeholders remaining",function(){
 		given("an invalid input value",function(){
 			input.val("55555555");
