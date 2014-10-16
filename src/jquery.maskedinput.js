@@ -345,7 +345,9 @@ $.fn.extend({
 						}
 					} else if (buffer[i] === test.charAt(pos) && i !== partialPosition) {
 						pos++;
-						lastMatch = i;
+                        if( i < partialPosition){
+                            lastMatch = i;
+                        }
 					}
 				}
 				if (allow) {
