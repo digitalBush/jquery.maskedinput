@@ -113,6 +113,18 @@ feature("Leaving A Masked Input",function(){
 		});
 	});
 
+	scenario("Mask ending in literal",function(){
+		given("a mask ending in a literal",function(){
+			input.mask("99!");
+		});
+		when("typing two characters and blurring",function(){
+			input.mashKeys("12").blur();
+		});
+		then("value should remain",function(){
+			expect(input).toHaveValue("12!");
+		});
+	});
+
 	scenario("Empty placeholders remaining with autoclear set to false",function(){
 		given("a mask with two placeholders",function(){
 			input.mask("99", { autoclear: false });

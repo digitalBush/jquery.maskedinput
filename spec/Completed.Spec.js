@@ -99,4 +99,24 @@ feature("Completed callback", function() {
 			expect(input).toHaveValue('1234');
 		});
 	});
+
+	scenario('Completing mask by typing last character with literal to right',function(){
+		var completed=false;
+		given("an input with a completed callback", function(){
+			input.mask("99!",{completed:function(){completed=true;}});
+		});
+
+		when("typing left to right",function(){
+			input.mashKeys("12");
+		});
+
+		then("completed callback should be called",function(){
+			expect(completed).toBeTruthy();
+		});
+		then("value should be correct",function(){
+			expect(input).toHaveValue('12!');
+		});
+	});
+
+
 });
