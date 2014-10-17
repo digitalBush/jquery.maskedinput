@@ -235,7 +235,7 @@ $.fn.extend({
                     return;
                 }
 
-				var k = e.which,
+				var k = e.which || e.keyCode,
 					pos,
 					begin,
 					end;
@@ -268,7 +268,7 @@ $.fn.extend({
                     return;
                 }
 
-				var k = e.which,
+				var k = e.which || e.keyCode,
 					pos = input.caret(),
 					p,
 					c,
