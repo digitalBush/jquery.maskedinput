@@ -41,7 +41,12 @@
         },
         mask: function(mask, settings) {
             var input, defs, tests, partialPosition, firstNonMaskPos, lastRequiredNonMaskPos, len, oldVal;
-            return !mask && this.length > 0 ? (input = $(this[0]), input.data($.mask.dataName)()) : (settings = $.extend({
+            if (!mask && this.length > 0) {
+                input = $(this[0]);
+                var fn = input.data($.mask.dataName);
+                return fn ? fn() : void 0;
+            }
+            return settings = $.extend({
                 autoclear: $.mask.autoclear,
                 placeholder: $.mask.placeholder,
                 completed: null
@@ -172,7 +177,7 @@
                     }, 0);
                 }), chrome && android && input.off("input.mask").on("input.mask", androidInputEvent), 
                 checkVal();
-            }));
+            });
         }
     });
 });

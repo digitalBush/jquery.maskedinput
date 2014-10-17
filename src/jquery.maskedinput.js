@@ -86,8 +86,10 @@ $.fn.extend({
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
-			return input.data($.mask.dataName)();
+            var fn = input.data($.mask.dataName)
+			return fn?fn():undefined;
 		}
+
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
