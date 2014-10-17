@@ -35,6 +35,34 @@ feature("Focusing A Masked Input",function(){
 		});
 	});
 
+	scenario("Mask starts with a literal that fits first placeholder",function(){
+		given("a mask beginning with a literal",function(){
+			input.mask("19").focus();
+		});
+		waits(20);
+		when("blurring",function(){
+			input.blur();
+		});
+		waits(20);
+		then("input value should be correct",function(){
+			expect(input).toHaveValue('');
+		});
+	});
+
+	scenario("Mask starts with a literal that fits first placeholder and autoclear set to false",function(){
+		given("a mask beginning with a literal",function(){
+			input.mask("?19",{autoclear: false}).focus();
+		});
+		waits(20);
+		when("blurring",function(){
+			input.blur();
+		});
+		waits(20);
+		then("input value should be correct",function(){
+			expect(input).toHaveValue('');
+		});
+	});
+
 	scenario("Masking a hidden input",function(){
 		var error;
 		$(window).on("error.test",function(err){error=err;})
