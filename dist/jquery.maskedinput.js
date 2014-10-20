@@ -57,9 +57,12 @@
             }), this.trigger("unmask").each(function() {
                 function tryFireCompleted() {
                     if (settings.completed) {
-                        for (var i = firstNonMaskPos; lastRequiredNonMaskPos >= i; i++) if (tests[i] && buffer[i] === settings.placeholder) return;
+                        for (var i = firstNonMaskPos; lastRequiredNonMaskPos >= i; i++) if (tests[i] && buffer[i] === getPlaceholder(i)) return;
                         settings.completed.call(input);
                     }
+                }
+                function getPlaceholder(i) {
+                    return settings.placeholder.charAt(i < settings.placeholder.length ? i : 0);
                 }
                 function seekNext(pos) {
                     for (;++pos < len && !tests[pos]; ) ;
@@ -74,14 +77,14 @@
                     if (!(0 > begin)) {
                         for (i = begin, j = seekNext(end); len > i; i++) if (tests[i]) {
                             if (!(len > j && tests[i].test(buffer[j]))) break;
-                            buffer[i] = buffer[j], buffer[j] = settings.placeholder, j = seekNext(j);
+                            buffer[i] = buffer[j], buffer[j] = getPlaceholder(j), j = seekNext(j);
                         }
                         writeBuffer(), input.caret(Math.max(firstNonMaskPos, begin));
                     }
                 }
                 function shiftR(pos) {
                     var i, c, j, t;
-                    for (i = pos, c = settings.placeholder; len > i; i++) if (tests[i]) {
+                    for (i = pos, c = getPlaceholder(pos); len > i; i++) if (tests[i]) {
                         if (j = seekNext(i), t = buffer[i], buffer[i] = c, !(len > j && tests[j].test(t))) break;
                         c = t;
                     }
@@ -103,7 +106,7 @@
                 }
                 function keydownEvent(e) {
                     if (!input.prop("readonly")) {
-                        var pos, begin, end, k = e.which;
+                        var pos, begin, end, k = e.which || e.keyCode;
                         oldVal = input.val(), 8 === k || 46 === k || iPhone && 127 === k ? (pos = input.caret(), 
                         begin = pos.begin, end = pos.end, end - begin === 0 && (begin = 46 !== k ? seekPrev(begin) : end = seekNext(begin - 1), 
                         end = 46 === k ? seekNext(end) : end), clearBuffer(begin, end), shiftL(begin, end - 1), 
@@ -113,7 +116,7 @@
                 }
                 function keypressEvent(e) {
                     if (!input.prop("readonly")) {
-                        var p, c, next, k = e.which, pos = input.caret();
+                        var p, c, next, k = e.which || e.keyCode, pos = input.caret();
                         if (!(e.ctrlKey || e.altKey || e.metaKey || 32 > k) && k && 13 !== k) {
                             if (pos.end - pos.begin !== 0 && (clearBuffer(pos.begin, pos.end), shiftL(pos.begin, pos.end - 1)), 
                             p = seekNext(pos.begin - 1), len > p && (c = String.fromCharCode(k), tests[p].test(c))) {
@@ -131,7 +134,7 @@
                 }
                 function clearBuffer(start, end) {
                     var i;
-                    for (i = start; end > i && len > i; i++) tests[i] && (buffer[i] = settings.placeholder);
+                    for (i = start; end > i && len > i; i++) tests[i] && (buffer[i] = getPlaceholder(i));
                 }
                 function writeBuffer() {
                     input.val(buffer.join(""));
@@ -139,7 +142,7 @@
                 function checkVal(allow) {
                     var i, c, pos, test = input.val(), lastMatch = -1;
                     for (i = 0, pos = 0; len > i; i++) if (tests[i]) {
-                        for (buffer[i] = settings.placeholder; pos++ < test.length; ) if (c = test.charAt(pos - 1), 
+                        for (buffer[i] = getPlaceholder(i); pos++ < test.length; ) if (c = test.charAt(pos - 1), 
                         tests[i].test(c)) {
                             buffer[i] = c, lastMatch = i;
                             break;
@@ -153,12 +156,12 @@
                     clearBuffer(0, len)) : writeBuffer() : (writeBuffer(), input.val(input.val().substring(0, lastMatch + 1))), 
                     partialPosition ? i : firstNonMaskPos;
                 }
-                var input = $(this), buffer = $.map(mask.split(""), function(c) {
-                    return "?" != c ? defs[c] ? settings.placeholder : c : void 0;
+                var input = $(this), buffer = $.map(mask.split(""), function(c, i) {
+                    return "?" != c ? defs[c] ? getPlaceholder(i) : c : void 0;
                 }), defaultBuffer = buffer.join(""), focusText = input.val();
                 input.data($.mask.dataName, function() {
                     return $.map(buffer, function(c, i) {
-                        return tests[i] && c != settings.placeholder ? c : null;
+                        return tests[i] && c != getPlaceholder(i) ? c : null;
                     }).join("");
                 }), input.one("unmask", function() {
                     input.off(".mask").removeData($.mask.dataName);

@@ -125,7 +125,7 @@ $.fn.extend({
     				mask.split(""),
     				function(c, i) {
     					if (c != '?') {
-    						return defs[c] ? settings.placeholder : c;
+    						return defs[c] ? getPlaceholder(i) : c;
     					}
     				}),
 				defaultBuffer = buffer.join(''),
@@ -137,11 +137,17 @@ $.fn.extend({
                 }
 
                 for (var i = firstNonMaskPos; i <= lastRequiredNonMaskPos; i++) {
-                    if (tests[i] && buffer[i] === settings.placeholder) {
+                    if (tests[i] && buffer[i] === getPlaceholder(i)) {
                         return;
                     }
                 }
                 settings.completed.call(input);
+            }
+
+            function getPlaceholder(i){
+                if(i < settings.placeholder.length)
+                    return settings.placeholder.charAt(i);
+                return settings.placeholder.charAt(0);
             }
 
 			function seekNext(pos) {
@@ -166,7 +172,7 @@ $.fn.extend({
 					if (tests[i]) {
 						if (j < len && tests[i].test(buffer[j])) {
 							buffer[i] = buffer[j];
-							buffer[j] = settings.placeholder;
+							buffer[j] = getPlaceholder(j);
 						} else {
 							break;
 						}
@@ -184,7 +190,7 @@ $.fn.extend({
 					j,
 					t;
 
-				for (i = pos, c = settings.placeholder; i < len; i++) {
+				for (i = pos, c = getPlaceholder(pos); i < len; i++) {
 					if (tests[i]) {
 						j = seekNext(i);
 						t = buffer[i];
@@ -315,7 +321,7 @@ $.fn.extend({
 				var i;
 				for (i = start; i < end && i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = getPlaceholder(i);
 					}
 				}
 			}
@@ -332,7 +338,7 @@ $.fn.extend({
 
 				for (i = 0, pos = 0; i < len; i++) {
 					if (tests[i]) {
-						buffer[i] = settings.placeholder;
+						buffer[i] = getPlaceholder(i);
 						while (pos++ < test.length) {
 							c = test.charAt(pos - 1);
 							if (tests[i].test(c)) {
@@ -376,7 +382,7 @@ $.fn.extend({
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=settings.placeholder ? c : null;
+					return tests[i]&&c!=getPlaceholder(i) ? c : null;
 				}).join('');
 			});
 
