@@ -11,18 +11,10 @@
     }
 }(function ($) {
 
-function getPasteEvent() {
-    var el = document.createElement('input'),
-        name = 'onpaste';
-    el.setAttribute(name, '');
-    return (typeof el[name] === 'function')?'paste':'input';
-}
-
-var pasteEventName = getPasteEvent() + ".mask",
-	ua = navigator.userAgent,
+var ua = navigator.userAgent,
 	iPhone = /iphone/i.test(ua),
 	chrome = /chrome/i.test(ua),
-	android=/android/i.test(ua),
+	android = /android/i.test(ua),
 	caretTimeoutId;
 
 $.mask = {
@@ -417,7 +409,7 @@ $.fn.extend({
 				.on("blur.mask", blurEvent)
 				.on("keydown.mask", keydownEvent)
 				.on("keypress.mask", keypressEvent)
-				.on(pasteEventName, function() {
+				.on("input.mask paste.mask", function() {
                     if (input.prop("readonly")){
                         return;
                     }

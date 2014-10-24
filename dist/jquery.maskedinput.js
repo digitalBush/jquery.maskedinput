@@ -7,11 +7,7 @@
 !function(factory) {
     "function" == typeof define && define.amd ? define([ "jquery" ], factory) : factory("object" == typeof exports ? require("jquery") : jQuery);
 }(function($) {
-    function getPasteEvent() {
-        var el = document.createElement("input"), name = "onpaste";
-        return el.setAttribute(name, ""), "function" == typeof el[name] ? "paste" : "input";
-    }
-    var caretTimeoutId, pasteEventName = getPasteEvent() + ".mask", ua = navigator.userAgent, iPhone = /iphone/i.test(ua), chrome = /chrome/i.test(ua), android = /android/i.test(ua);
+    var caretTimeoutId, ua = navigator.userAgent, iPhone = /iphone/i.test(ua), chrome = /chrome/i.test(ua), android = /android/i.test(ua);
     $.mask = {
         definitions: {
             "9": "[0-9]",
@@ -173,7 +169,7 @@
                             writeBuffer(), pos == mask.replace("?", "").length ? input.caret(0, pos) : input.caret(pos);
                         }, 10);
                     }
-                }).on("blur.mask", blurEvent).on("keydown.mask", keydownEvent).on("keypress.mask", keypressEvent).on(pasteEventName, function() {
+                }).on("blur.mask", blurEvent).on("keydown.mask", keydownEvent).on("keypress.mask", keypressEvent).on("input.mask paste.mask", function() {
                     input.prop("readonly") || setTimeout(function() {
                         var pos = checkVal(!0);
                         input.caret(pos), tryFireCompleted();
