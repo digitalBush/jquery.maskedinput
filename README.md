@@ -74,7 +74,7 @@ By design, this plugin will reject input which doesn't complete the mask. You ca
 
 Getting the bits
 ----------------
-We generally recommend that you use [bower](http://bower.io) to install jquery.maskedinput plugin, however you can download a copy of the latest release by clicking [this link right here.](https://github.com/digitalBush/jquery.maskedinput/archive/1.3.1.zip)
+We generally recommend that you use [bower](http://bower.io) to install jquery.maskedinput plugin.
 
     $ bower install --save jquery.maskedinput
 
