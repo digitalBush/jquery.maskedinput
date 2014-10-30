@@ -3,12 +3,12 @@
   "version": "1.4.0",
   "author": "Josh Bush (digitalbush.com)",
   "description": "jQuery Masked Input Plugin",
-
   "devDependencies": {
     "grunt": "0.4.x",
     "grunt-contrib-jasmine": "0.5.x",
+    "grunt-contrib-uglify": "0.2.x",
     "grunt-contrib-watch": "0.5.x",
-    "grunt-contrib-uglify": "0.2.x"
+    "grunt-nuget": "^0.1.4"
   },
   "scripts": {
     "test": "grunt test"

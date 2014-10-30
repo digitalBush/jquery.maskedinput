@@ -14,4 +14,8 @@
       <dependency id="jQuery" version="1.9" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="dist/jquery.maskedinput.js" target="content\scripts" />
+    <file src="dist/jquery.maskedinput.min.js" target="content\scripts" />
+  </files>
 </package>
