@@ -57,5 +57,6 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-nuget');
 
   grunt.registerTask('test', ['jasmine']);
-  grunt.registerTask('default', ['test', 'uglify', 'nugetpack']);
+  grunt.registerTask('pack', ['default','nugetpack']);
+  grunt.registerTask('default', ['test', 'uglify']);
 };
