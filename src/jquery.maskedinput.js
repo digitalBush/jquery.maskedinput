@@ -398,6 +398,9 @@ $.fn.extend({
 					pos = checkVal();
 
 					caretTimeoutId = setTimeout(function(){
+                        if(input.get(0) !== document.activeElement){
+                            return;
+                        }
 						writeBuffer();
 						if (pos == mask.replace("?","").length) {
 							input.caret(0, pos);
