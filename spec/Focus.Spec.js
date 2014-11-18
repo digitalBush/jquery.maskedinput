@@ -86,6 +86,23 @@ feature("Focusing A Masked Input",function(){
 			expect(caret.end).toEqual(2);
 		});
 	});
+  scenario("Mask separated by spaces and placeholder is empty",function(){
+    given("a mask separated by spaces",function(){
+      input.mask("99 99 99", {placeholder: ""});
+    });
+    when("focusing",function(){
+      input.focus();
+    });
+    waits(20);
+    then("placeholder text should be correct",function(){
+      expect(input).toHaveValue('');
+    });
+    and("caret position should be correct",function(){
+      var caret=input.caret();
+      expect(caret.begin).toEqual(0);
+      expect(caret.end).toEqual(0);
+    });
+  });
 });
 
 feature("Leaving A Masked Input",function(){
