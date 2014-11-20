@@ -111,7 +111,7 @@
                     for (i = start; end > i && len > i; i++) tests[i] && (buffer[i] = settings.placeholder);
                 }
                 function writeBuffer() {
-                    input.val(buffer.join(""));
+                    input.val($.trim(buffer.join("")));
                 }
                 function checkVal(allow) {
                     var i, c, pos, test = input.val(), lastMatch = -1;
@@ -121,7 +121,10 @@
                             buffer[i] = c, lastMatch = i;
                             break;
                         }
-                        if (pos > test.length) break;
+                        if (pos > test.length) {
+                            clearBuffer(i + 1, len);
+                            break;
+                        }
                     } else buffer[i] === test.charAt(pos) && i !== partialPosition && (pos++, lastMatch = i);
                     return allow ? writeBuffer() : partialPosition > lastMatch + 1 ? settings.autoclear || buffer.join("") === defaultBuffer ? (input.val() && input.val(""), 
                     clearBuffer(0, len)) : writeBuffer() : (writeBuffer(), input.val(input.val().substring(0, lastMatch + 1))), 
