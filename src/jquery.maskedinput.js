@@ -274,7 +274,7 @@ $.fn.extend({
 				}
 			}
 
-			function writeBuffer() { input.val(buffer.join('').trim()); }
+			function writeBuffer() { input.val($.trim(buffer.join(''))); }
 
 			function checkVal(allow) {
 				//try to place characters where they belong

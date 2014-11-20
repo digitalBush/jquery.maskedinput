@@ -111,7 +111,7 @@
                     for (i = start; end > i && len > i; i++) tests[i] && (buffer[i] = settings.placeholder);
                 }
                 function writeBuffer() {
-                    input.val(buffer.join("").trim());
+                    input.val($.trim(buffer.join("")));
                 }
                 function checkVal(allow) {
                     var i, c, pos, test = input.val(), lastMatch = -1;
