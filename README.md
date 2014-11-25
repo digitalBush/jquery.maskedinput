@@ -76,7 +76,7 @@ Getting the bits
 ----------------
 We generally recommend that you use [bower](http://bower.io) to install jquery.maskedinput plugin.
 
-    $ bower install --save jquery.maskedinput
+    $ bower install --save jquery-maskedinput
 
 
 Setting up your Developer Environment
