@@ -6,6 +6,7 @@
     "Josh Bush (digitalbush.com)"
   ],
   "description": "jQuery Masked Input Plugin",
+  "main": "./dist/jquery.maskedinput.js",
   "moduleType": [
     "es6"
   ],
