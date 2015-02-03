@@ -33,7 +33,7 @@ feature("Enter Key", function() {
 			});
 			when("typing one character and pressing enter",function(){
 				input.caret(0);
-				input.mashKeys("1")
+				input.mashKeys("1");
 				input.trigger(enterKeyEvent);
 			});
 			then("value should remain visible with placeholders",function(){
