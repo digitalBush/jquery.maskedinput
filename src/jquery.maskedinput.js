@@ -78,7 +78,7 @@ $.fn.extend({
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
-            var fn = input.data($.mask.dataName)
+            var fn = input.data($.mask.dataName);
 			return fn?fn():undefined;
 		}
 
