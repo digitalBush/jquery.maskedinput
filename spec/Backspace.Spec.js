@@ -12,7 +12,7 @@ feature("Backspace Key", function() {
 			});
 
 			when("hitting the backspace key",function(){
-				input.mashKeys(function(keys){keys.type(keys.backspace)});
+				input.mashKeys(function(keys){keys.type(keys.backspace);});
 			});
 
 			then("value should be correct",function(){
@@ -36,7 +36,7 @@ feature("Backspace Key", function() {
 			});
 
 			when("hitting the backspace key",function(){
-				input.mashKeys(function(keys){keys.type(keys.backspace)});
+				input.mashKeys(function(keys){keys.type(keys.backspace);});
 			});
 
 			then("value should be correct",function(){
@@ -62,7 +62,7 @@ feature("Backspace Key", function() {
 			});
 
 			when("hitting the backspace key",function(){
-				input.mashKeys(function(keys){keys.type(keys.backspace)});
+				input.mashKeys(function(keys){keys.type(keys.backspace);});
 			});
 
 			then("value should be correct",function(){
@@ -86,7 +86,7 @@ feature("Backspace Key", function() {
 			});
 
 			when("hitting the backspace key",function(){
-				input.mashKeys(function(keys){keys.type(keys.backspace)});
+				input.mashKeys(function(keys){keys.type(keys.backspace);});
 			});
 
 			then("value should be correct",function(){
@@ -111,7 +111,7 @@ feature("Backspace Key", function() {
 				});
 
 				when("hitting the backspace key",function(){
-					input.mashKeys(function(keys){keys.type(keys.backspace)});
+					input.mashKeys(function(keys){keys.type(keys.backspace);});
 				});
 
 				then("value should be correct",function(){
@@ -135,7 +135,7 @@ feature("Backspace Key", function() {
 				});
 
 				when("hitting the backspace key",function(){
-					input.mashKeys(function(keys){keys.type(keys.backspace)});
+					input.mashKeys(function(keys){keys.type(keys.backspace);});
 				});
 
 				then("value should be correct",function(){
