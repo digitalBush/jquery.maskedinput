@@ -12,7 +12,7 @@ feature("Escape Key", function() {
 			});
 			waits(1);
 			when("user types something different then hits escape key",function(){
-				input.mashKeys(function(keys){keys.type('1',keys.esc)});
+				input.mashKeys(function(keys){keys.type('1',keys.esc);});
 			});
 
 			then("value is return to previous value",function(){
