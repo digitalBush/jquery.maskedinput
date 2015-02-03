@@ -65,7 +65,7 @@ feature("Focusing A Masked Input",function(){
 
 	scenario("Masking a hidden input",function(){
 		var error;
-		$(window).on("error.test",function(err){error=err;})
+		$(window).on("error.test",function(err){error=err;});
 
 		given("a mask on a hidden input",function(){
 			input.hide().mask("9");
@@ -76,7 +76,7 @@ feature("Focusing A Masked Input",function(){
 		waits(1);
 		then("should not throw an error",function(){
 			expect(error).toBeUndefined();
-		})
+		});
 	});
 
 	scenario("Mask contains a partial value with autoclear set to false",function(){
@@ -159,7 +159,7 @@ feature("Leaving A Masked Input",function(){
 		});
 		when("typing one character and blurring",function(){
 			input.caret(0);
-			input.mashKeys("1")
+			input.mashKeys("1");
 			input.blur();
 		});
 		then("value should remain visible with placeholders",function(){
