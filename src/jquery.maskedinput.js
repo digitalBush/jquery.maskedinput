@@ -143,12 +143,12 @@ $.fn.extend({
 			}
 
 			function seekNext(pos) {
-				while (++pos < len && !tests[pos]);
+				while (++pos < len && !tests[pos])
 				return pos;
 			}
 
 			function seekPrev(pos) {
-				while (--pos >= 0 && !tests[pos]);
+				while (--pos >= 0 && !tests[pos])
 				return pos;
 			}
 
