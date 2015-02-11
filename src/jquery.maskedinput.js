@@ -199,7 +199,7 @@ $.fn.extend({
 			function androidInputEvent(e) {
 				var curVal = input.val();
 				var pos = input.caret();
-				if (curVal.length < oldVal.length) {
+				if (oldVal && oldVal.length && oldVal.length > curVal.length ) {
 					// a deletion or backspace happened
 					checkVal(true);
 					while (pos.begin > 0 && !tests[pos.begin-1])
