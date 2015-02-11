@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>jQuery.MaskedInput</id>
-    <version>1.4.0.0</version>
+    <version>1.4.1.0</version>
     <authors>digitalBush</authors>
     <owners>stimms</owners>
     <licenseUrl>https://github.com/digitalBush/jquery.maskedinput/blob/master/LICENSE</licenseUrl>
