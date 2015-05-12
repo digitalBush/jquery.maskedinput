@@ -44,6 +44,13 @@ jQuery(function($){
 });
 ```
 
+Optionally, if you would like to disable the automatic discarding of the uncomplete input, you may pass an optional argument to the maskedinput method
+```html
+jQuery(function($){
+   $("#product").mask("99/99/9999",{autoclear: false});
+});
+```
+
 You can now supply your own mask definitions.
 ```html
 jQuery(function($){
