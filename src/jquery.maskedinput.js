@@ -94,6 +94,8 @@ $.fn.extend({
 		partialPosition = len = mask.length;
 		firstNonMaskPos = null;
 
+		mask = String(mask);
+
 		$.each(mask.split(""), function(i, c) {
 			if (c == '?') {
 				len--;
