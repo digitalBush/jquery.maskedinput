@@ -203,11 +203,11 @@ $.fn.extend({
 					// a deletion or backspace happened
 					checkVal(true);
 					while (pos.begin > 0 && !tests[pos.begin-1])
-						  pos.begin--;
+						pos.begin--;
 					if (pos.begin === 0)
 					{
-					   while (pos.begin < firstNonMaskPos && !tests[pos.begin])
-						  pos.begin++;
+						while (pos.begin < firstNonMaskPos && !tests[pos.begin])
+							pos.begin++;
 					}
 					input.caret(pos.begin,pos.begin);
 				} else {
