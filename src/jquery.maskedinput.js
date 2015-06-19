@@ -34,7 +34,7 @@ $.fn.extend({
 	caret: function(begin, end) {
 		var range;
 
-		if (this.length === 0 || this.is(":hidden")) {
+		if (this.length === 0 || this.is(":hidden") || this.get(0) !== document.activeElement) {
 			return;
 		}
 
