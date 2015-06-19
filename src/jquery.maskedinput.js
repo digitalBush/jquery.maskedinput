@@ -197,7 +197,6 @@ $.fn.extend({
 			}
 
 			function androidInputEvent(e) {
-				console.log(input);
 				var curVal = input.val();
 				var pos = input.caret();
 				if (oldVal && oldVal.length && oldVal.length > curVal.length ) {
