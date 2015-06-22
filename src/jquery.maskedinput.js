@@ -24,6 +24,8 @@ $.mask = {
 		'a': "[A-Za-z]",
 		'*': "[A-Za-z0-9]"
 	},
+        overwrite: false,
+        autofocus: true,
 	autoclear: true,
 	dataName: "rawMaskFn",
 	placeholder: '_'
@@ -83,6 +85,8 @@ $.fn.extend({
 		}
 
 		settings = $.extend({
+			overwrite: $.mask.overwrite,
+			autofocus: $.mask.autofocus,
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
 			completed: null
@@ -162,6 +166,7 @@ $.fn.extend({
 					return;
 				}
 
+				if (!settings.overwrite)
 				for (i = begin, j = seekNext(end); i < len; i++) {
 					if (tests[i]) {
 						if (j < len && tests[i].test(buffer[j])) {
@@ -184,6 +189,7 @@ $.fn.extend({
 					j,
 					t;
 
+				if (!settings.overwrite)
 				for (i = pos, c = getPlaceholder(pos); i < len; i++) {
 					if (tests[i]) {
 						j = seekNext(i);
@@ -413,12 +419,14 @@ $.fn.extend({
                         if(input.get(0) !== document.activeElement){
                             return;
                         }
-						writeBuffer();
-						if (pos == mask.replace("?","").length) {
-							input.caret(0, pos);
-						} else {
-							input.caret(pos);
-						}
+                        			if (settings.autofocus) {
+							writeBuffer();
+							if (pos == mask.replace("?","").length) {
+								input.caret(0, pos);
+							} else {
+								input.caret(pos);
+							}
+                        			}
 					}, 10);
 				})
 				.on("blur.mask", blurEvent)
