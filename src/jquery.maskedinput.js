@@ -26,7 +26,8 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	onInvalid: null,
 };
 
 $.fn.extend({
@@ -85,7 +86,8 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			onError: null
 		}, settings);
 
 
@@ -315,7 +317,9 @@ $.fn.extend({
                             if(pos.begin <= lastRequiredNonMaskPos){
 		                         tryFireCompleted();
                              }
-						}
+						}else if(settings.onError){
+                            settings.onError.call(input);
+                        }
 					}
 					e.preventDefault();
 				}
