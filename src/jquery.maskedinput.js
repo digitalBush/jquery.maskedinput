@@ -240,6 +240,18 @@ $.fn.extend({
                     input.change();
             }
 
+            function specialKeys(k) {
+                var spKeys = { home: 35, end: 36, left: 37, right: 39 },
+                      isSpecialKey = false;
+                for (sk in spKeys) {
+                    if (spKeys.hasOwnProperty(sk) && spKeys[sk] === k) {
+                        isSpecialKey = true;
+                        break;
+                    }
+                }
+                return isSpecialKey;
+            }
+
 			function keydownEvent(e) {
                 if (input.prop("readonly")){
                     return;
@@ -284,7 +296,7 @@ $.fn.extend({
 					c,
 					next;
 
-				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
+				if (e.ctrlKey || e.altKey || e.metaKey || k < 32 || specialKeys(k)) {//Ignore
 					return;
 				} else if ( k && k !== 13 ) {
 					if (pos.end - pos.begin !== 0){

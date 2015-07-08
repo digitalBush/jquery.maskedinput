@@ -20,7 +20,7 @@
     }, $.fn.extend({
         caret: function(begin, end) {
             var range;
-            if (0 !== this.length && !this.is(":hidden")) return "number" == typeof begin ? (end = "number" == typeof end ? end : begin, 
+            if (0 !== this.length && !this.is(":hidden") && this.get(0) === document.activeElement) return "number" == typeof begin ? (end = "number" == typeof end ? end : begin, 
             this.each(function() {
                 this.setSelectionRange ? this.setSelectionRange(begin, end) : this.createTextRange && (range = this.createTextRange(), 
                 range.collapse(!0), range.moveEnd("character", end), range.moveStart("character", begin), 
@@ -47,7 +47,7 @@
                 placeholder: $.mask.placeholder,
                 completed: null
             }, settings), defs = $.mask.definitions, tests = [], partialPosition = len = mask.length, 
-            firstNonMaskPos = null, $.each(mask.split(""), function(i, c) {
+            firstNonMaskPos = null, mask = String(mask), $.each(mask.split(""), function(i, c) {
                 "?" == c ? (len--, partialPosition = i) : defs[c] ? (tests.push(new RegExp(defs[c])), 
                 null === firstNonMaskPos && (firstNonMaskPos = tests.length - 1), partialPosition > i && (lastRequiredNonMaskPos = tests.length - 1)) : tests.push(null);
             }), this.trigger("unmask").each(function() {
@@ -58,7 +58,7 @@
                     }
                 }
                 function getPlaceholder(i) {
-                    return settings.placeholder.charAt(i < settings.placeholder.length ? i : 0);
+                    return i < settings.placeholder.length ? settings.placeholder.charAt(i) : settings.placeholder.charAt(0);
                 }
                 function seekNext(pos) {
                     for (;++pos < len && !tests[pos]; ) ;
@@ -85,20 +85,34 @@
                         c = t;
                     }
                 }
-                function androidInputEvent() {
+                function androidInputEvent(e) {
                     var curVal = input.val(), pos = input.caret();
                     if (oldVal && oldVal.length && oldVal.length > curVal.length) {
                         for (checkVal(!0); pos.begin > 0 && !tests[pos.begin - 1]; ) pos.begin--;
                         if (0 === pos.begin) for (;pos.begin < firstNonMaskPos && !tests[pos.begin]; ) pos.begin++;
                         input.caret(pos.begin, pos.begin);
                     } else {
-                        for (checkVal(!0); pos.begin < len && !tests[pos.begin]; ) pos.begin++;
-                        input.caret(pos.begin, pos.begin);
+                        var lastEnteredValue = (checkVal(!0), curVal.charAt(pos.begin));
+                        pos.begin < len && (tests[pos.begin] ? tests[pos.begin].test(lastEnteredValue) && pos.begin++ : (pos.begin++, 
+                        tests[pos.begin].test(lastEnteredValue) && pos.begin++)), input.caret(pos.begin, pos.begin);
                     }
                     tryFireCompleted();
                 }
-                function blurEvent() {
+                function blurEvent(e) {
                     checkVal(), input.val() != focusText && input.change();
+                }
+                function specialKeys(k) {
+                    var spKeys = {
+                        home: 35,
+                        end: 36,
+                        left: 37,
+                        right: 39
+                    }, isSpecialKey = !1;
+                    for (sk in spKeys) if (spKeys.hasOwnProperty(sk) && spKeys[sk] === k) {
+                        isSpecialKey = !0;
+                        break;
+                    }
+                    return isSpecialKey;
                 }
                 function keydownEvent(e) {
                     if (!input.prop("readonly")) {
@@ -113,7 +127,7 @@
                 function keypressEvent(e) {
                     if (!input.prop("readonly")) {
                         var p, c, next, k = e.which || e.keyCode, pos = input.caret();
-                        if (!(e.ctrlKey || e.altKey || e.metaKey || 32 > k) && k && 13 !== k) {
+                        if (!(e.ctrlKey || e.altKey || e.metaKey || 32 > k || specialKeys(k)) && k && 13 !== k) {
                             if (pos.end - pos.begin !== 0 && (clearBuffer(pos.begin, pos.end), shiftL(pos.begin, pos.end - 1)), 
                             p = seekNext(pos.begin - 1), len > p && (c = String.fromCharCode(k), tests[p].test(c))) {
                                 if (shiftR(p), buffer[p] = c, writeBuffer(), next = seekNext(p), android) {
