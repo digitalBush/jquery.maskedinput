@@ -183,4 +183,25 @@ feature("Leaving A Masked Input",function(){
 			expect(input).toHaveValue("(44_) ___-____");
 		});
 	});
+
+	//autoclear: false auto filling some characters #316 
+	scenario("Leave mask intact after blur with a split up mask with autoclear false",function(){
+		given("a mask with 10 placeholders",function(){
+			input.mask("A*B*C*", { autoclear: false });
+		});
+		when("focusing input",function(){
+			input.focus();
+		});
+		waits(20);
+		then("mask should be intact",function(){
+			expect(input).toHaveValue("A_B_C_");
+		});
+		waits(20);
+		when("then blurring",function(){
+			input.blur();
+		});
+		then("value should remain",function(){
+			expect(input).toHaveValue("");
+		});
+	});
 });

@@ -16,11 +16,12 @@
         },
         autoclear: !0,
         dataName: "rawMaskFn",
-        placeholder: "_"
+        placeholder: "_",
+        escapechar: "^"
     }, $.fn.extend({
         caret: function(begin, end) {
             var range;
-            if (0 !== this.length && !this.is(":hidden")) return "number" == typeof begin ? (end = "number" == typeof end ? end : begin, 
+            if (0 !== this.length && !this.is(":hidden") && this.get(0) === document.activeElement) return "number" == typeof begin ? (end = "number" == typeof end ? end : begin, 
             this.each(function() {
                 this.setSelectionRange ? this.setSelectionRange(begin, end) : this.createTextRange && (range = this.createTextRange(), 
                 range.collapse(!0), range.moveEnd("character", end), range.moveStart("character", begin), 
@@ -36,7 +37,7 @@
             return this.trigger("unmask");
         },
         mask: function(mask, settings) {
-            var input, defs, tests, partialPosition, firstNonMaskPos, lastRequiredNonMaskPos, len, oldVal;
+            var input, defs, tests, partialPosition, firstNonMaskPos, lastRequiredNonMaskPos, len, oldVal, escaped = [], inescape = !1;
             if (!mask && this.length > 0) {
                 input = $(this[0]);
                 var fn = input.data($.mask.dataName);
@@ -45,20 +46,37 @@
             return settings = $.extend({
                 autoclear: $.mask.autoclear,
                 placeholder: $.mask.placeholder,
-                completed: null
+                completed: null,
+                escapechar: $.mask.escapechar
             }, settings), defs = $.mask.definitions, tests = [], partialPosition = len = mask.length, 
-            firstNonMaskPos = null, $.each(mask.split(""), function(i, c) {
-                "?" == c ? (len--, partialPosition = i) : defs[c] ? (tests.push(new RegExp(defs[c])), 
-                null === firstNonMaskPos && (firstNonMaskPos = tests.length - 1), partialPosition > i && (lastRequiredNonMaskPos = tests.length - 1)) : tests.push(null);
+            firstNonMaskPos = null, mask = String(mask), $.each(mask.split(""), function(i, c) {
+                inescape ? inescape = !1 : c == settings.escapechar && (inescape = !0, escaped.push(i - escaped.length));
+            }), $.each(escaped, function(i, e) {
+                mask = mask.substr(0, e) + mask.substr(e + 1);
+            }), $.each(mask.split(""), function(i, c) {
+                -1 == escaped.indexOf(i) ? "?" == c ? (len--, partialPosition = i) : defs[c] ? (tests.push(new RegExp(defs[c])), 
+                null === firstNonMaskPos && (firstNonMaskPos = tests.length - 1), partialPosition > i && (lastRequiredNonMaskPos = tests.length - 1)) : tests.push(null) : tests.push(null);
             }), this.trigger("unmask").each(function() {
+                function isComplete() {
+                    if (input.val() == defaultBuffer) return !1;
+                    for (var i = firstNonMaskPos; lastRequiredNonMaskPos >= i; i++) if (tests[i] && buffer[i] === getPlaceholder(i)) return !1;
+                    return !0;
+                }
+                function isPartialComplete() {
+                    for (var i = lastRequiredNonMaskPos; len >= i; i++) if (tests[i] && buffer[i] === getPlaceholder(i)) return !1;
+                    return !0;
+                }
+                function stripMask(value) {
+                    var stripped = "";
+                    return $.each(value.split(""), function(i, c) {
+                        c != defaultBuffer.charAt(i) && (stripped += c);
+                    }), stripped;
+                }
                 function tryFireCompleted() {
-                    if (settings.completed) {
-                        for (var i = firstNonMaskPos; lastRequiredNonMaskPos >= i; i++) if (tests[i] && buffer[i] === getPlaceholder(i)) return;
-                        settings.completed.call(input);
-                    }
+                    settings.completed && isComplete() && settings.completed.call(input);
                 }
                 function getPlaceholder(i) {
-                    return settings.placeholder.charAt(i < settings.placeholder.length ? i : 0);
+                    return i < settings.placeholder.length ? settings.placeholder.charAt(i) : settings.placeholder.charAt(0);
                 }
                 function seekNext(pos) {
                     for (;++pos < len && !tests[pos]; ) ;
@@ -85,19 +103,20 @@
                         c = t;
                     }
                 }
-                function androidInputEvent() {
+                function androidInputEvent(e) {
                     var curVal = input.val(), pos = input.caret();
                     if (oldVal && oldVal.length && oldVal.length > curVal.length) {
                         for (checkVal(!0); pos.begin > 0 && !tests[pos.begin - 1]; ) pos.begin--;
                         if (0 === pos.begin) for (;pos.begin < firstNonMaskPos && !tests[pos.begin]; ) pos.begin++;
                         input.caret(pos.begin, pos.begin);
                     } else {
-                        for (checkVal(!0); pos.begin < len && !tests[pos.begin]; ) pos.begin++;
-                        input.caret(pos.begin, pos.begin);
+                        var lastEnteredValue = (checkVal(!0), curVal.charAt(pos.begin));
+                        pos.begin < len && (tests[pos.begin] ? tests[pos.begin].test(lastEnteredValue) && pos.begin++ : (pos.begin++, 
+                        tests[pos.begin].test(lastEnteredValue) && pos.begin++)), input.caret(pos.begin, pos.begin);
                     }
                     tryFireCompleted();
                 }
-                function blurEvent() {
+                function blurEvent(e) {
                     checkVal(), input.val() != focusText && input.change();
                 }
                 function keydownEvent(e) {
@@ -136,24 +155,15 @@
                     input.val(buffer.join(""));
                 }
                 function checkVal(allow) {
-                    var i, c, pos, test = input.val(), lastMatch = -1;
-                    for (i = 0, pos = 0; len > i; i++) if (tests[i]) {
-                        for (buffer[i] = getPlaceholder(i); pos++ < test.length; ) if (c = test.charAt(pos - 1), 
-                        tests[i].test(c)) {
-                            buffer[i] = c, lastMatch = i;
-                            break;
-                        }
-                        if (pos > test.length) {
-                            clearBuffer(i + 1, len);
-                            break;
-                        }
-                    } else buffer[i] === test.charAt(pos) && pos++, partialPosition > i && (lastMatch = i);
-                    return allow ? writeBuffer() : partialPosition > lastMatch + 1 ? settings.autoclear || buffer.join("") === defaultBuffer ? (input.val() && input.val(""), 
-                    clearBuffer(0, len)) : writeBuffer() : (writeBuffer(), input.val(input.val().substring(0, lastMatch + 1))), 
-                    partialPosition ? i : firstNonMaskPos;
+                    var i, c, pos, test = input.val(), lastMatch = -1, firstMaskedPos = len;
+                    for (test = stripMask(test), i = 0, pos = 0; len > i; i++) tests[i] ? (buffer[i] = getPlaceholder(i), 
+                    c = test.charAt(pos), tests[i].test(c) ? (buffer[i] = c, lastMatch = i, pos++) : firstMaskedPos > i && (firstMaskedPos = i)) : buffer[i] === test.charAt(pos) && pos++;
+                    return allow ? writeBuffer() : isComplete() ? (writeBuffer(), partialPosition > lastMatch && (lastMatch = partialPosition - 1), 
+                    isPartialComplete() || input.val(input.val().substring(0, lastMatch + 1))) : settings.autoclear || buffer.join("") === defaultBuffer ? (input.val() && input.val(""), 
+                    clearBuffer(0, len)) : writeBuffer(), partialPosition ? firstMaskedPos : firstNonMaskPos;
                 }
                 var input = $(this), buffer = $.map(mask.split(""), function(c, i) {
-                    return "?" != c ? defs[c] ? getPlaceholder(i) : c : void 0;
+                    return -1 != escaped.indexOf(i) ? c : "?" != c ? defs[c] ? getPlaceholder(i) : c : void 0;
                 }), defaultBuffer = buffer.join(""), focusText = input.val();
                 input.data($.mask.dataName, function() {
                     return $.map(buffer, function(c, i) {

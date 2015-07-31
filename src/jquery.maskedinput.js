@@ -26,7 +26,8 @@ $.mask = {
 	},
 	autoclear: true,
 	dataName: "rawMaskFn",
-	placeholder: '_'
+	placeholder: '_',
+	escapechar: '^'
 };
 
 $.fn.extend({
@@ -74,7 +75,9 @@ $.fn.extend({
 			firstNonMaskPos,
             lastRequiredNonMaskPos,
             len,
-            oldVal;
+            oldVal, 
+            escaped = [],
+            inescape = false;
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
@@ -85,7 +88,8 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			escapechar: $.mask.escapechar
 		}, settings);
 
 
@@ -97,20 +101,39 @@ $.fn.extend({
 		mask = String(mask);
 
 		$.each(mask.split(""), function(i, c) {
-			if (c == '?') {
-				len--;
-				partialPosition = i;
-			} else if (defs[c]) {
-				tests.push(new RegExp(defs[c]));
-				if (firstNonMaskPos === null) {
-					firstNonMaskPos = tests.length - 1;
-				}
-                if(i < partialPosition){
-                    lastRequiredNonMaskPos = tests.length - 1;
+			if (!inescape) {
+                if (c == settings.escapechar) { 
+                	inescape = true;
+                    escaped.push(i - escaped.length);
                 }
+            } else {
+            	inescape = false;
+            }
+        });
+
+        $.each(escaped, function(i, e) {
+            mask = mask.substr(0,e) + mask.substr(e+1);
+        });
+
+		$.each(mask.split(""), function(i, c) {
+			if (escaped.indexOf(i) == -1) {
+				if (c == '?') {
+					len--;
+					partialPosition = i;
+				} else if (defs[c]) {
+					tests.push(new RegExp(defs[c]));
+					if (firstNonMaskPos === null) {
+						firstNonMaskPos = tests.length - 1;
+					}
+            	    if(i < partialPosition){
+            	        lastRequiredNonMaskPos = tests.length - 1;
+            	    }
+				} else {
+					tests.push(null);
+				}
 			} else {
-				tests.push(null);
-			}
+                tests.push(null);
+            }
 		});
 
 		return this.trigger("unmask").each(function() {
@@ -118,24 +141,58 @@ $.fn.extend({
 				buffer = $.map(
     				mask.split(""),
     				function(c, i) {
-    					if (c != '?') {
-    						return defs[c] ? getPlaceholder(i) : c;
-    					}
+    					if (escaped.indexOf(i) == -1) {
+    						if (c != '?') {
+    							return defs[c] ? getPlaceholder(i) : c;
+    						}
+    					} else {
+                            return c;
+                        }
     				}),
 				defaultBuffer = buffer.join(''),
 				focusText = input.val();
+
+			function isComplete(){
+                if (input.val() != defaultBuffer) { 
+                    for (var i = firstNonMaskPos; i <= lastRequiredNonMaskPos; i++) {
+                        if (tests[i] && buffer[i] === getPlaceholder(i)) {
+                            return false;
+                        }
+                    }
+                } else {
+                    return false;
+                }
+                return true;
+            }
+
+            function isPartialComplete(){
+                for (var i = lastRequiredNonMaskPos; i <= len; i++) {
+                    if (tests[i] && buffer[i] === getPlaceholder(i)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function stripMask(value){
+            	var stripped = '';
+
+                $.each(value.split(""), function(i, c) {
+                    if (c != defaultBuffer.charAt(i)) {
+                       stripped = stripped + c; 
+                    }
+                });
+                return stripped;
+            }
 
             function tryFireCompleted(){
                 if (!settings.completed) {
                     return;
                 }
 
-                for (var i = firstNonMaskPos; i <= lastRequiredNonMaskPos; i++) {
-                    if (tests[i] && buffer[i] === getPlaceholder(i)) {
-                        return;
-                    }
+                if (isComplete()){
+                    settings.completed.call(input);
                 }
-                settings.completed.call(input);
             }
 
             function getPlaceholder(i){
@@ -338,35 +395,38 @@ $.fn.extend({
 					lastMatch = -1,
 					i,
 					c,
-					pos;
+					pos,
+					firstMaskedPos = len;
+
+				//Strip the mask out from the input so
+				//we can use just the user input to reallocate
+				//back into the mask
+				test = stripMask(test);
 
 				for (i = 0, pos = 0; i < len; i++) {
-					if (tests[i]) {
-						buffer[i] = getPlaceholder(i);
-						while (pos++ < test.length) {
-							c = test.charAt(pos - 1);
-							if (tests[i].test(c)) {
-								buffer[i] = c;
-								lastMatch = i;
-								break;
-							}
-						}
-						if (pos > test.length) {
-							clearBuffer(i + 1, len);
-							break;
-						}
-					} else {
+                    if (tests[i]) {
+                        buffer[i] = getPlaceholder(i);
+                                
+                        c = test.charAt(pos);
+                       
+                        if (tests[i].test(c)) {
+                            buffer[i] = c;
+                            lastMatch = i;
+                            pos++;
+                        } else {
+                            if (i < firstMaskedPos) {
+                                firstMaskedPos = i;
+                            }
+                        }
+                    } else {
                         if (buffer[i] === test.charAt(pos)) {
                             pos++;
                         }
-                        if( i < partialPosition){
-                            lastMatch = i;
-                        }
-					}
-				}
+                    }
+                }
 				if (allow) {
 					writeBuffer();
-				} else if (lastMatch + 1 < partialPosition) {
+				} else if (!isComplete()) {
 					if (settings.autoclear || buffer.join('') === defaultBuffer) {
 						// Invalid value. Remove it and replace it with the
 						// mask, which is the default behavior.
@@ -379,11 +439,19 @@ $.fn.extend({
 					}
 				} else {
 					writeBuffer();
-					input.val(input.val().substring(0, lastMatch + 1));
-				}
-				return (partialPosition ? i : firstNonMaskPos);
-			}
 
+					//Can't assume the last match will be in the position
+					//just after the partial character ie. 99!? x 99
+					if (lastMatch < partialPosition) {
+						lastMatch = partialPosition - 1;
+					}
+
+					if (!isPartialComplete()){ 
+						input.val(input.val().substring(0, lastMatch + 1));
+					}
+				}
+				return (partialPosition ? firstMaskedPos : firstNonMaskPos);
+			}
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
 					return tests[i]&&c!=getPlaceholder(i) ? c : null;

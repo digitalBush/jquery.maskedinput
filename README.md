@@ -8,6 +8,7 @@ This is a masked input plugin for the jQuery javascript library. It allows a use
 * a - Represents an alpha character (A-Z,a-z)
 * 9 - Represents a numeric character (0-9)
 * \* - Represents an alphanumeric character (A-Z,a-z,0-9)
+* ^ - Represents an escape character
 
 ### Usage
 First, include the jQuery and masked input javascript files.
@@ -51,6 +52,14 @@ jQuery(function($){
 });
 ```
 
+Optionally, if you are not satisfied with the caret ('^') character as an escape character, you may pass an optional argument to the maskedinput method.
+
+```html
+jQuery(function($){
+   $("#product").mask("aaaaa!aa",{escapechar:"!"});
+});
+```
+
 You can now supply your own mask definitions.
 ```html
 jQuery(function($){
@@ -64,6 +73,14 @@ You can have part of your mask be optional. Anything listed after '?' within the
 ```html
 jQuery(function($){
    $("#phone").mask("(999) 999-9999? x99999");
+});
+```
+
+The first character after '^' (default) will be escaped if it is a mask definition.
+
+```html
+jQuery(function($){
+   $("#phone").mask("aaa^9");
 });
 ```
 

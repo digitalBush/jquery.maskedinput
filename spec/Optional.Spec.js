@@ -82,4 +82,16 @@ feature("Optional marker",function(){
             expect(input).toHaveValue("1234");
         });
     });
+
+    scenario("Optional marker with mask ending in a literal", function() {
+        given("a mask with an optional marker ending in a literal",function(){
+            input.mask("99?99B", { autoclear: false });
+        });
+        when("typing four characters and leaving",function(){
+            input.mashKeys("1234").blur();
+        });
+        then("value should remain",function(){
+            expect(input).toHaveValue("1234B");
+        });
+    });
 });
