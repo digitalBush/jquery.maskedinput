@@ -75,4 +75,17 @@ feature("Escaping a character in a mask",function(){
 			expect(input).toHaveValue("_^__");
 		});
 	});
+
+	scenario("Multiple escapes in a mask",function(){
+		given("a mask with an escaped ^ value",function(){
+			input.mask("^a^a^99999^^");
+		});
+		when("focusing",function(){
+			input.focus();
+		});
+		waits(20);
+		then("the value should be aa9____^",function(){
+			expect(input).toHaveValue("aa9____^");
+		});
+	});
 });

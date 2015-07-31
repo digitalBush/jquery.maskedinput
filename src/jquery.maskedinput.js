@@ -76,7 +76,8 @@ $.fn.extend({
             lastRequiredNonMaskPos,
             len,
             oldVal, 
-            escaped = [];
+            escaped = [],
+            inescape = false;
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
@@ -100,16 +101,18 @@ $.fn.extend({
 		mask = String(mask);
 
 		$.each(mask.split(""), function(i, c) {
-            if (escaped[escaped.length-1] != i-1) {
+			if (!inescape) {
                 if (c == settings.escapechar) { 
-                    escaped.push(i);
+                	inescape = true;
+                    escaped.push(i - escaped.length);
                 }
+            } else {
+            	inescape = false;
             }
         });
 
         $.each(escaped, function(i, e) {
             mask = mask.substr(0,e) + mask.substr(e+1);
-            escaped[i] = escaped[i] - i;
         });
 
 		$.each(mask.split(""), function(i, c) {

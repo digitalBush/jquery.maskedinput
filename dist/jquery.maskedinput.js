@@ -37,7 +37,7 @@
             return this.trigger("unmask");
         },
         mask: function(mask, settings) {
-            var input, defs, tests, partialPosition, firstNonMaskPos, lastRequiredNonMaskPos, len, oldVal, escaped = [];
+            var input, defs, tests, partialPosition, firstNonMaskPos, lastRequiredNonMaskPos, len, oldVal, escaped = [], inescape = !1;
             if (!mask && this.length > 0) {
                 input = $(this[0]);
                 var fn = input.data($.mask.dataName);
@@ -50,9 +50,9 @@
                 escapechar: $.mask.escapechar
             }, settings), defs = $.mask.definitions, tests = [], partialPosition = len = mask.length, 
             firstNonMaskPos = null, mask = String(mask), $.each(mask.split(""), function(i, c) {
-                escaped[escaped.length - 1] != i - 1 && c == settings.escapechar && escaped.push(i);
+                inescape ? inescape = !1 : c == settings.escapechar && (inescape = !0, escaped.push(i - escaped.length));
             }), $.each(escaped, function(i, e) {
-                mask = mask.substr(0, e) + mask.substr(e + 1), escaped[i] = escaped[i] - i;
+                mask = mask.substr(0, e) + mask.substr(e + 1);
             }), $.each(mask.split(""), function(i, c) {
                 -1 == escaped.indexOf(i) ? "?" == c ? (len--, partialPosition = i) : defs[c] ? (tests.push(new RegExp(defs[c])), 
                 null === firstNonMaskPos && (firstNonMaskPos = tests.length - 1), partialPosition > i && (lastRequiredNonMaskPos = tests.length - 1)) : tests.push(null) : tests.push(null);
