@@ -38,7 +38,7 @@ $.fn.extend({
 			return;
 		}
 
-		if (typeof begin == 'number') {
+		if (typeof begin === 'number') {
 			end = (typeof end === 'number') ? end : begin;
 			return this.each(function() {
 				if (this.setSelectionRange) {
@@ -97,7 +97,7 @@ $.fn.extend({
 		mask = String(mask);
 
 		$.each(mask.split(""), function(i, c) {
-			if (c == '?') {
+			if (c === '?') {
 				len--;
 				partialPosition = i;
 			} else if (defs[c]) {
@@ -118,7 +118,7 @@ $.fn.extend({
 				buffer = $.map(
 					mask.split(""),
 					function(c, i) {
-						if (c != '?') {
+						if (c !== '?') {
 							return defs[c] ? getPlaceholder(i) : c;
 						}
 					}),
@@ -139,8 +139,10 @@ $.fn.extend({
 			}
 
 			function getPlaceholder(i){
-				if(i < settings.placeholder.length)
+				if(i < settings.placeholder.length){
 					return settings.placeholder.charAt(i);
+				}
+
 				return settings.placeholder.charAt(0);
 			}
 
