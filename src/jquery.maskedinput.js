@@ -217,7 +217,6 @@ $.fn.extend({
 					}
 					input.caret(pos.begin,pos.begin);
 				} else {
-					var pos2 = checkVal(true);
 					while (pos.begin < len && !tests[pos.begin])
 					var lastEnteredValue = curVal.charAt(pos.begin);
 					if (pos.begin < len){
