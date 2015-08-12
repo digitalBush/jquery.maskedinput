@@ -391,7 +391,7 @@ $.fn.extend({
 
 			input.data($.mask.dataName,function(){
 				return $.map(buffer, function(c, i) {
-					return tests[i]&&c!=getPlaceholder(i) ? c : null;
+					return tests[i]&& c !== getPlaceholder(i) ? c : null;
 				}).join('');
 			});
 
