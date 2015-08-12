@@ -240,7 +240,7 @@ $.fn.extend({
 			function blurEvent() {
 				checkVal();
 
-				if (input.val() != focusText){
+				if (input.val() !== focusText){
 					input.change();
 				}
 			}
