@@ -200,7 +200,7 @@ $.fn.extend({
 				}
 			}
 
-			function androidInputEvent(e) {
+			function androidInputEvent() {
 				var curVal = input.val();
 				var pos = input.caret();
 				if (oldVal && oldVal.length && oldVal.length > curVal.length ) {
@@ -238,7 +238,7 @@ $.fn.extend({
 				tryFireCompleted();
 			}
 
-			function blurEvent(e) {
+			function blurEvent() {
 				checkVal();
 
 				if (input.val() != focusText){
