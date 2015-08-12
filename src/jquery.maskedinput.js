@@ -419,7 +419,7 @@ $.fn.extend({
 							return;
 						}
 						writeBuffer();
-						if (pos == mask.replace("?","").length) {
+						if (pos === mask.replace("?","").length) {
 							input.caret(0, pos);
 						} else {
 							input.caret(pos);
