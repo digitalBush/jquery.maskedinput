@@ -206,12 +206,14 @@ $.fn.extend({
 				if (oldVal && oldVal.length && oldVal.length > curVal.length ) {
 					// a deletion or backspace happened
 					checkVal(true);
-					while (pos.begin > 0 && !tests[pos.begin-1])
+					while (pos.begin > 0 && !tests[pos.begin-1]){
 						pos.begin--;
+					}
 					if (pos.begin === 0)
 					{
-						while (pos.begin < firstNonMaskPos && !tests[pos.begin])
+						while (pos.begin < firstNonMaskPos && !tests[pos.begin]){
 							pos.begin++;
+						}
 					}
 					input.caret(pos.begin,pos.begin);
 				} else {
@@ -224,7 +226,7 @@ $.fn.extend({
 							if(tests[pos.begin].test(lastEnteredValue)){
 								pos.begin++;
 							}
-						}else{
+						} else {
 							if(tests[pos.begin].test(lastEnteredValue)){
 								pos.begin++;
 							}
@@ -239,8 +241,9 @@ $.fn.extend({
 			function blurEvent(e) {
 				checkVal();
 
-				if (input.val() != focusText)
+				if (input.val() != focusText){
 					input.change();
+				}
 			}
 
 			function keydownEvent(e) {
