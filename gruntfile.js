@@ -63,7 +63,7 @@ module.exports = function( grunt ) {
           undef: true
         },
         files: {
-          src: ['js/jquery.maskedinput.js']
+          src: ['src/jquery.maskedinput.js']
         }
       }
     },
