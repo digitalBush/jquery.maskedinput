@@ -44,6 +44,30 @@ module.exports = function( grunt ) {
         }
       }
     },
+
+    jshint: {
+      options: {
+        curly: true,
+        eqeqeq: true,
+        eqnull: true,
+        browser: true,
+        globals: {
+          jQuery: true
+        },
+        devel: true
+      },
+      uses_defaults: 'src/jquery.maskedinput.js',
+      with_overrides: {
+        options: {
+          curly: false,
+          undef: true
+        },
+        files: {
+          src: ['js/jquery.maskedinput.js']
+        }
+      }
+    },
+
     nugetpack: {
         dist: {
             src: 'jquery.maskedinput.nuspec',
@@ -55,7 +79,9 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks("grunt-contrib-jasmine");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks('grunt-nuget');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
+  grunt.registerTask('jstesting', 'jshint');
   grunt.registerTask('test', ['jasmine']);
   grunt.registerTask('pack', ['default','nugetpack']);
   grunt.registerTask('default', ['test', 'uglify']);
