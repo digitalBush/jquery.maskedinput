@@ -220,7 +220,6 @@ $.fn.extend({
 					}
 					input.caret(pos.begin,pos.begin);
 				} else {
-					while (pos.begin < len && !tests[pos.begin])
 					lastEnteredValue = curVal.charAt(pos.begin);
 					if (pos.begin < len){
 						if(!tests[pos.begin]){
