@@ -85,7 +85,8 @@ $.fn.extend({
 		settings = $.extend({
 			autoclear: $.mask.autoclear,
 			placeholder: $.mask.placeholder, // Load default placeholder
-			completed: null
+			completed: null,
+			cleared: null
 		}, settings);
 
 
@@ -370,7 +371,12 @@ $.fn.extend({
 					if (settings.autoclear || buffer.join('') === defaultBuffer) {
 						// Invalid value. Remove it and replace it with the
 						// mask, which is the default behavior.
-						if(input.val()) input.val("");
+						if(input.val()) {
+							input.val("");
+
+							if (settings.cleared)
+								settings.cleared.call(input);
+						}
 						clearBuffer(0, len);
 					} else {
 						// Invalid value, but we opt to show the value to the
