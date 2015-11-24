@@ -392,7 +392,7 @@ $.fn.extend({
 
 
 			input
-				.attr('data-mask', mask)
+				.attr("data-mask", mask)
 				.one("unmask", function() {
 					input
 						.off(".mask")
