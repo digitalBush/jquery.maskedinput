@@ -284,7 +284,7 @@ $.fn.extend({
 					c,
 					next;
 
-				if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {//Ignore
+				if (e.ctrlKey || e.altKey || e.metaKey || k < 41) {//Ignore
 					return;
 				} else if ( k && k !== 13 ) {
 					if (pos.end - pos.begin !== 0){
