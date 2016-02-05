@@ -92,7 +92,7 @@
                         if (0 === pos.begin) for (;pos.begin < firstNonMaskPos && !tests[pos.begin]; ) pos.begin++;
                         input.caret(pos.begin, pos.begin);
                     } else {
-                        for (checkVal(!0); pos.begin < len && !tests[pos.begin]; ) pos.begin++;
+                        for (pos.begin = (!0); pos.begin < len && !tests[pos.begin]; ) pos.begin++;
                         input.caret(pos.begin, pos.begin);
                     }
                     tryFireCompleted();
