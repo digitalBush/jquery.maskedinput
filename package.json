@@ -10,6 +10,7 @@
     "grunt-contrib-watch": "0.5.x",
     "grunt-nuget": "^0.1.4"
   },
+  "main": "./src/jquery.maskedinput.js",
   "scripts": {
     "test": "grunt test"
   }
