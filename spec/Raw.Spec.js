@@ -56,15 +56,15 @@ feature("Getting raw value",function(){
 	});
 
 	scenario("Verify if the input hasn't the mask bound through the raw value", function() {
-        given("an input without a mask", function() {
-            input
-            .mask("9/9-9_9").unmask();
-        });
+		given("an input without a mask", function() {
+			input
+			.mask("9/9-9_9").unmask();
+		});
 
-        then("The raw value should be undefined and no error must occur", function() {
-            expect(input.mask()).toBe(undefined);
-        });
-    });
+		then("The raw value should be undefined and no error must occur", function() {
+			expect(input.mask()).toBe(undefined);
+		});
+	});
 });
 
 feature("Getting raw value with autoclear set to false", function() {

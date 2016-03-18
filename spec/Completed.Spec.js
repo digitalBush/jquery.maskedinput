@@ -26,7 +26,7 @@ feature("Completed callback", function() {
 		when("replacing first character value",function(){
 			input
 			.caret(1)
-			.mashKeys(function(keys){keys.type(keys.backspace)})
+			.mashKeys(function(keys){keys.type(keys.backspace);})
 			.mashKeys("3");
 		});
 
@@ -45,7 +45,7 @@ feature("Completed callback", function() {
 			input
 			.mask("99",{completed:function(){completed=true;}})
 			.mashKeys("1")
-			.mashKeys(function(keys){keys.type(keys.backspace)});
+			.mashKeys(function(keys){keys.type(keys.backspace);});
 		});
 
 		when("moving cursor to last position and typing",function(){

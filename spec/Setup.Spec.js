@@ -1,4 +1,4 @@
-feature("Masking an Input", function() {	
+feature("Masking an Input", function() {
 	scenario('Applying a mask to an already masked input',function(){
 		given("an input with two masks", function(){
 			input

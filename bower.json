@@ -1,11 +1,12 @@
 {
   "name": "jquery.maskedinput",
+  "version": "1.4.2",
   "homepage": "http://digitalbush.com/projects/masked-input-plugin/",
   "authors": [
     "Josh Bush (digitalbush.com)"
   ],
   "description": "jQuery Masked Input Plugin",
-  "main": "./dist/jquery.maskedinput.js",
+  "main": "./src/jquery.maskedinput.js",
   "moduleType": [
     "es6"
   ],
