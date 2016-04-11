@@ -302,15 +302,14 @@ $.fn.extend({
 							writeBuffer();
 							next = seekNext(p);
 
+							var setCaret = function() {
+								input.caret(next);
+							};
 							if(android){
 								//Path for CSP Violation on FireFox OS 1.1
-								var proxy = function() {
-									$.proxy($.fn.caret,input,next)();
-								};
-
-								setTimeout(proxy,0);
+								setTimeout(setCaret,0);
 							}else{
-								input.caret(next);
+								setCaret();
 							}
 							if(pos.begin <= lastRequiredNonMaskPos){
 								 tryFireCompleted();
