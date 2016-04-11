@@ -318,6 +318,8 @@ $.fn.extend({
 						}
 					}
 					e.preventDefault();
+
+					input.trigger('input');
 				}
 			}
 
