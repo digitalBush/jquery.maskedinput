@@ -1,14 +1,14 @@
 (function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof exports === 'object') {
-        // Node/CommonJS
-        factory(require('jquery'));
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		// Node/CommonJS
+		factory(require('jquery'));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
 }(function ($) {
 
 var ua = navigator.userAgent,
@@ -72,13 +72,13 @@ $.fn.extend({
 			tests,
 			partialPosition,
 			firstNonMaskPos,
-            lastRequiredNonMaskPos,
-            len,
-            oldVal;
+			lastRequiredNonMaskPos,
+			len,
+			oldVal;
 
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
-            var fn = input.data($.mask.dataName)
+			var fn = input.data($.mask.dataName)
 			return fn?fn():undefined;
 		}
 
@@ -105,9 +105,9 @@ $.fn.extend({
 				if (firstNonMaskPos === null) {
 					firstNonMaskPos = tests.length - 1;
 				}
-                if(i < partialPosition){
-                    lastRequiredNonMaskPos = tests.length - 1;
-                }
+				if(i < partialPosition){
+					lastRequiredNonMaskPos = tests.length - 1;
+				}
 			} else {
 				tests.push(null);
 			}
@@ -116,33 +116,33 @@ $.fn.extend({
 		return this.trigger("unmask").each(function() {
 			var input = $(this),
 				buffer = $.map(
-    				mask.split(""),
-    				function(c, i) {
-    					if (c != '?') {
-    						return defs[c] ? getPlaceholder(i) : c;
-    					}
-    				}),
+					mask.split(""),
+					function(c, i) {
+						if (c != '?') {
+							return defs[c] ? getPlaceholder(i) : c;
+						}
+					}),
 				defaultBuffer = buffer.join(''),
 				focusText = input.val();
 
-            function tryFireCompleted(){
-                if (!settings.completed) {
-                    return;
-                }
+			function tryFireCompleted(){
+				if (!settings.completed) {
+					return;
+				}
 
-                for (var i = firstNonMaskPos; i <= lastRequiredNonMaskPos; i++) {
-                    if (tests[i] && buffer[i] === getPlaceholder(i)) {
-                        return;
-                    }
-                }
-                settings.completed.call(input);
-            }
+				for (var i = firstNonMaskPos; i <= lastRequiredNonMaskPos; i++) {
+					if (tests[i] && buffer[i] === getPlaceholder(i)) {
+						return;
+					}
+				}
+				settings.completed.call(input);
+			}
 
-            function getPlaceholder(i){
-                if(i < settings.placeholder.length)
-                    return settings.placeholder.charAt(i);
-                return settings.placeholder.charAt(0);
-            }
+			function getPlaceholder(i){
+				if(i < settings.placeholder.length)
+					return settings.placeholder.charAt(i);
+				return settings.placeholder.charAt(0);
+			}
 
 			function seekNext(pos) {
 				while (++pos < len && !tests[pos]);
@@ -234,22 +234,22 @@ $.fn.extend({
 
 
 			function blurEvent(e) {
-                checkVal();
+				checkVal();
 
-                if (input.val() != focusText)
-                    input.change();
-            }
+				if (input.val() != focusText)
+					input.change();
+			}
 
 			function keydownEvent(e) {
-                if (input.prop("readonly")){
-                    return;
-                }
+				if (input.prop("readonly")){
+					return;
+				}
 
 				var k = e.which || e.keyCode,
 					pos,
 					begin,
 					end;
-                    oldVal = input.val();
+					oldVal = input.val();
 				//backspace, delete, and escape get special treatment
 				if (k === 8 || k === 46 || (iPhone && k === 127)) {
 					pos = input.caret();
@@ -274,9 +274,9 @@ $.fn.extend({
 			}
 
 			function keypressEvent(e) {
-                if (input.prop("readonly")){
-                    return;
-                }
+				if (input.prop("readonly")){
+					return;
+				}
 
 				var k = e.which || e.keyCode,
 					pos = input.caret(),
@@ -312,9 +312,9 @@ $.fn.extend({
 							}else{
 								input.caret(next);
 							}
-                            if(pos.begin <= lastRequiredNonMaskPos){
-		                         tryFireCompleted();
-                             }
+							if(pos.begin <= lastRequiredNonMaskPos){
+								 tryFireCompleted();
+							 }
 						}
 					}
 					e.preventDefault();
@@ -356,12 +356,12 @@ $.fn.extend({
 							break;
 						}
 					} else {
-                        if (buffer[i] === test.charAt(pos)) {
-                            pos++;
-                        }
-                        if( i < partialPosition){
-                            lastMatch = i;
-                        }
+						if (buffer[i] === test.charAt(pos)) {
+							pos++;
+						}
+						if( i < partialPosition){
+							lastMatch = i;
+						}
 					}
 				}
 				if (allow) {
@@ -398,9 +398,9 @@ $.fn.extend({
 						.removeData($.mask.dataName);
 				})
 				.on("focus.mask", function() {
-                    if (input.prop("readonly")){
-                        return;
-                    }
+					if (input.prop("readonly")){
+						return;
+					}
 
 					clearTimeout(caretTimeoutId);
 					var pos;
@@ -410,9 +410,9 @@ $.fn.extend({
 					pos = checkVal();
 
 					caretTimeoutId = setTimeout(function(){
-                        if(input.get(0) !== document.activeElement){
-                            return;
-                        }
+						if(input.get(0) !== document.activeElement){
+							return;
+						}
 						writeBuffer();
 						if (pos == mask.replace("?","").length) {
 							input.caret(0, pos);
@@ -425,22 +425,22 @@ $.fn.extend({
 				.on("keydown.mask", keydownEvent)
 				.on("keypress.mask", keypressEvent)
 				.on("input.mask paste.mask", function() {
-                    if (input.prop("readonly")){
-                        return;
-                    }
+					if (input.prop("readonly")){
+						return;
+					}
 
 					setTimeout(function() {
 						var pos=checkVal(true);
 						input.caret(pos);
-                        tryFireCompleted();
+						tryFireCompleted();
 					}, 0);
 				});
-                if (chrome && android)
-                {
-                    input
-                        .off('input.mask')
-                        .on('input.mask', androidInputEvent);
-                }
+				if (chrome && android)
+				{
+					input
+						.off('input.mask')
+						.on('input.mask', androidInputEvent);
+				}
 				checkVal(); //Perform initial check for existing values
 		});
 	}
