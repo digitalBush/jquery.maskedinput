@@ -12,5 +12,6 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "main": "src/jquery.maskedinput.js"
 }
