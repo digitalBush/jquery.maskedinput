@@ -330,7 +330,15 @@ $.fn.extend({
 				}
 			}
 
-			function writeBuffer() { input.val(buffer.join('')); }
+			function writeBuffer() {
+                    var i = 0;
+                    var val = '';
+                    while (i < buffer.length && buffer[i] !== '') {
+                        val += buffer[i];
+                        i++;
+                    }
+                    input.val( val );
+            }
 
 			function checkVal(allow) {
 				//try to place characters where they belong
