@@ -75,7 +75,7 @@ $.fn.extend({
             lastRequiredNonMaskPos,
             len,
             oldVal;
-
+        if(typeof mask === 'object') mask = '';
 		if (!mask && this.length > 0) {
 			input = $(this[0]);
             var fn = input.data($.mask.dataName)
