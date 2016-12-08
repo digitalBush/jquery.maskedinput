@@ -19,7 +19,7 @@ First, include the jQuery and masked input javascript files.
 
 Next, call the mask function for those items you wish to have masked.
 
-```html
+```js
 jQuery(function($){
    $("#date").mask("99/99/9999");
    $("#phone").mask("(999) 999-9999");
@@ -30,7 +30,7 @@ jQuery(function($){
 
 Optionally, if you are not satisfied with the underscore ('_') character as a placeholder, you may pass an optional argument to the maskedinput method.
 
-```html
+```js
 jQuery(function($){
    $("#product").mask("99/99/9999",{placeholder:" "});
 });
@@ -38,21 +38,21 @@ jQuery(function($){
 
 Optionally, if you would like to execute a function once the mask has been completed, you can specify that function as an optional argument to the maskedinput method.
 
-```html
+```js
 jQuery(function($){
    $("#product").mask("99/99/9999",{completed:function(){alert("You typed the following: "+this.val());}});
 });
 ```
 
 Optionally, if you would like to disable the automatic discarding of the uncomplete input, you may pass an optional argument to the maskedinput method
-```html
+```js
 jQuery(function($){
    $("#product").mask("99/99/9999",{autoclear: false});
 });
 ```
 
 You can now supply your own mask definitions.
-```html
+```js
 jQuery(function($){
    $.mask.definitions['~']='[+-]';
    $("#eyescript").mask("~9.99 ~9.99 999");
@@ -61,7 +61,7 @@ jQuery(function($){
 
 You can have part of your mask be optional. Anything listed after '?' within the mask is considered optional user input. The common example for this is phone number + optional extension.
 
-```html
+```js
 jQuery(function($){
    $("#phone").mask("(999) 999-9999? x99999");
 });
@@ -69,7 +69,7 @@ jQuery(function($){
 
 If your requirements aren't met by the predefined placeholders, you can always add your own. For example, maybe you need a mask to only allow hexadecimal characters. You can add your own definition for a placeholder, say 'h', like so: `$.mask.definitions['h'] = "[A-Fa-f0-9]";` Then you can use that to mask for something like css colors in hex with a `mask "#hhhhhh"`.
 
-```html
+```js
 jQuery(function($){
    $("#phone").mask("#hhhhhh");
 });
