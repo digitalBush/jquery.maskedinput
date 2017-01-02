@@ -66,6 +66,9 @@ $.fn.extend({
 	unmask: function() {
 		return this.trigger("unmask");
 	},
+	isMaskValid: function() {
+		return $(this).data('mask-isvalid');
+	},
 	mask: function(mask, settings) {
 		var input,
 			defs,
