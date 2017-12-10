@@ -1,6 +1,12 @@
 Masked Input Plugin for jQuery
 ==============================
-[![Build Status](https://travis-ci.org/digitalBush/jquery.maskedinput.png)](https://travis-ci.org/digitalBush/jquery.maskedinput)
+**Notice: This project is no longer being maintained.**
+
+I started this project [over 10 years ago](https://forum.jquery.com/topic/jquery-introduction-and-masked-input-plugin) to fill a need for a side project I was working on at the time. Nothing ever became of that side project, but this little plugin lived on. Over the years it brought me joy to stumble on sites using this thing. It was super encouraging to hear from people using it in their own products. I tried for a while to maintain it, even after I had moved away from front end web development. 
+
+The time has come to officially call it quits. The web has changed(**A LOT**) and there are better things out there like [Cleave.js](https://nosir.github.io/cleave.js/). I'll leave this repo up for posterity in an archived state. Thank you to everyone who contributed to or used this plugin over the years.
+
+
 Overview
 --------
 This is a masked input plugin for the jQuery javascript library. It allows a user to more easily enter fixed width input where you would like them to enter the data in a certain format (dates,phone numbers, etc). It has been tested on Internet Explorer, Firefox, Safari, Opera, and Chrome.  A mask is defined by a format made up of mask literals and mask definitions. Any character not in the definitions list below is considered a mask literal. Mask literals will be automatically entered for the user as they type and will not be able to be removed by the user.The following mask definitions are predefined:
